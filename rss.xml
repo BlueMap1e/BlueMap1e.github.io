@@ -5,10 +5,26 @@
         <link>https://BlueMap1e.github.io</link>
         <description>——By BlueMap1e</description>
         <language>zh-CN</language>
-        <pubDate>Wed, 18 Oct 2023 19:22:39 +0800</pubDate>
-        <lastBuildDate>Wed, 18 Oct 2023 19:22:39 +0800</lastBuildDate>
+        <pubDate>Wed, 18 Oct 2023 21:45:53 +0800</pubDate>
+        <lastBuildDate>Wed, 18 Oct 2023 21:45:53 +0800</lastBuildDate>
         <category>Web Front-End</category>
         <category>Circumvention</category>
+        <item>
+            <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</guid>
+            <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
+            <link>https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</link>
+            <category>Circumvention</category>
+            <pubDate>Wed, 18 Oct 2023 21:45:53 +0800</pubDate>
+            <description><![CDATA[ &lt;h3 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h3&gt;
+&lt;p&gt;ChatGPT 之前封锁了很多大机房的 IP 段，这导致 Vultr、Digital Ocean 等常用的 VPS 供应商机房访问 OpenAI 的服务会被屏蔽。&lt;/p&gt;
+&lt;p&gt;本文介绍如何简单地配置 CloudFlare Warp 进行出站流量转发，以绕过 OpenAI 的屏蔽策略，访问 OpenAI 的服务。&lt;/p&gt;
+&lt;h3 id=&#34;部署过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#部署过程&#34;&gt;#&lt;/a&gt; 部署过程&lt;/h3&gt;
+&lt;p&gt;非常简单，只需要一行命令行：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;bash&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-fsSL&lt;/span&gt; git.io/warp.sh&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt; d&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;部署已完成，所有出站流量都走 CloudFlare Warp。可能会引入些许延迟和轻微降速，但是几乎无感。&lt;/p&gt;
+&lt;p&gt;喜欢的可以去给脚本的作者点个 Star：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL1AzVEVSWC93YXJwLnNo&#34;&gt;P3TERX/warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;更详细的文档在作者的文档当中也已经说明。&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu23%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Ubuntu23上搭建简单的Shadowsocks-Libev服务器</title>
@@ -174,7 +190,6 @@
 &lt;p&gt;使用以下命令来开启服务端的 Shadowsocks-Libev 服务：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl start snap.shadowsocks-libev.ss-server-daemon.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;可以使用这个命令来查看你的 Shadowsocks-Libev 服务器运行状态：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl status snap.shadowsocks-libev.ss-server-daemon.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;如果正常运行，那么你会看到绿色的提示信息。记得观察一下加密算法，如果你的加密算法设置不被兼容或者拼写出错，那么服务器会将其自动修改为 Chacha20-IETF-Poly1305，客户端连接的时候别弄错了。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5CWorm_CA%5CBlueMap1e-Blog%5Csource_pictures%5Css-status.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;可以设置一下 Shadowsocks 的开机自启动，以免一个 reboot 或者 IDC 维护了一下就掉线了：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl &lt;span class=&#34;token builtin class-name&#34;&gt;enable&lt;/span&gt; snap.shadowsocks-libev.ss-server-daemon.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;配置防火墙&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置防火墙&#34;&gt;#&lt;/a&gt; 配置防火墙&lt;/h3&gt;
 &lt;p&gt;很简单，首先，如果你是通过 SSH 连接的 VPS，给防火墙添加这条规则，以免开了防火墙以后掉线：&lt;/p&gt;
@@ -183,7 +198,6 @@
 &lt;p&gt;然后让防火墙开放 Shadowsocks 的监听端口，注意，把此处的端口号改成自己的端口号：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw allow &lt;span class=&#34;token number&#34;&gt;16384&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;最后开启防火墙，并允许开机自启动，SSH 用户需要确认一下：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw &lt;span class=&#34;token builtin class-name&#34;&gt;enable&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;最后，在客户端配置相同的加密算法，预共享密钥，端口号，并填上服务器的 IPv4 或 IPv6 地址，即可完成连接，使用 Shadowsocks 代理服务器。&lt;/p&gt;
-&lt;p&gt;&lt;img data-src=&#34;C:%5CUsers%5CWorm_CA%5CBlueMap1e-Blog%5Csource_pictures%5Css-win-config.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
  ]]></description>
