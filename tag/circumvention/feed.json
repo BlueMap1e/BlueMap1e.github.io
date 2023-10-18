@@ -5,6 +5,16 @@
     "home_page_url": "https://BlueMap1e.github.io",
     "items": [
         {
+            "id": "https://bluemap1e.github.io/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/",
+            "url": "https://bluemap1e.github.io/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/",
+            "title": "使用BBR一键安装脚本快速优化VPS网络性能",
+            "date_published": "2023-10-18T14:02:16.000Z",
+            "content_html": "<h3 id=\"前言\"><a class=\"anchor\" href=\"#前言\">#</a> 前言</h3>\n<p>常规 VPS 在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装 BBR 来有效提升带宽。</p>\n<h3 id=\"安装bbr一键脚本\"><a class=\"anchor\" href=\"#安装bbr一键脚本\">#</a> 安装 BBR 一键脚本</h3>\n<p>通过这行命令可以安装 tcp.sh 一键脚本</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre><span class=\"token function\">wget</span> <span class=\"token parameter variable\">-N</span> --no-check-certificate <span class=\"token string\">\"https://gist.github.com/zeruns/a0ec603f20d1b86de6a774a8ba27588f/raw/4f9957ae23f5efb2bb7c57a198ae2cffebfb1c56/tcp.sh\"</span> <span class=\"token operator\">&amp;&amp;</span> <span class=\"token function\">chmod</span> +x tcp.sh <span class=\"token operator\">&amp;&amp;</span> ./tcp.sh</pre></td></tr></table></figure><p>启动脚本之后，你可以先更新脚本：</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre><span class=\"token number\">0</span></pre></td></tr></table></figure><p>然后再次启动脚本：</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre>/root/tcp.sh</pre></td></tr></table></figure><p>之后根据界面自己选择需要的 BBR 进行加速即可，根据脚本的指示操作即可完成安装。</p>\n",
+            "tags": [
+                "Circumvention"
+            ]
+        },
+        {
             "id": "https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/",
             "url": "https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/",
             "title": "通过简单的CloudFlare Warp让VPS解锁ChatGPT",
