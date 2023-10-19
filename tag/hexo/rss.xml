@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <rss version="2.0">
     <channel>
-        <title>BlueMap1e Blog • Posts by &#34;web front-end&#34; tag</title>
+        <title>BlueMap1e Blog • Posts by &#34;hexo&#34; tag</title>
         <link>https://BlueMap1e.github.io</link>
         <description>——By BlueMap1e</description>
         <language>zh-CN</language>
@@ -56,6 +56,15 @@
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;hexo clean&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;hexo g&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;尝试查看本地博客：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;hexo s&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;然后在浏览器中输入 &lt;span class=&#34;exturl&#34; data-url=&#34;bG9jYWxob3N0OjQwMDA=&#34;&gt;localhost:4000&lt;/span&gt; 或 &lt;a href=&#34;127.0.0.1:4000&#34;&gt;127.0.0.1:4000 &lt;/a&gt; 进行预览，觉得样式满意了之后，可以同步到 Github Pages（网页端）：&lt;/p&gt;
 &lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;hexo d&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt; ]]></description>
+        </item>
+        <item>
+            <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</guid>
+            <title>我的第一篇博客</title>
+            <link>https://bluemap1e.github.io/2023/10/18/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/</link>
+            <category>Hexo</category>
+            <pubDate>Wed, 18 Oct 2023 16:22:42 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;一个基于 Hexo 和 ShokaX 的简单博客&lt;/p&gt;
+ ]]></description>
         </item>
     </channel>
 </rss>
