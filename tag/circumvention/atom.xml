@@ -6,9 +6,9 @@
     <updated>2023-10-18T14:02:16.000Z</updated>
     <category term="Circumvention" />
     <category term="Network" />
+    <category term="Linux" />
     <category term="Web Front-End" />
     <category term="Hexo" />
-    <category term="Linux" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</id>
         <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
@@ -43,9 +43,9 @@
         <updated>2023-10-18T13:45:53.000Z</updated>
     </entry>
     <entry>
-        <id>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu23%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
-        <title>在Ubuntu23上搭建简单的Shadowsocks-Libev服务器</title>
-        <link rel="alternate" href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu23%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+        <id>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
+        <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
         <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一个简单的 Shadowsocks-Libev 服务器搭建过程，系统为 Ubuntu，因为自带了 Snap 应用商店等多种工具包，很方便。&lt;/p&gt;
 &lt;p&gt;当然你得提前准备一台 VPS，建议用 Vultr，Digital Ocean 之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。&lt;/p&gt;
