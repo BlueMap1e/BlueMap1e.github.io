@@ -46,7 +46,7 @@
         <id>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu23%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
         <title>在Ubuntu23上搭建简单的Shadowsocks-Libev服务器</title>
         <link rel="alternate" href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu23%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-        <content type="html">&lt;h3 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h3&gt;
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一个简单的 Shadowsocks-Libev 服务器搭建过程，系统为 Ubuntu，因为自带了 Snap 应用商店等多种工具包，很方便。&lt;/p&gt;
 &lt;p&gt;当然你得提前准备一台 VPS，建议用 Vultr，Digital Ocean 之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。&lt;/p&gt;
 &lt;p&gt;如果你追求稳定，那么建议最好还是不要用 Shadowsocks 协议。&lt;/p&gt;
