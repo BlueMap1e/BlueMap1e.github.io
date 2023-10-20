@@ -7,9 +7,9 @@
     <category term="Circumvention" />
     <category term="Network" />
     <category term="Linux" />
-    <category term="Web Front-End" />
     <category term="Hexo" />
     <category term="Algorithm" />
+    <category term="Web Front-End" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/19/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%EF%BC%88DFS%EF%BC%89/</id>
         <title>算法学习——深度优先搜索（DFS）</title>
@@ -34,11 +34,7 @@
 &lt;h4 id=&#34;缺点&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#缺点&#34;&gt;#&lt;/a&gt; 缺点&lt;/h4&gt;
 &lt;pre&gt;&lt;code&gt;- 面对大规模问题时容易造成深层递归，甚至造成栈溢出
 &lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;dfs的迭代实现&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#dfs的迭代实现&#34;&gt;#&lt;/a&gt; DFS 的迭代实现&lt;/h2&gt;
-&lt;h3 id=&#34;问题示例-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#问题示例-2&#34;&gt;#&lt;/a&gt; 问题示例&lt;/h3&gt;
-&lt;p&gt;​	仍然是刚才的问题：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cubHVvZ3UuY29tLmNuL3Byb2JsZW0vUDE2MDU=&#34;&gt;P1605 迷宫 - 洛谷&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;​	&lt;img data-src=&#34;/2023/10/19/%E7%AE%97%E6%B3%95%E5%AD%A6%E4%B9%A0%E2%80%94%E2%80%94%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2%EF%BC%88DFS%EF%BC%89/P1605.png&#34; class title=&#34;Luogu-P1605&#34;&gt;&lt;/p&gt;
-&lt;p&gt;​	可以尝试通过栈和迭代实现 DFS，通过栈来模拟访问节点的整个过程，而不用实际地进行函数的调用。&lt;/p&gt;
+&lt;p&gt;未完待续&lt;/p&gt;
 </content>
         <category term="Algorithm" />
         <updated>2023-10-19T08:01:00.000Z</updated>
