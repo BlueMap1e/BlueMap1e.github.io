@@ -1,21 +1,27 @@
 <?xml version="1.0"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://BlueMap1e.github.io</id>
-    <title>BlueMap1e Blog • Posts by &#34;linux&#34; tag</title>
-    <link href="https://BlueMap1e.github.io" />
-    <updated>2023-10-21T05:35:09.000Z</updated>
-    <category term="Circumvention" />
-    <category term="Network" />
-    <category term="Linux" />
-    <category term="Hexo" />
-    <category term="Web Front-End" />
-    <category term="Algorithm" />
-    <category term="MineCraft" />
-    <entry>
-        <id>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
-        <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
-        <link rel="alternate" href="https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+<rss version="2.0">
+    <channel>
+        <title>BlueMap1e Blog • Posts by &#34;minecraft&#34; tag</title>
+        <link>https://BlueMap1e.github.io</link>
+        <description>——By BlueMap1e</description>
+        <language>zh-CN</language>
+        <pubDate>Sat, 21 Oct 2023 13:35:09 +0800</pubDate>
+        <lastBuildDate>Sat, 21 Oct 2023 13:35:09 +0800</lastBuildDate>
+        <category>Circumvention</category>
+        <category>Network</category>
+        <category>Linux</category>
+        <category>Hexo</category>
+        <category>Web Front-End</category>
+        <category>Algorithm</category>
+        <category>MineCraft</category>
+        <item>
+            <guid isPermalink="true">https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
+            <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
+            <link>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
+            <category>Linux</category>
+            <category>MineCraft</category>
+            <pubDate>Sat, 21 Oct 2023 13:35:09 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;昨天看到了阿里云的经济型 e 服务器，感觉性价比挺不错的，因此尝试用来搭一台 MineCraft 服务器玩玩，这样用 Curtain 之类的模组挂机很方便。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;vps基本配置信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#vps基本配置信息&#34;&gt;#&lt;/a&gt; VPS 基本配置信息&lt;/h2&gt;
@@ -128,188 +134,7 @@
 &lt;p&gt;个人水平有限，应该还有很多没有讲到的地方，之后如果发现了也会尝试补充完善。&lt;/p&gt;
 &lt;p&gt;本教程比较依赖 XShell / XFTP 工具包，因此操作中出现很多 “偷懒” 的地方。&lt;/p&gt;
 &lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
-</content>
-        <category term="Linux" />
-        <category term="MineCraft" />
-        <updated>2023-10-21T05:35:09.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
-        <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
-        <link rel="alternate" href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
-&lt;p&gt;一个简单的 Shadowsocks-Libev 服务器搭建过程，系统为 Ubuntu，因为自带了 Snap 应用商店等多种工具包，很方便。&lt;/p&gt;
-&lt;p&gt;当然你得提前准备一台 VPS，建议用 Vultr，Digital Ocean 之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。&lt;/p&gt;
-&lt;p&gt;如果你追求稳定，那么建议最好还是不要用 Shadowsocks 协议。&lt;/p&gt;
-&lt;hr&gt;
-&lt;h2 id=&#34;系统更新与软件安装&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#系统更新与软件安装&#34;&gt;#&lt;/a&gt; 系统更新与软件安装&lt;/h2&gt;
-&lt;p&gt;首先例行更新：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt-get&lt;/span&gt; update &lt;span class=&#34;token parameter variable&#34;&gt;-y&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt-get&lt;/span&gt; upgrade &lt;span class=&#34;token parameter variable&#34;&gt;-y&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;然后用 Snap 应用商店安装 Core&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;snap &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt; core&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;Snap 安装 Shadowsocks-Libev&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;snap &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt; shadowsocks-libev &lt;span class=&#34;token parameter variable&#34;&gt;--edge&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;hr&gt;
-&lt;h2 id=&#34;配置文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置文件&#34;&gt;#&lt;/a&gt; 配置文件&lt;/h2&gt;
-&lt;p&gt;用 nano 打开 Shadowsocks 配置文件路径，当然如果你会 vim，那更好&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;nano&lt;/span&gt; /var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;以下是一个示例的配置文件：&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;server&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;::0&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;0.0.0.0&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;server_port&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;16384&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;method&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;aes-128-gcm&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;password&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;IRBa9FdVrSL147CL&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;mode&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;tcp_and_udp&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;fast_open&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token boolean&#34;&gt;true&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;简单介绍一下这个配置文件中可能需要修改的地方：&lt;/p&gt;
-&lt;h3 id=&#34;服务器端口号&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#服务器端口号&#34;&gt;#&lt;/a&gt; 服务器端口号&lt;/h3&gt;
-&lt;p&gt;这是 Shadowsocks 服务端的监听端口号，你可以随便换一个你喜欢的端口号，但是换成 80, 443 之类的常用端口也不能提高你的安全性&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;server_port&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token number&#34;&gt;16384&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;对称加密算法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#对称加密算法&#34;&gt;#&lt;/a&gt; 对称加密算法&lt;/h3&gt;
-&lt;p&gt;Shadowsocks 使用多种对称加密算法，这里建议选择 AEAD 加密算法（性能高、抗重放攻击、兼容性好），Shadowsocks 支持的 AEAD 加密算法包括：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;AES-128-GCM&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-192-GCM&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-256-GCM&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Chacha20-IETF-Poly1305&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;XChacha20-IETF-Poly1305&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;2022-BLAKE3-AES-128-GCM&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;2022-BLAKE3-AES-256-GCM&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;2022-BLAKE3-Chacha20-IETF-Poly1305&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;这个选择就看你心情了，记得客户端和服务端的加密算法选择必须是一致的，否则无法成功解密&lt;/p&gt;
-&lt;p&gt;AES-GCM 的话，密钥长度越大理论上安全性就越高（然而实际上 128 位也非常安全），同时对硬件的压力就越大，不过一般而言压力都不算很大&lt;/p&gt;
-&lt;p&gt;Chacha20-IETF-Poly1305 是一种 AEAD 流密码，性能很高，如果你的设备 CPU 不太好可以选，不过一般而言 AES-128-GCM 也足够快&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;method&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;aes-128-gcm&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;当然，如果你很叛逆，你一定要用老式流密码或者不带认证的块密码，那也是完全可以的。只要你的客户端和服务端同时支持，而且你很自信：&lt;/p&gt;
-&lt;ol&gt;
-&lt;li&gt;
-&lt;p&gt;RC4&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;RC4-MD5&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-128-CTR&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;xxxxxxxxxx hexo dbash&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-256-CTR&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-128-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-192-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-256-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-128-CFB8&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-192-CFB8&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-256-CFB8&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-128-OFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-192-OFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;AES-256-OFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;BF-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;CAST5-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;DES-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;IDEA-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;RC2-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;SEED-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Camellia-128-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Camellia-192-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Camellia-256-CFB&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Camellia-128-CFB8&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Camellia-192-CFB8&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Camellia-256-CFB8&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Salsa20&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Chacha20&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;Chacha20-IETF&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;XChacha20&lt;/p&gt;
-&lt;p&gt;那么举个例子，你就可以这样设置，当然很多客户端和服务端已经弃用流密码了，不保证这些加密算法都还能兼容：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token string&#34;&gt;&#34;method&#34;&lt;/span&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;rc4-md5&#34;&lt;/span&gt;,&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;如果你用这些老加密算法设置失败了，服务端会自动把加密算法设置为 Chacha20-IETF-Poly1305。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;h3 id=&#34;预共享密钥psk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#预共享密钥psk&#34;&gt;#&lt;/a&gt; 预共享密钥（PSK）&lt;/h3&gt;
-&lt;p&gt;客户端与服务端之间共享的一个密钥字符串，Shadowsocks 安全性的基石。客户端与服务器的 PSK 必须是一致的。&lt;/p&gt;
-&lt;p&gt;虽然说你输入的这个密钥并不会真的直接被加密算法使用，但是还是建议使用 12 字节以上的，具有一定随机性的 PSK。&lt;/p&gt;
-&lt;p&gt;这并不是说 AES-GCM 或者 Chacha20 不可靠，而是 Shadowsocks 长期依赖一个 PSK 进行通信。以下是一个例子：&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;password&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;xMZpoL46GhfrJgEP&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;传输层协议&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#传输层协议&#34;&gt;#&lt;/a&gt; 传输层协议&lt;/h3&gt;
-&lt;p&gt;使用的传输层协议，看你自己的需求来设置&lt;/p&gt;
-&lt;p&gt;TCP + UDP：&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;mode&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;tcp_and_udp&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;TCP：&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;mode&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token string&#34;&gt;&#34;tcp_only&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;tcp-fast-open&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#tcp-fast-open&#34;&gt;#&lt;/a&gt; TCP Fast Open&lt;/h3&gt;
-&lt;p&gt;打开没问题，因为目前 Shadowsocks 的密码学安全性似乎没什么问题：&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;fast_open&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token boolean&#34;&gt;true&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;当然你要是就是不想开，那你就把它关了：&lt;/p&gt;
-&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;fast_open&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;token boolean&#34;&gt;false&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;至此，Shadowsocks 服务端配置文件基本参数设置完毕，nano 可以 Ctrl+X 退出，保存 Y，并回车。&lt;/p&gt;
-&lt;h2 id=&#34;运行shadowsocks服务与防火墙&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#运行shadowsocks服务与防火墙&#34;&gt;#&lt;/a&gt; 运行 Shadowsocks 服务与防火墙&lt;/h2&gt;
-&lt;h3 id=&#34;运行shadowsocks服务&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#运行shadowsocks服务&#34;&gt;#&lt;/a&gt; 运行 Shadowsocks 服务&lt;/h3&gt;
-&lt;p&gt;使用以下命令来开启服务端的 Shadowsocks-Libev 服务：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl start snap.shadowsocks-libev.ss-server-daemon.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;可以使用这个命令来查看你的 Shadowsocks-Libev 服务器运行状态：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl status snap.shadowsocks-libev.ss-server-daemon.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;如果正常运行，那么你会看到绿色的提示信息。记得观察一下加密算法，如果你的加密算法设置不被兼容或者拼写出错，那么服务器会将其自动修改为 Chacha20-IETF-Poly1305，客户端连接的时候别弄错了。&lt;/p&gt;
-&lt;p&gt;可以设置一下 Shadowsocks 的开机自启动，以免一个 reboot 或者 IDC 维护了一下就掉线了：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;systemctl &lt;span class=&#34;token builtin class-name&#34;&gt;enable&lt;/span&gt; snap.shadowsocks-libev.ss-server-daemon.service&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;配置防火墙&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置防火墙&#34;&gt;#&lt;/a&gt; 配置防火墙&lt;/h3&gt;
-&lt;p&gt;很简单，首先，如果你是通过 SSH 连接的 VPS，给防火墙添加这条规则，以免开了防火墙以后掉线：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;ufw allow ssh
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;然后让防火墙开放 Shadowsocks 的监听端口，注意，把此处的端口号改成自己的端口号：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw allow &lt;span class=&#34;token number&#34;&gt;16384&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;最后开启防火墙，并允许开机自启动，SSH 用户需要确认一下：&lt;/p&gt;
-&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw &lt;span class=&#34;token builtin class-name&#34;&gt;enable&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;最后，在客户端配置相同的加密算法，预共享密钥，端口号，并填上服务器的 IPv4 或 IPv6 地址，即可完成连接，使用 Shadowsocks 代理服务器。&lt;/p&gt;
-&lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
-</content>
-        <category term="Circumvention" />
-        <category term="Network" />
-        <category term="Linux" />
-        <updated>2023-10-18T11:22:39.000Z</updated>
-    </entry>
-</feed>
+ ]]></description>
+        </item>
+    </channel>
+</rss>

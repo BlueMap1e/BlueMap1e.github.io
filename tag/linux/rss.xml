@@ -5,14 +5,137 @@
         <link>https://BlueMap1e.github.io</link>
         <description>——By BlueMap1e</description>
         <language>zh-CN</language>
-        <pubDate>Wed, 18 Oct 2023 19:22:39 +0800</pubDate>
-        <lastBuildDate>Wed, 18 Oct 2023 19:22:39 +0800</lastBuildDate>
+        <pubDate>Sat, 21 Oct 2023 13:35:09 +0800</pubDate>
+        <lastBuildDate>Sat, 21 Oct 2023 13:35:09 +0800</lastBuildDate>
         <category>Circumvention</category>
         <category>Network</category>
-        <category>Web Front-End</category>
-        <category>Hexo</category>
         <category>Linux</category>
+        <category>Hexo</category>
+        <category>Web Front-End</category>
         <category>Algorithm</category>
+        <category>MineCraft</category>
+        <item>
+            <guid isPermalink="true">https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
+            <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
+            <link>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
+            <category>Linux</category>
+            <category>MineCraft</category>
+            <pubDate>Sat, 21 Oct 2023 13:35:09 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;昨天看到了阿里云的经济型 e 服务器，感觉性价比挺不错的，因此尝试用来搭一台 MineCraft 服务器玩玩，这样用 Curtain 之类的模组挂机很方便。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;vps基本配置信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#vps基本配置信息&#34;&gt;#&lt;/a&gt; VPS 基本配置信息&lt;/h2&gt;
+&lt;p&gt;阿里云经济型 e 服务器购买地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuYWxpeXVuLmNvbS9kYWlseS1hY3QvZWNzL2Vjcy9kZXRhaWwvZQ==&#34;&gt;云服务器 ECS e 实例 - 阿里云 (aliyun.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CPU&lt;/strong&gt;: 2vCPU&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;RAM&lt;/strong&gt;: 8GB&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;SSD&lt;/strong&gt;: 20GB&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Bandwidth&lt;/strong&gt;: 5Mbps&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OS&lt;/strong&gt;: Debian 12.2 x64&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;minecraft配置信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#minecraft配置信息&#34;&gt;#&lt;/a&gt; MineCraft 配置信息&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Version&lt;/strong&gt;: 1.18.2 Java Edition&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Mod API&lt;/strong&gt;: Forge 40.2.10&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;JDK&lt;/strong&gt;：OpenJDK 17&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;搭建使用工具&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建使用工具&#34;&gt;#&lt;/a&gt; 搭建使用工具&lt;/h2&gt;
+&lt;p&gt;XShell Community + XFTP Community	免费下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cubmV0c2FyYW5nLmNvbS9lbi94c2hlbGwv&#34;&gt;XSHELL - The Industry&#39;s Most Powerful SSH Client (netsarang.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;当然其他工具包应该也是完全可以的，MobaXterm 之类的，不过如果只用 PuTTY 之类的简单工具可能在模组传输过程中有点麻烦，这方面个人没研究过。&lt;/p&gt;
+&lt;p&gt;或许可以试试 FTP 之类的工具，实在不行就用 curl 或者 wget 慢慢下（？）&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;搭建过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建过程&#34;&gt;#&lt;/a&gt; 搭建过程&lt;/h2&gt;
+&lt;h3 id=&#34;安装openjdk&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装openjdk&#34;&gt;#&lt;/a&gt; 安装 OpenJDK&lt;/h3&gt;
+&lt;p&gt;首先通过密钥对或用户名 + 密码的方式，使用 XShell 登录远程服务器。&lt;/p&gt;
+&lt;p&gt;首先是例行更新一下&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt-get&lt;/span&gt; update &lt;span class=&#34;token parameter variable&#34;&gt;-y&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt-get&lt;/span&gt; upgrade &lt;span class=&#34;token parameter variable&#34;&gt;-y&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;这里以我决定搭建的 MineCraft 1.18.2 JE 为例，它需要 Java 16+，那么我安装 Java 17。&lt;/p&gt;
+&lt;p&gt;（PS：Java 版本通常而言越高越好，但这并非绝对，例如 1.12.2 及以下的一些版本就只能通过 Java 8 运行，这里需要根据自己的需求来修改）&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt; openjdk-17-jdk&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h3 id=&#34;forge服务端部署&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#forge服务端部署&#34;&gt;#&lt;/a&gt; Forge 服务端部署&lt;/h3&gt;
+&lt;h4 id=&#34;获取forge下载链接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#获取forge下载链接&#34;&gt;#&lt;/a&gt; 获取 Forge 下载链接&lt;/h4&gt;
+&lt;p&gt;打开 Forge 的官方网站 &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9maWxlcy5taW5lY3JhZnRmb3JnZS5uZXQvbmV0L21pbmVjcmFmdGZvcmdlL2ZvcmdlLw==&#34;&gt;Downloads for Minecraft Forge&lt;/span&gt;，找到自己对应游戏版本的 Forge。&lt;/p&gt;
+&lt;p&gt;这里以 1.18.2 Forge 40.2.10 为例：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Forge-Web-Download.png&#34; class title=&#34;Forge-Web-Download&#34;&gt;&lt;/p&gt;
+&lt;p&gt;右键 Installer，点击复制链接，复制到剪贴板，此时你会得到这样的一条链接：&lt;/p&gt;
+&lt;figure class=&#34;highlight css&#34;&gt;&lt;figcaption data-lang=&#34;CSS&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;https&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;//adfoc.us/serve/sitelinks/?id=271228&amp;amp;url=&lt;span class=&#34;token property&#34;&gt;https&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;//maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.2.10/forge-1.18.2-40.2.10-installer.jar&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;此时，你需要把第二个&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly94bi0tOWlxdTRnY2dqNmM5NTNiNTZ6aHYyYg==&#34;&gt; https:// 之前的部分去掉&lt;/span&gt;，得到这样的一条链接：&lt;/p&gt;
+&lt;figure class=&#34;highlight css&#34;&gt;&lt;figcaption data-lang=&#34;CSS&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;https&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt;//maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.2.10/forge-1.18.2-40.2.10-installer.jar&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;这就是需要用到的链接&lt;/p&gt;
+&lt;h4 id=&#34;安装forge服务端&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装forge服务端&#34;&gt;#&lt;/a&gt; 安装 Forge 服务端&lt;/h4&gt;
+&lt;p&gt;此时需要写一条下载 Forge 的命令，注意，这条命令根据自己刚才得到的链接来修改：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;wget&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-O&lt;/span&gt; installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.2.10/forge-1.18.2-40.2.10-installer.jar&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;在服务端根目录下创建一个 MineCraft Forge 自己的文件夹吧，这样方便管理，不容易混淆。&lt;/p&gt;
+&lt;p&gt;当然，你完全可以自己修改到一个想要安装的位置：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;cd&lt;/span&gt; /&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; Forge&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token builtin class-name&#34;&gt;cd&lt;/span&gt; / Forge&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;下载完成之后，就可以用 Java 运行 Forge 安装包来安装 MineCraft Forge 服务端了：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;java&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-jar&lt;/span&gt; installer.jar &lt;span class=&#34;token parameter variable&#34;&gt;--installServer&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;安装模组&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装模组&#34;&gt;#&lt;/a&gt; 安装模组&lt;/h4&gt;
+&lt;p&gt;新建一个 mods 文件夹，用来存放模组：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;mkdir&lt;/span&gt; mods&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;此时，如果有 XFTP 这样的文件传输工具，你可以直接连接到 VPS，然后直接用 GUI 操作，把本地已经准备好的模组文件都复制到服务端的 / Forge/mods 文件夹当中就可以了。&lt;/p&gt;
+&lt;p&gt;（注意：最好查一下 &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cubWNtb2QuY24v&#34;&gt;MC 百科&lt;/span&gt; 或 &lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY3Vyc2Vmb3JnZS5jb20vbWluZWNyYWZ0&#34;&gt;CurseForge&lt;/span&gt; 来确认一部分模组是否有必要在服务端安装。一些 “服务端可选” 的模组安装了也问题不大，但是一些 “服务端无效” 的模组请尽量删除（例如：Rubidium，Oculus 等），否则可能会造成服务器启动失败。）&lt;/p&gt;
+&lt;h4 id=&#34;首次启动&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#首次启动&#34;&gt;#&lt;/a&gt; 首次启动&lt;/h4&gt;
+&lt;h5 id=&#34;尝试运行服务端&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#尝试运行服务端&#34;&gt;#&lt;/a&gt; 尝试运行服务端&lt;/h5&gt;
+&lt;p&gt;Forge 1.17 + 自带了这样的一个一键脚本，可以运行 MineCraft 服务端，你只需要启用一键脚本就可以了：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/Forge/run.sh nogui&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;Forge 之前版本需要 Java 设置一些参数来启动，这里以 MineCraft 1.12.2 JE Forge 23.5.2859 为例，之后的启动方法同理：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;java&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-jar&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-Xmx4096M&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-Xms2048M&lt;/span&gt; forge-1.12.2-14.23.5.2859.jar nogui&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;（PS：如果你有 Xmanager，那么可以去掉 &amp;quot;nogui&amp;quot;，因为 XShell 会自动调用 Xmanager 处理 GUI 的交互部分）&lt;/p&gt;
+&lt;h5 id=&#34;同意用户协议&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#同意用户协议&#34;&gt;#&lt;/a&gt; 同意用户协议&lt;/h5&gt;
+&lt;p&gt;首次启动会失败，然后创建一个 eula.txt 文件，这是用户协议，我们必须同意协议才能进行游戏。&lt;/p&gt;
+&lt;p&gt;我们可以用各种文本编辑器来修改它，nano、vim 都可以。这里以最简单的 nano 为例：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;nano&lt;/span&gt; eula.txt&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;此时就进入了 eula.txt 的编辑界面：&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/eula-txt.png&#34; class title=&#34;eula.txt&#34;&gt;&lt;/p&gt;
+&lt;p&gt;通过上下左右键可以操作光标，只要把 false 改成 true 就可以了，代表同意用户协议。&lt;/p&gt;
+&lt;p&gt;然后 Ctrl+X 退出，Y 保存修改，回车，这样就保存了更改。&lt;/p&gt;
+&lt;h4 id=&#34;第二次启动&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#第二次启动&#34;&gt;#&lt;/a&gt; 第二次启动&lt;/h4&gt;
+&lt;h5 id=&#34;尝试运行服务端-2&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#尝试运行服务端-2&#34;&gt;#&lt;/a&gt; 尝试运行服务端&lt;/h5&gt;
+&lt;p&gt;现在可以第二次运行 MineCraft 服务器了，这会生成一个世界，加载模组资源，并初始化所有配置文件：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/Forge/run.sh nogui&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;如果启动失败，那么基本上有两种原因。如果显示 killed，那么是服务器资源不足，如果显示大量的报错信息，那么基本可以确定是模组冲突。&lt;/p&gt;
+&lt;h5 id=&#34;资源不足&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#资源不足&#34;&gt;#&lt;/a&gt; 资源不足&lt;/h5&gt;
+&lt;h6 id=&#34;117&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#117&#34;&gt;#&lt;/a&gt; 1.17+&lt;/h6&gt;
+&lt;p&gt;可以尝试调整 user_jvm_args.txt 文件中的配置，把内存拉低一些，但是通常而言最好不要低于 1G。&lt;/p&gt;
+&lt;h6 id=&#34;117-&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#117-&#34;&gt;#&lt;/a&gt; 1.17-&lt;/h6&gt;
+&lt;p&gt;可以尝试调整运行参数，把运行参数降下来。因为一般而言 killed 都是内存不足导致的。&lt;/p&gt;
+&lt;h5 id=&#34;报错信息&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#报错信息&#34;&gt;#&lt;/a&gt; 报错信息&lt;/h5&gt;
+&lt;p&gt;阅读红色的报错日志，看看究竟是什么模组出问题了，是什么模组之间发生冲突了。&lt;/p&gt;
+&lt;p&gt;然后进入 mods 文件夹，通过 rm 指令删除对应的模组即可，有 XFTP 的可以通过图形化界面来操作，更容易。&lt;/p&gt;
+&lt;h5 id=&#34;退出-修改服务端配置文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#退出-修改服务端配置文件&#34;&gt;#&lt;/a&gt; 退出 修改服务端配置文件&lt;/h5&gt;
+&lt;p&gt;世界生成完毕后，个人的建议是先退出：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/stop&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;此时你可以检查一下目前的 / Forge 文件夹，发现创建了很多文件：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;ls&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;可以尝试修改一下服务端配置文件，定制化你的游戏体验，这一部分不详细赘述：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;nano&lt;/span&gt; server.properties&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h4 id=&#34;正式启动&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#正式启动&#34;&gt;#&lt;/a&gt; 正式启动&lt;/h4&gt;
+&lt;h5 id=&#34;使用screen分屏功能-在后台运行minecraft&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#使用screen分屏功能-在后台运行minecraft&#34;&gt;#&lt;/a&gt; 使用 Screen 分屏功能 在后台运行 MineCraft&lt;/h5&gt;
+&lt;p&gt;个人推荐使用 screen 分屏功能来简单地管理 MineCraft 服务器，这样只需要后台挂一个窗口就行，期间服务器可以做别的事情。&lt;/p&gt;
+&lt;p&gt;安装 screen：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;screen&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;使用 screen 进行分屏操作（示例，分屏名称完全可以自选）：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;screen&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-S&lt;/span&gt; Forge&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;运行 MineCraft 服务端：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/Forge/run.sh nogui&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;退出分屏：&lt;/p&gt;
+&lt;p&gt;Ctrl + A + D&lt;/p&gt;
+&lt;h5 id=&#34;管理之前的分屏&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#管理之前的分屏&#34;&gt;#&lt;/a&gt; 管理之前的分屏&lt;/h5&gt;
+&lt;p&gt;查看现有分屏：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;screen&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-ls&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;恢复上一次的分屏会话：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;screen&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-r&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;恢复特定的分屏会话（示例，选择你自己想要进入的那个分屏）：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;screen&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-r&lt;/span&gt; Forge&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;至此，MineCraft Forge 服务端搭建过程已经完成。&lt;/p&gt;
+&lt;h2 id=&#34;配置防火墙规则&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置防火墙规则&#34;&gt;#&lt;/a&gt; 配置防火墙规则&lt;/h2&gt;
+&lt;h3 id=&#34;云服务供应商控制台&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#云服务供应商控制台&#34;&gt;#&lt;/a&gt; 云服务供应商控制台&lt;/h3&gt;
+&lt;p&gt;个人使用的服务器为阿里云，这类云服务厂商提供单独的安全组 / 防火墙策略。需要在控制面板上找到安全组，手动添加一条 TCP 规则。&lt;/p&gt;
+&lt;p&gt;端口默认是 25565，如果你修改过 server.properties 文件，那么请根据你自己设置的端口号开放端口访问权限。&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Security-Group.png&#34; class title=&#34;Security-Group-Example&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;ufw等内置防火墙&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#ufw等内置防火墙&#34;&gt;#&lt;/a&gt; UFW 等内置防火墙&lt;/h3&gt;
+&lt;p&gt;如果你的服务器没有控制台的防火墙规则，你又不希望把所有端口全部开放，那么可以尝试使用 ufw 这样的简单防火墙工具。&lt;/p&gt;
+&lt;p&gt;首先检查一下 ufw 是否安装好了：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;apt&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;install&lt;/span&gt; ufw&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;然后开放 ufw 的几个关键端口：&lt;/p&gt;
+&lt;p&gt;（PS：请一定要确认 SSH 端口是不是默认的 22，有些云服务供应商不是的，别一个防火墙把自己的 SSH 连接给掐断了）&lt;/p&gt;
+&lt;p&gt;（PS：这里的 25565 端口也是 MineCraft 默认的服务器端口，如果改过 server.properties 文件，还是要根据自己的设置来调整）&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw allow &lt;span class=&#34;token function&#34;&gt;ssh&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw allow &lt;span class=&#34;token number&#34;&gt;25565&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;启用 ufw 防火墙：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw &lt;span class=&#34;token builtin class-name&#34;&gt;enable&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;简单检查一下防火墙的运行状态：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;ufw status&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;客户端连接minecraft服务器进行游玩&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#客户端连接minecraft服务器进行游玩&#34;&gt;#&lt;/a&gt; 客户端连接 MineCraft 服务器进行游玩&lt;/h2&gt;
+&lt;h3 id=&#34;关于模组兼容&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#关于模组兼容&#34;&gt;#&lt;/a&gt; 关于模组兼容&lt;/h3&gt;
+&lt;p&gt;根据个人经验，客户端模组和服务端模组是这样的关系：&lt;/p&gt;
+&lt;p&gt;如果某个模组要求客户端需装，服务端需装，那么客户端和服务端必须同时安装这个模组。（此类模组多为内容模组，例如世界生成、科技、魔法、农业等）&lt;/p&gt;
+&lt;p&gt;如果某个模组要求客户端需装，服务端可选，那么通常而言，客户端安装这个模组即可。（此类模组多为辅助模组，例如操作、面板、管理、地图、优化等）&lt;/p&gt;
+&lt;p&gt;如果某个模组要求客户端需装，服务端无效，那么最好不要在服务端安装这个模组。（此类模组多为深度优化模组，例如 Rubidium, Sodium, Oculus, Iris）&lt;/p&gt;
+&lt;h3 id=&#34;客户端连接方式&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#客户端连接方式&#34;&gt;#&lt;/a&gt; 客户端连接方式&lt;/h3&gt;
+&lt;p&gt;打开游戏，多人游戏，添加服务器。&lt;/p&gt;
+&lt;p&gt;输入备注，服务器 IP 地址、端口即可。不填端口的话就会尝试连接默认的 25565 端口。&lt;/p&gt;
+&lt;p&gt;提示模组不兼容很正常，这通常是因为客户端和服务端优化模组等差异造成的。此时不要直接放弃，一定要尝试连接一下。如果有一些模组不匹配，通常会收到一些信息，那么你可以在服务器后台或者客户端安装一些模组来补全。大多数情况下，就算模组列表不匹配，还是可以游玩的。&lt;/p&gt;
+&lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
+&lt;p&gt;至此，一台可运行的 MineCraft Forge 服务器已经搭建完成并上线运行。&lt;/p&gt;
+&lt;p&gt;个人水平有限，应该还有很多没有讲到的地方，之后如果发现了也会尝试补充完善。&lt;/p&gt;
+&lt;p&gt;本教程比较依赖 XShell / XFTP 工具包，因此操作中出现很多 “偷懒” 的地方。&lt;/p&gt;
+&lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
@@ -80,7 +203,7 @@
 &lt;p&gt;AES-128-CTR&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;AES-192-CTR&lt;/p&gt;
+&lt;p&gt;xxxxxxxxxx hexo dbash&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;AES-256-CTR&lt;/p&gt;
