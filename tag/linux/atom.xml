@@ -3,14 +3,36 @@
     <id>https://BlueMap1e.github.io</id>
     <title>BlueMap1e Blog • Posts by &#34;linux&#34; tag</title>
     <link href="https://BlueMap1e.github.io" />
-    <updated>2023-10-21T05:35:09.000Z</updated>
+    <updated>2023-10-22T00:17:39.000Z</updated>
+    <category term="Linux" />
+    <category term="Virtual Private Server" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="Linux" />
-    <category term="MineCraft" />
-    <category term="Hexo" />
     <category term="Web Front-End" />
+    <category term="Hexo" />
+    <category term="MineCraft" />
     <category term="Algorithm" />
+    <entry>
+        <id>https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
+        <title>免费领取一台IBM LinuxOne服务器</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;​	最近一直在找低价格的云服务器，没想到 IBM LinuxOne 居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖&lt;/p&gt;
+&lt;h2 id=&#34;注册过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#注册过程&#34;&gt;#&lt;/a&gt; 注册过程&lt;/h2&gt;
+&lt;p&gt;​	很简单，只要打开 IBM LinuxOne 的站点，点注册就行了：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9saW51eG9uZS5jbG91ZC5tYXJpc3QuZWR1LyMvaW5zdGFuY2U=&#34;&gt;LinuxONE Community Cloud (marist.edu)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;​	&lt;img data-src=&#34;/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png&#34; class title=&#34;Register-UI&#34;&gt;&lt;/p&gt;
+&lt;p&gt;​	然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。&lt;/p&gt;
+&lt;p&gt;​	Description of Your Project 乱填就好了，比如说 Web Development, Game Development 等等。&lt;/p&gt;
+&lt;p&gt;​	过几个小时会有一封确认邮件发到邮箱，链接有效期 48 小时，点击即可激活账号。&lt;/p&gt;
+&lt;p&gt;​	激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：&lt;/p&gt;
+&lt;p&gt;​	&lt;strong&gt;CPU&lt;/strong&gt;: 2v CPU&lt;/p&gt;
+&lt;p&gt;​	&lt;strong&gt;RAM&lt;/strong&gt;: 4GB&lt;/p&gt;
+&lt;p&gt;​	&lt;strong&gt;SSD&lt;/strong&gt;: 50GB&lt;/p&gt;
+</content>
+        <category term="Linux" />
+        <category term="Virtual Private Server" />
+        <updated>2023-10-22T00:17:39.000Z</updated>
+    </entry>
     <entry>
         <id>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
         <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
@@ -130,6 +152,7 @@
 &lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
 </content>
         <category term="Linux" />
+        <category term="Virtual Private Server" />
         <category term="MineCraft" />
         <updated>2023-10-21T05:35:09.000Z</updated>
     </entry>
@@ -307,9 +330,10 @@
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
 </content>
+        <category term="Linux" />
+        <category term="Virtual Private Server" />
         <category term="Circumvention" />
         <category term="Network" />
-        <category term="Linux" />
         <updated>2023-10-18T11:22:39.000Z</updated>
     </entry>
 </feed>
