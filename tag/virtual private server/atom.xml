@@ -8,10 +8,10 @@
     <category term="Circumvention" />
     <category term="Network" />
     <category term="Linux" />
-    <category term="Virtual Private Server" />
     <category term="MineCraft" />
-    <category term="Web Front-End" />
+    <category term="Virtual Private Server" />
     <category term="Hexo" />
+    <category term="Web Front-End" />
     <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
@@ -153,8 +153,8 @@
 &lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
 </content>
         <category term="Linux" />
-        <category term="Virtual Private Server" />
         <category term="MineCraft" />
+        <category term="Virtual Private Server" />
         <updated>2023-10-21T05:35:09.000Z</updated>
     </entry>
     <entry>
