@@ -4,14 +4,14 @@
     <title>BlueMap1e Blog • Posts by &#34;virtual private server&#34; tag</title>
     <link href="https://BlueMap1e.github.io" />
     <updated>2023-10-22T00:17:39.000Z</updated>
-    <category term="C++" />
     <category term="Circumvention" />
     <category term="Network" />
+    <category term="C++" />
     <category term="Linux" />
-    <category term="MineCraft" />
     <category term="Virtual Private Server" />
     <category term="Web Front-End" />
     <category term="Hexo" />
+    <category term="MineCraft" />
     <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
@@ -153,8 +153,8 @@
 &lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
 </content>
         <category term="Linux" />
-        <category term="MineCraft" />
         <category term="Virtual Private Server" />
+        <category term="MineCraft" />
         <updated>2023-10-21T05:35:09.000Z</updated>
     </entry>
     <entry>
