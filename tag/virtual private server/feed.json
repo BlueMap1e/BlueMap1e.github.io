@@ -5,6 +5,18 @@
     "home_page_url": "https://BlueMap1e.github.io",
     "items": [
         {
+            "id": "https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/",
+            "url": "https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/",
+            "title": "通过简单的TightVNC连接到Debian 12服务器",
+            "date_published": "2023-10-26T12:12:18.000Z",
+            "content_html": "<h2 id=\"前言\"><a class=\"anchor\" href=\"#前言\">#</a> 前言</h2>\n<p>最近想稍微折腾一下怎么连接服务器的 GUI，查了一些资料，简单操作了一下，记录一下过程。</p>\n<h2 id=\"工具\"><a class=\"anchor\" href=\"#工具\">#</a> 工具</h2>\n<ul>\n<li>VPS 一台</li>\n<li>1Remote (PRemoteM)（下载地址：<span class=\"exturl\" data-url=\"aHR0cHM6Ly9hcHBzLm1pY3Jvc29mdC5jb20vZGV0YWlsLzFyZW1vdGUtKHByZW1vdGVtKS1tc3RzYy1yZW1vdGUtZGVza3RvcC85UE5NTkY5MkpORlA=\">1Remote (PRemoteM) - mstsc remote desktop - Official app in the Microsoft Store</span>）</li>\n</ul>\n<h2 id=\"服务端搭建\"><a class=\"anchor\" href=\"#服务端搭建\">#</a> 服务端搭建</h2>\n<p>首先安装 Xfce4 GUI：</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre><span class=\"token function\">apt</span> <span class=\"token function\">install</span> xfce4 xfce4-goodies</pre></td></tr></table></figure><p>然后安装 TightVNC Server：</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre><span class=\"token function\">apt</span> <span class=\"token function\">install</span> tightvncserver</pre></td></tr></table></figure><p>安装完可以直接开：</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre>vncserver</pre></td></tr></table></figure><p>设置一下登录口令（注意保存），然后让 ufw 放行 5901 端口：</p>\n<p>（PS：这个登录口令至多 8 个字符，如果更长只会被截成 8 个字符）</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre>ufw allow <span class=\"token number\">5901</span></pre></td></tr></table></figure><p>启动 ufw（如果没启动的话）：</p>\n<figure class=\"highlight bash\"><figcaption data-lang=\"bash\"></figcaption><table><tr><td data-num=\"1\"></td><td><pre>ufw <span class=\"token builtin class-name\">enable</span></pre></td></tr></table></figure><h2 id=\"客户端连接\"><a class=\"anchor\" href=\"#客户端连接\">#</a> 客户端连接</h2>\n<p>打开 1Remote (PRemoteM) 客户端，找到右上角加号，点添加，协议选择 VNC：</p>\n<p><img data-src=\"/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/PRemoteM-VNC.png\" class title=\"PRemoteM-VNC\"></p>\n<p>地址为服务器 IP，端口默认 5901，密码请输入在服务端设置的登录口令，点保存。</p>\n<p>勾选这一个 VNC 连接，点击底部菜单栏的连接，即可连接到 VNC 服务端。</p>\n<h2 id=\"结语\"><a class=\"anchor\" href=\"#结语\">#</a> 结语</h2>\n<p>TightVNC 的配置非常简单，配置完成后就可以轻松地连接服务器的 GUI 了。</p>\n<p>不过它有一个问题，那就是明文传输数据，这个明显是完全接受不了的。关于如何给 VNC 套一层 SSH 或者 TLS，目前个人还在研究，如果成功了应该也会写一篇博客记一下。</p>\n",
+            "tags": [
+                "Linux",
+                "Virtual Private Server",
+                "Network"
+            ]
+        },
+        {
             "id": "https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/",
             "url": "https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/",
             "title": "免费领取一台IBM LinuxOne服务器",

@@ -40,6 +40,7 @@
 &lt;p&gt;不过它有一个问题，那就是明文传输数据，这个明显是完全接受不了的。关于如何给 VNC 套一层 SSH 或者 TLS，目前个人还在研究，如果成功了应该也会写一篇博客记一下。&lt;/p&gt;
 </content>
         <category term="Linux" />
+        <category term="Virtual Private Server" />
         <category term="Network" />
         <updated>2023-10-26T12:12:18.000Z</updated>
     </entry>
