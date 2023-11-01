@@ -13,10 +13,10 @@
         <category>VPS</category>
         <category>Web Front-End</category>
         <category>Hexo</category>
-        <category>Algorithm</category>
+        <category>MineCraft</category>
         <category>C++</category>
         <category>Crypto</category>
-        <category>MineCraft</category>
+        <category>Algorithm</category>
         <item>
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>通过简单的TightVNC连接到Debian 12服务器</title>
