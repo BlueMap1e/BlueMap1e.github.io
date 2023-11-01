@@ -6,14 +6,14 @@
     <updated>2023-11-01T02:37:40.000Z</updated>
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="Web Front-End" />
-    <category term="Hexo" />
     <category term="Linux" />
     <category term="VPS" />
-    <category term="MineCraft" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
+    <category term="Algorithm" />
     <category term="C++" />
     <category term="Crypto" />
-    <category term="Algorithm" />
+    <category term="MineCraft" />
     <entry>
         <id>https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%EF%BC%88Code%20Runner%EF%BC%89%20+%20Crypto++%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
         <title>简单的VSCode C++（Code Runner） + Crypto++ 开发环境搭建</title>
