@@ -3,27 +3,59 @@
     <id>https://BlueMap1e.github.io</id>
     <title>BlueMap1e Blog • Posts by &#34;crypto&#34; tag</title>
     <link href="https://BlueMap1e.github.io" />
-    <updated>2023-11-01T02:37:40.000Z</updated>
+    <updated>2023-11-01T09:28:21.000Z</updated>
     <category term="Circumvention" />
     <category term="Network" />
     <category term="Linux" />
     <category term="VPS" />
+    <category term="MineCraft" />
     <category term="Web Front-End" />
     <category term="Hexo" />
-    <category term="MineCraft" />
     <category term="C++" />
     <category term="Crypto" />
     <category term="Algorithm" />
     <entry>
-        <id>https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%EF%BC%88Code%20Runner%EF%BC%89%20+%20Crypto++%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
-        <title>简单的VSCode C++（Code Runner） + Crypto++ 开发环境搭建</title>
-        <link rel="alternate" href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%EF%BC%88Code%20Runner%EF%BC%89%20+%20Crypto++%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+        <id>https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
+        <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;OpenSSL 是一个强大的，使用 C 编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS 支持和 CLI 调用等多种优势。&lt;/p&gt;
+&lt;p&gt;本文主要介绍如何在 Windows 上使用 VSCode C++ (Code Runner) 搭建 OpenSSL 开发环境。&lt;/p&gt;
+&lt;h2 id=&#34;环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#环境&#34;&gt;#&lt;/a&gt; 环境&lt;/h2&gt;
+&lt;p&gt;Visual Studio Code 1.62.3.0&lt;/p&gt;
+&lt;h2 id=&#34;搭建过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建过程&#34;&gt;#&lt;/a&gt; 搭建过程&lt;/h2&gt;
+&lt;h3 id=&#34;安装openssl&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装openssl&#34;&gt;#&lt;/a&gt; 安装 OpenSSL&lt;/h3&gt;
+&lt;p&gt;本文的作者是个懒狗，他决定使用一键安装包：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zbHByb3dlYi5jb20vcHJvZHVjdHMvV2luMzJPcGVuU1NMLmh0bWw=&#34;&gt;Win32/Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;在这个网页上找到自己想要安装的 OpenSSL 版本就可以了，然后下载.exe 或.msi 安装包，默认把选项全部勾选即可。&lt;/p&gt;
+&lt;h3 id=&#34;添加path环境变量&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#添加path环境变量&#34;&gt;#&lt;/a&gt; 添加 Path 环境变量&lt;/h3&gt;
+&lt;p&gt;开始菜单 - 设置 - 系统 - 关于 - 高级系统设置 - 高级 - 环境变量（当然你也可以直接在开始菜单搜索）&lt;/p&gt;
+&lt;p&gt;在系统变量中找到 Path，增加一条，指向你的 OpenSSL 安装目录下的 /bin 目录，例如： &lt;code&gt;D:\OpenSSL-Win64\bin&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;确定，保存。此时打开 CLI（Win+R，cmd），尝试检查一下 OpenSSL 是否安装成功：&lt;/p&gt;
+&lt;figure class=&#34;highlight shell&#34;&gt;&lt;figcaption data-lang=&#34;Bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;openssl version&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;如果安装成功，就会返回一个版本信息，例如：&lt;/p&gt;
+&lt;figure class=&#34;highlight shell&#34;&gt;&lt;figcaption data-lang=&#34;Bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;OpenSSL &lt;span class=&#34;token number&#34;&gt;3.1&lt;/span&gt;.3 &lt;span class=&#34;token number&#34;&gt;19&lt;/span&gt; Sep &lt;span class=&#34;token number&#34;&gt;2023&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;Library: OpenSSL &lt;span class=&#34;token number&#34;&gt;3.1&lt;/span&gt;.3 &lt;span class=&#34;token number&#34;&gt;19&lt;/span&gt; Sep &lt;span class=&#34;token number&#34;&gt;2023&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;配置vscode&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置vscode&#34;&gt;#&lt;/a&gt; 配置 VSCode&lt;/h2&gt;
+&lt;p&gt;打开 VSCode，找到 Code Runner 扩展，修改 settings.json 文件，增加这样的几条规则，并 Ctrl+S 保存，例子如下：&lt;br&gt;
+（可以修改自己想用的 C/C++ 标准，例如 &lt;code&gt;std=c++20&lt;/code&gt;  是 &lt;code&gt;C++ 20&lt;/code&gt; ，那么你可以修改为 &lt;code&gt;std=c++23&lt;/code&gt;  来改成 &lt;code&gt;C++23&lt;/code&gt; ）&lt;br&gt;
+（请把示例中的安装目录修改为自己的 OpenSSL 文件夹下的 \include 目录和 \lib 目录）&lt;/p&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token property&#34;&gt;&#34;code-runner.executorMap&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token property&#34;&gt;&#34;cpp&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;cd $dir &amp;amp;&amp;amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&#34;D:\\OpenSSL-Win64\\include\&#34; -L \&#34;D:\\OpenSSL-Win64\\lib\&#34; -lssl -lcrypto &amp;amp;&amp;amp; $dir$fileNameWithoutExt&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token property&#34;&gt;&#34;c&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;cd $dir &amp;amp;&amp;amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&#34;D:\\OpenSSL-Win64\\include\&#34; -L \&#34;D:\\OpenSSL-Win64\\lib\&#34; -lssl -lcrypto &amp;amp;&amp;amp; $dir$fileNameWithoutExt&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;C_Cpp.default.includePath&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token string&#34;&gt;&#34;D:\\OpenSSL-Win64\\include&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;测试运行&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#测试运行&#34;&gt;#&lt;/a&gt; 测试运行&lt;/h2&gt;
+&lt;p&gt;这里是一个非常简单的测试程序：&lt;/p&gt;
+&lt;figure class=&#34;highlight cpp&#34;&gt;&lt;figcaption data-lang=&#34;C++&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;iostream&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token macro property&#34;&gt;&lt;span class=&#34;token directive-hash&#34;&gt;#&lt;/span&gt;&lt;span class=&#34;token directive keyword&#34;&gt;include&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&amp;lt;openssl/aes.h&gt;&lt;/span&gt;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;using&lt;/span&gt; &lt;span class=&#34;token keyword&#34;&gt;namespace&lt;/span&gt; std&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token keyword&#34;&gt;int&lt;/span&gt; &lt;span class=&#34;token function&#34;&gt;main&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    cout &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;Hello, OpenSSL!&#34;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    cout &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;AES Block Size is: &#34;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; AES_BLOCK_SIZE &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34; Bytes&#34;&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&amp;lt;&lt;/span&gt; endl&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token keyword&#34;&gt;return&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;0&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;如果正常运行，这个程序输出如下：&lt;/p&gt;
+&lt;figure class=&#34;highlight css&#34;&gt;&lt;figcaption data-lang=&#34;CSS&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;Hello&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt; OpenSSL!&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;AES Block Size &lt;span class=&#34;token property&#34;&gt;is&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;:&lt;/span&gt; 16 Bytes&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
+&lt;p&gt;至此，VSCode C++ (Code Runner) + OpenSSL 开发环境配置完毕，可以进行 OpenSSL 的 C/C++ 开发。&lt;/p&gt;
+</content>
+        <category term="C++" />
+        <category term="Crypto" />
+        <updated>2023-11-01T09:28:21.000Z</updated>
+    </entry>
+    <entry>
+        <id>https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20Crypto++%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
+        <title>简单的VSCode C++ (Code Runner) + Crypto++ 开发环境搭建</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20Crypto++%20%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
         <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;在使用 C++ 实现密码学算法时，个人感觉 OpenSSL 虽然功能强大，但调用繁琐，文档不太齐全，使用有些别扭。&lt;/p&gt;
-&lt;p&gt;因此就想配置一个 Crypto++ 的开发环境，个人认为 Crypto++ 更加轻量，采用 OOP 的设计准则，更符合 C++ 的程序设计风格。&lt;/p&gt;
+&lt;p&gt;因此就想配置一个 Crypto++ 的 Windows 开发环境，个人认为 Crypto++ 更加轻量，采用 OOP 的设计准则，更符合 C++ 的程序设计风格。&lt;/p&gt;
 &lt;h2 id=&#34;环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#环境&#34;&gt;#&lt;/a&gt; 环境&lt;/h2&gt;
-&lt;p&gt;Visual Studio&lt;/p&gt;
-&lt;p&gt;Visual Studio Code&lt;/p&gt;
+&lt;p&gt;Visual Studio 2019&lt;/p&gt;
+&lt;p&gt;Visual Studio Code 1.62.3.0&lt;/p&gt;
 &lt;h2 id=&#34;搭建过程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#搭建过程&#34;&gt;#&lt;/a&gt; 搭建过程&lt;/h2&gt;
 &lt;h3 id=&#34;下载crypto&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#下载crypto&#34;&gt;#&lt;/a&gt; 下载 Crypto++&lt;/h3&gt;
 &lt;p&gt;Crypto++ 的开源项目地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3dlaWRhaTExL2NyeXB0b3Bw&#34;&gt;weidai11/cryptopp: free C++ class library of cryptographic schemes (github.com)&lt;/span&gt;&lt;/p&gt;
