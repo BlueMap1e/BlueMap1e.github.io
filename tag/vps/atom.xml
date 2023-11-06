@@ -6,13 +6,13 @@
     <updated>2023-10-26T12:12:18.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Web Front-End" />
-    <category term="Hexo" />
     <category term="Circumvention" />
     <category term="Network" />
     <category term="Linux" />
-    <category term="VPS" />
     <category term="MineCraft" />
+    <category term="VPS" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
     <category term="C++" />
     <category term="Algorithm" />
     <entry>
@@ -187,8 +187,8 @@
 &lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
 </content>
         <category term="Linux" />
-        <category term="VPS" />
         <category term="MineCraft" />
+        <category term="VPS" />
         <updated>2023-10-21T05:35:09.000Z</updated>
     </entry>
     <entry>

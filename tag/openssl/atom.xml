@@ -6,13 +6,13 @@
     <updated>2023-11-05T16:34:17.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Web Front-End" />
-    <category term="Hexo" />
     <category term="Circumvention" />
     <category term="Network" />
     <category term="Linux" />
-    <category term="VPS" />
     <category term="MineCraft" />
+    <category term="VPS" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
     <category term="C++" />
     <category term="Algorithm" />
     <entry>
@@ -79,7 +79,7 @@
 &lt;h4 id=&#34;shake-128&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#shake-128&#34;&gt;#&lt;/a&gt; SHAKE-128&lt;/h4&gt;
 &lt;p&gt;NIST SHA-3 散列算法标准之一，输出可扩展，默认 128 位。&lt;/p&gt;
 &lt;h4 id=&#34;shake-256&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#shake-256&#34;&gt;#&lt;/a&gt; SHAKE-256&lt;/h4&gt;
-&lt;p&gt;NIST SHA-3 散列算法标准之一，删除可扩展，默认 256 位。&lt;/p&gt;
+&lt;p&gt;NIST SHA-3 散列算法标准之一，输出可扩展，默认 256 位。&lt;/p&gt;
 &lt;h4 id=&#34;sm3&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#sm3&#34;&gt;#&lt;/a&gt; SM3&lt;/h4&gt;
 &lt;p&gt;国密算法散列函数，输出 256 位，设计方面强度对标 SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。&lt;/p&gt;
 &lt;h4 id=&#34;whirlpool&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#whirlpool&#34;&gt;#&lt;/a&gt; Whirlpool&lt;/h4&gt;

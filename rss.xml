@@ -9,13 +9,13 @@
         <lastBuildDate>Mon, 06 Nov 2023 00:34:17 +0800</lastBuildDate>
         <category>OpenSSL</category>
         <category>Crypto</category>
-        <category>Web Front-End</category>
-        <category>Hexo</category>
         <category>Circumvention</category>
         <category>Network</category>
         <category>Linux</category>
-        <category>VPS</category>
         <category>MineCraft</category>
+        <category>VPS</category>
+        <category>Web Front-End</category>
+        <category>Hexo</category>
         <category>C++</category>
         <category>Algorithm</category>
         <item>
@@ -85,7 +85,7 @@
 &lt;h4 id=&#34;shake-128&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#shake-128&#34;&gt;#&lt;/a&gt; SHAKE-128&lt;/h4&gt;
 &lt;p&gt;NIST SHA-3 散列算法标准之一，输出可扩展，默认 128 位。&lt;/p&gt;
 &lt;h4 id=&#34;shake-256&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#shake-256&#34;&gt;#&lt;/a&gt; SHAKE-256&lt;/h4&gt;
-&lt;p&gt;NIST SHA-3 散列算法标准之一，删除可扩展，默认 256 位。&lt;/p&gt;
+&lt;p&gt;NIST SHA-3 散列算法标准之一，输出可扩展，默认 256 位。&lt;/p&gt;
 &lt;h4 id=&#34;sm3&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#sm3&#34;&gt;#&lt;/a&gt; SM3&lt;/h4&gt;
 &lt;p&gt;国密算法散列函数，输出 256 位，设计方面强度对标 SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。&lt;/p&gt;
 &lt;h4 id=&#34;whirlpool&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#whirlpool&#34;&gt;#&lt;/a&gt; Whirlpool&lt;/h4&gt;
@@ -183,8 +183,8 @@
             <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
             <link>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
             <category>Linux</category>
-            <category>VPS</category>
             <category>MineCraft</category>
+            <category>VPS</category>
             <pubDate>Sat, 21 Oct 2023 13:35:09 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;昨天看到了阿里云的经济型 e 服务器，感觉性价比挺不错的，因此尝试用来搭一台 MineCraft 服务器玩玩，这样用 Curtain 之类的模组挂机很方便。&lt;/p&gt;
