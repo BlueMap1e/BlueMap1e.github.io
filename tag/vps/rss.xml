@@ -9,11 +9,11 @@
         <lastBuildDate>Thu, 26 Oct 2023 20:12:18 +0800</lastBuildDate>
         <category>OpenSSL</category>
         <category>Crypto</category>
-        <category>Circumvention</category>
-        <category>Network</category>
         <category>Linux</category>
         <category>MineCraft</category>
         <category>VPS</category>
+        <category>Circumvention</category>
+        <category>Network</category>
         <category>Web Front-End</category>
         <category>Hexo</category>
         <category>C++</category>
@@ -22,9 +22,9 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>通过简单的TightVNC连接到Debian 12服务器</title>
             <link>https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Network</category>
             <category>Linux</category>
             <category>VPS</category>
+            <category>Network</category>
             <pubDate>Thu, 26 Oct 2023 20:12:18 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;最近想稍微折腾一下怎么连接服务器的 GUI，查了一些资料，简单操作了一下，记录一下过程。&lt;/p&gt;
@@ -198,9 +198,9 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</guid>
             <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
             <link>https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</link>
+            <category>VPS</category>
             <category>Circumvention</category>
             <category>Network</category>
-            <category>VPS</category>
             <pubDate>Wed, 18 Oct 2023 21:45:53 +0800</pubDate>
             <description><![CDATA[ &lt;h3 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h3&gt;
 &lt;p&gt;ChatGPT 之前封锁了很多大机房的 IP 段，这导致 Vultr、Digital Ocean 等常用的 VPS 供应商机房访问 OpenAI 的服务会被屏蔽。&lt;/p&gt;
@@ -216,10 +216,10 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
             <link>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Circumvention</category>
-            <category>Network</category>
             <category>Linux</category>
             <category>VPS</category>
+            <category>Circumvention</category>
+            <category>Network</category>
             <pubDate>Wed, 18 Oct 2023 19:22:39 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一个简单的 Shadowsocks-Libev 服务器搭建过程，系统为 Ubuntu，因为自带了 Snap 应用商店等多种工具包，很方便。&lt;/p&gt;
