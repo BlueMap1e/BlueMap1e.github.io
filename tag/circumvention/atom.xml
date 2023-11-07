@@ -4,17 +4,17 @@
     <title>BlueMap1e Blog • Posts by &#34;circumvention&#34; tag</title>
     <link href="https://BlueMap1e.github.io" />
     <updated>2023-10-18T14:02:16.000Z</updated>
+    <category term="Circumvention" />
+    <category term="Network" />
+    <category term="Hexo" />
     <category term="OpenSSL" />
     <category term="Crypto" />
     <category term="Linux" />
-    <category term="VPS" />
-    <category term="Circumvention" />
-    <category term="Network" />
-    <category term="Web Front-End" />
-    <category term="Hexo" />
     <category term="MineCraft" />
-    <category term="Algorithm" />
+    <category term="VPS" />
+    <category term="Web Front-End" />
     <category term="C++" />
+    <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</id>
         <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
@@ -44,9 +44,9 @@
 &lt;p&gt;喜欢的可以去给脚本的作者点个 Star：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL1AzVEVSWC93YXJwLnNo&#34;&gt;P3TERX/warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;更详细的文档在作者的文档当中也已经说明。&lt;/p&gt;
 </content>
-        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
+        <category term="VPS" />
         <updated>2023-10-18T13:45:53.000Z</updated>
     </entry>
     <entry>
@@ -223,10 +223,10 @@
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
 </content>
-        <category term="Linux" />
-        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
+        <category term="Linux" />
+        <category term="VPS" />
         <updated>2023-10-18T11:22:39.000Z</updated>
     </entry>
 </feed>
