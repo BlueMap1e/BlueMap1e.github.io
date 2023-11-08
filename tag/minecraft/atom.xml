@@ -6,15 +6,15 @@
     <updated>2023-10-21T05:35:09.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Linux" />
-    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
+    <category term="Linux" />
+    <category term="VPS" />
     <category term="MineCraft" />
-    <category term="Algorithm" />
     <category term="Web Front-End" />
     <category term="Hexo" />
     <category term="C++" />
+    <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
         <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>

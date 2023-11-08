@@ -6,15 +6,15 @@
     <updated>2023-11-08T08:33:53.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Linux" />
-    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
+    <category term="Linux" />
+    <category term="VPS" />
     <category term="MineCraft" />
-    <category term="Algorithm" />
     <category term="Web Front-End" />
     <category term="Hexo" />
     <category term="C++" />
+    <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
         <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
@@ -36,8 +36,8 @@
 &lt;p&gt;一个可变密钥长度的分组加密算法参数通常由三部分组成，&lt;strong&gt;对称加密算法&lt;/strong&gt; - &lt;strong&gt;密钥长度&lt;/strong&gt; - &lt;strong&gt;分组密码工作模式&lt;/strong&gt;。&lt;/p&gt;
 &lt;p&gt;举个例子： &lt;code&gt;AES-128-CTR&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;AES&lt;/strong&gt;：&lt;strong&gt;对称加密算法&lt;/strong&gt; 为 &lt;strong&gt;高级加密标准（Advanced Encryption Standard，AES）&lt;/strong&gt;，它支持 128 位、192 位和 256 位的密钥长度&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;128&lt;/strong&gt;：** 密钥长度 ** 指定为 &lt;strong&gt;128 位&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;CTR&lt;/strong&gt;：** 分组密码工作模式 ** 是 &lt;strong&gt;计数器模式（Counter Mode, CTR）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;128&lt;/strong&gt;：&lt;strong&gt;密钥长度&lt;/strong&gt; 指定为 &lt;strong&gt;128 位&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;CTR&lt;/strong&gt;：&lt;strong&gt;分组密码工作模式&lt;/strong&gt; 是 &lt;strong&gt;计数器模式（Counter Mode, CTR）&lt;/strong&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h4 id=&#34;固定密钥长度-分组加密算法&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#固定密钥长度-分组加密算法&#34;&gt;#&lt;/a&gt; 固定密钥长度 分组加密算法&lt;/h4&gt;
 &lt;p&gt;一个固定密钥长度的分组加密算法参数通常由两部分组成，&lt;strong&gt;对称加密算法&lt;/strong&gt; - &lt;strong&gt;分组密码工作模式&lt;/strong&gt;。&lt;/p&gt;
@@ -63,7 +63,7 @@
 &lt;hr&gt;
 &lt;h4 id=&#34;aria&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#aria&#34;&gt;#&lt;/a&gt; ARIA&lt;/h4&gt;
 &lt;p&gt;ARIA 是韩国密码学研究者基于 AES 修改而来的一种 SPN 密码，原型是 AES。&lt;/p&gt;
-&lt;p&gt;韩国用于取代 AES 而设计的加密算法，具有高度安全性和较好的性能，密文分组 128 位，密钥长度可选 128 位，192 位活 256 位，对应的 SPN 迭代轮次分别是 12 轮、14 轮和 16 轮。&lt;/p&gt;
+&lt;p&gt;韩国用于取代 AES 而设计的加密算法，具有高度安全性和较好的性能，密文分组 128 位，密钥长度可选 128 位，192 位或 256 位，对应的 SPN 迭代轮次分别是 12 轮、14 轮和 16 轮。&lt;/p&gt;
 &lt;hr&gt;
 &lt;h4 id=&#34;bfblowfish&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#bfblowfish&#34;&gt;#&lt;/a&gt; BF（Blowfish）&lt;/h4&gt;
 &lt;p&gt;Blowfish 是&lt;em&gt; Bruce Schneier&lt;/em&gt; 设计的一种 Feistel 密码。&lt;/p&gt;

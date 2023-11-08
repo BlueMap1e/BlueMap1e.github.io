@@ -6,15 +6,15 @@
     <updated>2023-10-26T12:12:18.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Linux" />
-    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
+    <category term="Linux" />
+    <category term="VPS" />
     <category term="MineCraft" />
-    <category term="Algorithm" />
     <category term="Web Front-End" />
     <category term="Hexo" />
     <category term="C++" />
+    <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
         <title>通过简单的TightVNC连接到Debian 12服务器</title>
@@ -42,9 +42,9 @@
 &lt;p&gt;TightVNC 的配置非常简单，配置完成后就可以轻松地连接服务器的 GUI 了。&lt;/p&gt;
 &lt;p&gt;不过它有一个问题，那就是明文传输数据，这个明显是完全接受不了的。关于如何给 VNC 套一层 SSH 或者 TLS，目前个人还在研究，如果成功了应该也会写一篇博客记一下。&lt;/p&gt;
 </content>
+        <category term="Network" />
         <category term="Linux" />
         <category term="VPS" />
-        <category term="Network" />
         <updated>2023-10-26T12:12:18.000Z</updated>
     </entry>
     <entry>
@@ -365,10 +365,10 @@
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
 </content>
-        <category term="Linux" />
-        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
+        <category term="Linux" />
+        <category term="VPS" />
         <updated>2023-10-18T11:22:39.000Z</updated>
     </entry>
 </feed>
