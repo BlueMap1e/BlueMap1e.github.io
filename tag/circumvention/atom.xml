@@ -6,15 +6,15 @@
     <updated>2023-11-09T07:38:23.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Linux" />
-    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="Hexo" />
+    <category term="Linux" />
+    <category term="VPS" />
     <category term="MineCraft" />
+    <category term="Hexo" />
     <category term="Web Front-End" />
-    <category term="C++" />
     <category term="Algorithm" />
+    <category term="C++" />
     <entry>
         <id>https://bluemap1e.github.io/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</id>
         <title>简单的Cloudflare Warp使用方法</title>
@@ -80,9 +80,9 @@
 &lt;p&gt;喜欢的可以去给脚本的作者点个 Star：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL1AzVEVSWC93YXJwLnNo&#34;&gt;P3TERX/warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;更详细的文档在作者的文档当中也已经说明。&lt;/p&gt;
 </content>
-        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
+        <category term="VPS" />
         <updated>2023-10-18T13:45:53.000Z</updated>
     </entry>
     <entry>
@@ -259,10 +259,10 @@
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
 </content>
-        <category term="Linux" />
-        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
+        <category term="Linux" />
+        <category term="VPS" />
         <updated>2023-10-18T11:22:39.000Z</updated>
     </entry>
 </feed>
