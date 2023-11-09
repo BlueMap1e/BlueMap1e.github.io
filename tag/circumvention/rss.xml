@@ -9,12 +9,12 @@
         <lastBuildDate>Thu, 09 Nov 2023 15:38:23 +0800</lastBuildDate>
         <category>OpenSSL</category>
         <category>Crypto</category>
-        <category>Circumvention</category>
-        <category>Network</category>
         <category>Linux</category>
         <category>VPS</category>
-        <category>MineCraft</category>
+        <category>Circumvention</category>
+        <category>Network</category>
         <category>Hexo</category>
+        <category>MineCraft</category>
         <category>Web Front-End</category>
         <category>C++</category>
         <category>Algorithm</category>
@@ -27,7 +27,7 @@
             <pubDate>Thu, 09 Nov 2023 15:38:23 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;Cloudflare Warp 是 Cloudfare 推出的一种免费、高性能的 VPN 服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。&lt;/p&gt;
-&lt;p&gt;本文字教程主要介绍在 Windows 10/11 上使用 Cloudflare Warp 连接到互联网，并通过 Cloudflare Zero Trust 登录客户端，解除 Warp 自身的流量限制。&lt;/p&gt;
+&lt;p&gt;本文字教程主要介绍在个人设备上使用 Cloudflare Warp 连接到互联网，并通过 Cloudflare Zero Trust 登录客户端，解除 Warp 自身的流量限制。&lt;/p&gt;
 &lt;h2 id=&#34;安装与连接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装与连接&#34;&gt;#&lt;/a&gt; 安装与连接&lt;/h2&gt;
 &lt;p&gt;安装非常简单，在 Cloudflare 1.1.1.1 的官方网站下载适合自己设备的客户端即可。&lt;/p&gt;
 &lt;p&gt;下载链接：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly8xLjEuMS4xLw==&#34;&gt;1.1.1.1 — The free app that makes your Internet faster.&lt;/span&gt;&lt;/p&gt;
@@ -40,16 +40,18 @@
 &lt;p&gt;在左侧找到 Zero Trust，注册一个 Zero Trust 账号，团队名称可以自由选择。注册过程略。&lt;/p&gt;
 &lt;p&gt;注册成功后，找到左侧的 &lt;code&gt;My Team&lt;/code&gt;  一栏，找到 &lt;code&gt;Devices&lt;/code&gt;  选项。选择 &lt;code&gt;Connect a Device&lt;/code&gt;  选项。&lt;/p&gt;
 &lt;p&gt;单击 &lt;code&gt;Create an Enrollment&lt;/code&gt; ，输入需要注册的邮箱后缀名，例如 &lt;code&gt;@gmail.com&lt;/code&gt; ，然后点击 &lt;code&gt;save&lt;/code&gt; 。&lt;/p&gt;
-&lt;p&gt;现在打开自己的 Cloudflare Warp 客户端，在右键菜单中找到 &lt;code&gt;偏好设置&lt;/code&gt; ，找到 &lt;code&gt;账户&lt;/code&gt; 一栏，点击 &lt;code&gt;使用Cloudflare Zero Trust登录&lt;/code&gt; 。&lt;/p&gt;
+&lt;h2 id=&#34;zero-trust登录与连接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#zero-trust登录与连接&#34;&gt;#&lt;/a&gt; Zero Trust 登录与连接&lt;/h2&gt;
+&lt;p&gt;打开自己的 Cloudflare Warp 客户端，在右键菜单中找到 &lt;code&gt;偏好设置&lt;/code&gt; ，找到 &lt;code&gt;账户&lt;/code&gt; 一栏，点击 &lt;code&gt;使用Cloudflare Zero Trust登录&lt;/code&gt; 。&lt;/p&gt;
 &lt;p&gt;输入自己之前注册 Zero Trust 使用的团队名称，点击确认，会跳转到团队的一个 Web 验证界面。&lt;/p&gt;
 &lt;p&gt;输入自己使用的邮箱。&lt;/p&gt;
 &lt;p&gt;在自己的邮箱当中找到 Cloudflare 发送的验证码，填写验证码，确认。&lt;/p&gt;
 &lt;p&gt;稍作等待，Cloudflare Warp 客户端的 Zero Trust 将成功登陆。&lt;/p&gt;
-&lt;h2 id=&#34;zero-trust登录与连接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#zero-trust登录与连接&#34;&gt;#&lt;/a&gt; Zero Trust 登录与连接&lt;/h2&gt;
 &lt;p&gt;打开 Cloudflare Warp 客户端，现在 Warp 的标志将被替换为 Zero Trust。点击连接按钮，即可尝试连接到 Cloudflare Warp 服务。&lt;/p&gt;
 &lt;p&gt;这一步的成功率很高，通常能够连接成功。并且 1G 的流量限制已经解除。&lt;/p&gt;
 &lt;p&gt;现在可以尝试访问一些网站，例如&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9nb29nbGUuY29t&#34;&gt; Google&lt;/span&gt;。&lt;/p&gt;
 &lt;p&gt;也可以尝试进行网络测速。&lt;/p&gt;
+&lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
+&lt;p&gt;至此，Cloudflare Warp + Zero Trust 的简单使用方法已经介绍完毕。Warp 能够通过 WireGuard 协议保护互联网协议，拥有强大的安全性、高效的协议设计和很高的下行速率（有一个问题是上行速率较低），并通过 1.1.1.1 DNS 解析来提高 DNS 解析的效率，避免 DNS 污染的影响，改善综合上网体验。&lt;/p&gt;
  ]]></description>
         </item>
         <item>
@@ -72,9 +74,9 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</guid>
             <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
             <link>https://bluemap1e.github.io/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</link>
+            <category>VPS</category>
             <category>Circumvention</category>
             <category>Network</category>
-            <category>VPS</category>
             <pubDate>Wed, 18 Oct 2023 21:45:53 +0800</pubDate>
             <description><![CDATA[ &lt;h3 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h3&gt;
 &lt;p&gt;ChatGPT 之前封锁了很多大机房的 IP 段，这导致 Vultr、Digital Ocean 等常用的 VPS 供应商机房访问 OpenAI 的服务会被屏蔽。&lt;/p&gt;
@@ -90,10 +92,10 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
             <link>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Circumvention</category>
-            <category>Network</category>
             <category>Linux</category>
             <category>VPS</category>
+            <category>Circumvention</category>
+            <category>Network</category>
             <pubDate>Wed, 18 Oct 2023 19:22:39 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一个简单的 Shadowsocks-Libev 服务器搭建过程，系统为 Ubuntu，因为自带了 Snap 应用商店等多种工具包，很方便。&lt;/p&gt;
