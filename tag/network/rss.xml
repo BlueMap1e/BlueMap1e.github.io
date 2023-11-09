@@ -5,8 +5,8 @@
         <link>https://BlueMap1e.github.io</link>
         <description>——By BlueMap1e</description>
         <language>zh-CN</language>
-        <pubDate>Thu, 26 Oct 2023 20:12:18 +0800</pubDate>
-        <lastBuildDate>Thu, 26 Oct 2023 20:12:18 +0800</lastBuildDate>
+        <pubDate>Thu, 09 Nov 2023 15:38:23 +0800</pubDate>
+        <lastBuildDate>Thu, 09 Nov 2023 15:38:23 +0800</lastBuildDate>
         <category>OpenSSL</category>
         <category>Crypto</category>
         <category>Circumvention</category>
@@ -14,10 +14,44 @@
         <category>Linux</category>
         <category>VPS</category>
         <category>MineCraft</category>
-        <category>Web Front-End</category>
         <category>Hexo</category>
+        <category>Web Front-End</category>
         <category>C++</category>
         <category>Algorithm</category>
+        <item>
+            <guid isPermalink="true">https://bluemap1e.github.io/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+            <title>简单的Cloudflare Warp使用方法</title>
+            <link>https://bluemap1e.github.io/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+            <category>Circumvention</category>
+            <category>Network</category>
+            <pubDate>Thu, 09 Nov 2023 15:38:23 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;Cloudflare Warp 是 Cloudfare 推出的一种免费、高性能的 VPN 服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。&lt;/p&gt;
+&lt;p&gt;本文字教程主要介绍在 Windows 10/11 上使用 Cloudflare Warp 连接到互联网，并通过 Cloudflare Zero Trust 登录客户端，解除 Warp 自身的流量限制。&lt;/p&gt;
+&lt;h2 id=&#34;安装与连接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装与连接&#34;&gt;#&lt;/a&gt; 安装与连接&lt;/h2&gt;
+&lt;p&gt;安装非常简单，在 Cloudflare 1.1.1.1 的官方网站下载适合自己设备的客户端即可。&lt;/p&gt;
+&lt;p&gt;下载链接：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly8xLjEuMS4xLw==&#34;&gt;1.1.1.1 — The free app that makes your Internet faster.&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;打开安装包，按照指示完成安装即可。打开 Cloudflare Warp 客户端。&lt;/p&gt;
+&lt;p&gt;点击连接，即可尝试连接。这一步有一定的可能性会失败。如果成功，已经可以访问国际互联网，而且性能通常不错。但是有一定的流量限制。&lt;/p&gt;
+&lt;p&gt;如果是轻度使用者，不在意流量限制，到这一步即可完成。&lt;/p&gt;
+&lt;h2 id=&#34;注册zero-trust&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#注册zero-trust&#34;&gt;#&lt;/a&gt; 注册 Zero Trust&lt;/h2&gt;
+&lt;p&gt;登录 Cloudflare Dashboard：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9kYXNoLmNsb3VkZmxhcmUuY29tLw==&#34;&gt;https://dash.cloudflare.com/&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;当然，如果没有账号可以先注册一个，很容易。注册过程略。&lt;/p&gt;
+&lt;p&gt;在左侧找到 Zero Trust，注册一个 Zero Trust 账号，团队名称可以自由选择。注册过程略。&lt;/p&gt;
+&lt;p&gt;注册成功后，找到左侧的 &lt;code&gt;My Team&lt;/code&gt;  一栏，找到 &lt;code&gt;Devices&lt;/code&gt;  选项。选择 &lt;code&gt;Connect a Device&lt;/code&gt;  选项。&lt;/p&gt;
+&lt;p&gt;单击 &lt;code&gt;Create an Enrollment&lt;/code&gt; ，输入需要注册的邮箱后缀名，例如 &lt;code&gt;@gmail.com&lt;/code&gt; ，然后点击 &lt;code&gt;save&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;现在打开自己的 Cloudflare Warp 客户端，在右键菜单中找到 &lt;code&gt;偏好设置&lt;/code&gt; ，找到 &lt;code&gt;账户&lt;/code&gt; 一栏，点击 &lt;code&gt;使用Cloudflare Zero Trust登录&lt;/code&gt; 。&lt;/p&gt;
+&lt;p&gt;输入自己之前注册 Zero Trust 使用的团队名称，点击确认，会跳转到团队的一个 Web 验证界面。&lt;/p&gt;
+&lt;p&gt;输入自己使用的邮箱。&lt;/p&gt;
+&lt;p&gt;在自己的邮箱当中找到 Cloudflare 发送的验证码，填写验证码，确认。&lt;/p&gt;
+&lt;p&gt;稍作等待，Cloudflare Warp 客户端的 Zero Trust 将成功登陆。&lt;/p&gt;
+&lt;h2 id=&#34;zero-trust登录与连接&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#zero-trust登录与连接&#34;&gt;#&lt;/a&gt; Zero Trust 登录与连接&lt;/h2&gt;
+&lt;p&gt;打开 Cloudflare Warp 客户端，现在 Warp 的标志将被替换为 Zero Trust。点击连接按钮，即可尝试连接到 Cloudflare Warp 服务。&lt;/p&gt;
+&lt;p&gt;这一步的成功率很高，通常能够连接成功。并且 1G 的流量限制已经解除。&lt;/p&gt;
+&lt;p&gt;现在可以尝试访问一些网站，例如&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9nb29nbGUuY29t&#34;&gt; Google&lt;/span&gt;。&lt;/p&gt;
+&lt;p&gt;也可以尝试进行网络测速。&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>通过简单的TightVNC连接到Debian 12服务器</title>
