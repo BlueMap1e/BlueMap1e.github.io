@@ -3,18 +3,61 @@
     <id>https://BlueMap1e.github.io</id>
     <title>BlueMap1e Blog • Posts by &#34;linux&#34; tag</title>
     <link href="https://BlueMap1e.github.io" />
-    <updated>2023-10-26T12:12:18.000Z</updated>
+    <updated>2023-11-11T12:19:25.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
-    <category term="Circumvention" />
-    <category term="Network" />
     <category term="Linux" />
     <category term="VPS" />
+    <category term="Circumvention" />
+    <category term="Network" />
     <category term="MineCraft" />
     <category term="Hexo" />
     <category term="Web Front-End" />
     <category term="Algorithm" />
     <category term="C++" />
+    <entry>
+        <id>https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
+        <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;VMess 是 V2Ray 设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。&lt;/p&gt;
+&lt;p&gt;本文主要简单介绍如何在 Debian 12 上搭建 VMess + TCP 这种最基本的 VMess 服务器。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;安装v2ray&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#安装v2ray&#34;&gt;#&lt;/a&gt; 安装 V2Ray&lt;/h2&gt;
+&lt;p&gt;SSH 连接 VPS 的过程略。&lt;/p&gt;
+&lt;p&gt;建议通过官方安装脚本安装 V2Ray：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;bash&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-L&lt;/span&gt; https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;安装最新的 geoip.dat 和 geosite.dat：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token function&#34;&gt;bash&lt;/span&gt; &lt;span class=&#34;token operator&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;token function&#34;&gt;curl&lt;/span&gt; &lt;span class=&#34;token parameter variable&#34;&gt;-L&lt;/span&gt; https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh&lt;span class=&#34;token punctuation&#34;&gt;)&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;hr&gt;
+&lt;h2 id=&#34;配置v2ray&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置v2ray&#34;&gt;#&lt;/a&gt; 配置 V2Ray&lt;/h2&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;修改配置文件&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#修改配置文件&#34;&gt;#&lt;/a&gt; 修改配置文件&lt;/h3&gt;
+&lt;p&gt;打开 V2Ray 的配置文件，这里以最简单的文本编辑器 nano 为例。当然，如果会用 vim 自然是更好的：&lt;/p&gt;
+&lt;p&gt;（不同云服务器供应商的文件结构可能不同，请注意找一下自己的 V2Ray 配置文件位置，并根据自己的情况修改目录）&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;/usr/local/etc/v2ray/config.json&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;一个非常简单的示例配置文件如下：&lt;/p&gt;
+&lt;figure class=&#34;highlight json&#34;&gt;&lt;figcaption data-lang=&#34;JSON&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;2&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;inbounds&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;3&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;4&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token property&#34;&gt;&#34;port&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token number&#34;&gt;8443&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;5&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token property&#34;&gt;&#34;protocol&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;vmess&#34;&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;6&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token property&#34;&gt;&#34;settings&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;7&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                &lt;span class=&#34;token property&#34;&gt;&#34;clients&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;8&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;9&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                        &lt;span class=&#34;token property&#34;&gt;&#34;id&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;766ff83e-c497-4ea9-8ad8-434be59c6bb9&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;10&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                    &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;11&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;                &lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;12&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;13&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;14&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;span class=&#34;token punctuation&#34;&gt;,&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;15&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token property&#34;&gt;&#34;outbounds&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token punctuation&#34;&gt;[&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;16&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#123;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;17&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;            &lt;span class=&#34;token property&#34;&gt;&#34;protocol&#34;&lt;/span&gt;&lt;span class=&#34;token operator&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;token string&#34;&gt;&#34;freedom&#34;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;18&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;        &lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;19&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;    &lt;span class=&#34;token punctuation&#34;&gt;]&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td data-num=&#34;20&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;&lt;span class=&#34;token punctuation&#34;&gt;&amp;#125;&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;Ctrl+X 退出，Y 保存，回车，完成编辑。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;配置文件简单说明&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#配置文件简单说明&#34;&gt;#&lt;/a&gt; 配置文件简单说明：&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;inbounds&lt;/code&gt; ：入站配置&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;port&lt;/code&gt; ：服务器监听端口，可以自己修改&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;protocol&lt;/code&gt; ：入站协议，此处使用 VMess&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;settings&lt;/code&gt; ：VMess 的设置&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;clients&lt;/code&gt; ：客户端&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;id&lt;/code&gt; ：一个 UUID，用于加密通信和身份验证，可以用 UUID 生成器生成：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cudXVpZGdlbmVyYXRvci5uZXQvdmVyc2lvbjQ=&#34;&gt;Online UUID Generator Tool&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;outbounds&lt;/code&gt; ：出站设置&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;protocol&lt;/code&gt; ：出站协议，此处使用 freedom，即无限制&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;启动并连接到v2ray服务器&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#启动并连接到v2ray服务器&#34;&gt;#&lt;/a&gt; 启动并连接到 V2Ray 服务器&lt;/h2&gt;
+&lt;p&gt;使用 &lt;code&gt;v2ray run&lt;/code&gt;  命令来启动 v2ray 服务端， &lt;code&gt;-c&lt;/code&gt;  参数可用于指定配置文件路径，例如：&lt;/p&gt;
+&lt;figure class=&#34;highlight bash&#34;&gt;&lt;figcaption data-lang=&#34;bash&#34;&gt;&lt;/figcaption&gt;&lt;table&gt;&lt;tr&gt;&lt;td data-num=&#34;1&#34;&gt;&lt;/td&gt;&lt;td&gt;&lt;pre&gt;v2ray run &lt;span class=&#34;token parameter variable&#34;&gt;-c&lt;/span&gt; /usr/local/etc/v2ray/config.json&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;p&gt;在客户端配置指定服务器的 IP 地址、端口、UUID 即可连接，传输层协议默认 TCP，加密方式可以选择 Auto，VMess 的服务端能自适应解密。&lt;/p&gt;
+&lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
+&lt;p&gt;至此，一台简单的 VMess + TCP 的代理服务器搭建完成，可以用于代理上网。&lt;/p&gt;
+</content>
+        <category term="Linux" />
+        <category term="VPS" />
+        <category term="Circumvention" />
+        <category term="Network" />
+        <updated>2023-11-11T12:19:25.000Z</updated>
+    </entry>
     <entry>
         <id>https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
         <title>通过简单的TightVNC连接到Debian 12服务器</title>
@@ -42,9 +85,9 @@
 &lt;p&gt;TightVNC 的配置非常简单，配置完成后就可以轻松地连接服务器的 GUI 了。&lt;/p&gt;
 &lt;p&gt;不过它有一个问题，那就是明文传输数据，这个明显是完全接受不了的。关于如何给 VNC 套一层 SSH 或者 TLS，目前个人还在研究，如果成功了应该也会写一篇博客记一下。&lt;/p&gt;
 </content>
-        <category term="Network" />
         <category term="Linux" />
         <category term="VPS" />
+        <category term="Network" />
         <updated>2023-10-26T12:12:18.000Z</updated>
     </entry>
     <entry>
@@ -365,10 +408,10 @@
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
 </content>
-        <category term="Circumvention" />
-        <category term="Network" />
         <category term="Linux" />
         <category term="VPS" />
+        <category term="Circumvention" />
+        <category term="Network" />
         <updated>2023-10-18T11:22:39.000Z</updated>
     </entry>
 </feed>
