@@ -9,23 +9,23 @@
         <lastBuildDate>Sat, 11 Nov 2023 20:19:25 +0800</lastBuildDate>
         <category>OpenSSL</category>
         <category>Crypto</category>
-        <category>Linux</category>
-        <category>VPS</category>
         <category>Circumvention</category>
         <category>Network</category>
+        <category>VPS</category>
+        <category>Linux</category>
         <category>MineCraft</category>
-        <category>Hexo</category>
         <category>Web Front-End</category>
-        <category>Algorithm</category>
+        <category>Hexo</category>
         <category>C++</category>
+        <category>Algorithm</category>
         <item>
             <guid isPermalink="true">https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
             <link>https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Linux</category>
-            <category>VPS</category>
             <category>Circumvention</category>
             <category>Network</category>
+            <category>VPS</category>
+            <category>Linux</category>
             <pubDate>Sat, 11 Nov 2023 20:19:25 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;VMess 是 V2Ray 设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。&lt;/p&gt;
@@ -65,9 +65,9 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>通过简单的TightVNC连接到Debian 12服务器</title>
             <link>https://bluemap1e.github.io/2023/10/26/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84TightVNC%E8%BF%9E%E6%8E%A5%E5%88%B0Debian-12%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Linux</category>
-            <category>VPS</category>
             <category>Network</category>
+            <category>VPS</category>
+            <category>Linux</category>
             <pubDate>Thu, 26 Oct 2023 20:12:18 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;最近想稍微折腾一下怎么连接服务器的 GUI，查了一些资料，简单操作了一下，记录一下过程。&lt;/p&gt;
@@ -97,8 +97,8 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>免费领取一台IBM LinuxOne服务器</title>
             <link>https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Linux</category>
             <category>VPS</category>
+            <category>Linux</category>
             <pubDate>Sun, 22 Oct 2023 08:17:39 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;​	最近一直在找低价格的云服务器，没想到 IBM LinuxOne 居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖&lt;/p&gt;
@@ -118,8 +118,8 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
             <link>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Linux</category>
             <category>VPS</category>
+            <category>Linux</category>
             <category>MineCraft</category>
             <pubDate>Sat, 21 Oct 2023 13:35:09 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
@@ -241,10 +241,10 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</guid>
             <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
             <link>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</link>
-            <category>Linux</category>
-            <category>VPS</category>
             <category>Circumvention</category>
             <category>Network</category>
+            <category>VPS</category>
+            <category>Linux</category>
             <pubDate>Wed, 18 Oct 2023 19:22:39 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一个简单的 Shadowsocks-Libev 服务器搭建过程，系统为 Ubuntu，因为自带了 Snap 应用商店等多种工具包，很方便。&lt;/p&gt;
