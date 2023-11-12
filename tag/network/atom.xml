@@ -6,10 +6,10 @@
     <updated>2023-11-11T12:19:25.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
+    <category term="Linux" />
+    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="VPS" />
-    <category term="Linux" />
     <category term="MineCraft" />
     <category term="Web Front-End" />
     <category term="Hexo" />
@@ -52,10 +52,10 @@
 &lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
 &lt;p&gt;至此，一台简单的 VMess + TCP 的代理服务器搭建完成，可以用于代理上网。&lt;/p&gt;
 </content>
+        <category term="Linux" />
+        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
-        <category term="VPS" />
-        <category term="Linux" />
         <updated>2023-11-11T12:19:25.000Z</updated>
     </entry>
     <entry>
@@ -121,9 +121,9 @@
 &lt;p&gt;TightVNC 的配置非常简单，配置完成后就可以轻松地连接服务器的 GUI 了。&lt;/p&gt;
 &lt;p&gt;不过它有一个问题，那就是明文传输数据，这个明显是完全接受不了的。关于如何给 VNC 套一层 SSH 或者 TLS，目前个人还在研究，如果成功了应该也会写一篇博客记一下。&lt;/p&gt;
 </content>
-        <category term="Network" />
-        <category term="VPS" />
         <category term="Linux" />
+        <category term="VPS" />
+        <category term="Network" />
         <updated>2023-10-26T12:12:18.000Z</updated>
     </entry>
     <entry>
@@ -155,9 +155,9 @@
 &lt;p&gt;喜欢的可以去给脚本的作者点个 Star：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL1AzVEVSWC93YXJwLnNo&#34;&gt;P3TERX/warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;更详细的文档在作者的文档当中也已经说明。&lt;/p&gt;
 </content>
+        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
-        <category term="VPS" />
         <updated>2023-10-18T13:45:53.000Z</updated>
     </entry>
     <entry>
@@ -334,10 +334,10 @@
 &lt;p&gt;这是一个 Shadowsocks-Windows 的 GUI 客户端的下载地址：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9naXRodWIuY29tL3NoYWRvd3NvY2tzL3NoYWRvd3NvY2tzLXdpbmRvd3MvcmVsZWFzZXM=&#34;&gt;Shadowsocks-Windows(C#)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;当然你也可以使用其它的代理客户端进行连接，如 v2rayN，Sing-Box 等，这里不一一列举。&lt;/p&gt;
 </content>
+        <category term="Linux" />
+        <category term="VPS" />
         <category term="Circumvention" />
         <category term="Network" />
-        <category term="VPS" />
-        <category term="Linux" />
         <updated>2023-10-18T11:22:39.000Z</updated>
     </entry>
 </feed>

@@ -6,10 +6,10 @@
     <updated>2023-10-21T05:35:09.000Z</updated>
     <category term="OpenSSL" />
     <category term="Crypto" />
+    <category term="Linux" />
+    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="VPS" />
-    <category term="Linux" />
     <category term="MineCraft" />
     <category term="Web Front-End" />
     <category term="Hexo" />
@@ -133,8 +133,8 @@
 &lt;p&gt;本教程比较依赖 XShell / XFTP 工具包，因此操作中出现很多 “偷懒” 的地方。&lt;/p&gt;
 &lt;p&gt;希望这篇文章能对想要自建 MineCraft Forge 服务器的用户有所帮助。&lt;/p&gt;
 </content>
-        <category term="VPS" />
         <category term="Linux" />
+        <category term="VPS" />
         <category term="MineCraft" />
         <updated>2023-10-21T05:35:09.000Z</updated>
     </entry>
