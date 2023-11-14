@@ -1,0 +1,21 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "BlueMap1e Blog • All posts by \"qt\" tag",
+    "description": "——By BlueMap1e",
+    "home_page_url": "https://BlueMap1e.github.io",
+    "items": [
+        {
+            "id": "https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/",
+            "url": "https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/",
+            "title": "在Qt Creator中使用OpenSSL",
+            "date_published": "2023-11-13T17:10:07.000Z",
+            "content_html": "<h2 id=\"前言\"><a class=\"anchor\" href=\"#前言\">#</a> 前言</h2>\n<p>最近在折腾 Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在 Qt Creator 中集成 OpenSSL。</p>\n<hr>\n<h2 id=\"环境\"><a class=\"anchor\" href=\"#环境\">#</a> 环境</h2>\n<p><strong>OS</strong>: Windows 10/11</p>\n<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)\t下载链接：<span class=\"exturl\" data-url=\"aHR0cHM6Ly93d3cucXQuaW8vZG93bmxvYWQtcXQtaW5zdGFsbGVyLW9zcz9oc0N0YVRyYWNraW5nPTk5ZDlkZDRmLTU2ODEtNDhkMi1iMDk2LTQ3MDcyNTUxMGQzNCU3QzA3NGRkYWQwLWZkZWYtNGU1My04YWE4LTVlOGE4NzZkNmFiNA==\">Download Qt OSS: Get Qt Online Installer</span></p>\n<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64\t\t 下载链接：<span class=\"exturl\" data-url=\"aHR0cHM6Ly9zbHByb3dlYi5jb20vcHJvZHVjdHMvV2luMzJPcGVuU1NMLmh0bWw=\">Win32/Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</span></p>\n<hr>\n<h2 id=\"qmake\"><a class=\"anchor\" href=\"#qmake\">#</a> QMake</h2>\n<p>QMake 集成 OpenSSL 非常简单。</p>\n<p>新建 Qt 项目时选择 QMake，然后进入项目的 <code>.pro</code>  文件，添加这两行：</p>\n<p>（PS：把示例中的路径修改为你自己的 OpenSSL 安装路径）</p>\n<pre><code class=\"language-qmake\">INCLUDEPATH += D:\\Lib\\OpenSSL-Win64\\include\nLIBS += -L&quot;D:\\Lib\\OpenSSL-Win64\\lib&quot; -lssl -lcrypto\n</code></pre>\n<hr>\n<h2 id=\"cmake\"><a class=\"anchor\" href=\"#cmake\">#</a> CMake</h2>\n<p>未完待续……</p>\n",
+            "tags": [
+                "OpenSSL",
+                "Crypto",
+                "C++",
+                "Qt"
+            ]
+        }
+    ]
+}

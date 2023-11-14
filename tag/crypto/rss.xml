@@ -5,19 +5,49 @@
         <link>https://BlueMap1e.github.io</link>
         <description>——By BlueMap1e</description>
         <language>zh-CN</language>
-        <pubDate>Sat, 11 Nov 2023 21:51:48 +0800</pubDate>
-        <lastBuildDate>Sat, 11 Nov 2023 21:51:48 +0800</lastBuildDate>
+        <pubDate>Tue, 14 Nov 2023 01:10:07 +0800</pubDate>
+        <lastBuildDate>Tue, 14 Nov 2023 01:10:07 +0800</lastBuildDate>
+        <category>Linux</category>
+        <category>VPS</category>
         <category>OpenSSL</category>
         <category>Crypto</category>
-        <category>Linux</category>
-        <category>Circumvention</category>
-        <category>Network</category>
-        <category>VPS</category>
-        <category>MineCraft</category>
         <category>Web Front-End</category>
         <category>Hexo</category>
+        <category>Circumvention</category>
+        <category>Network</category>
+        <category>MineCraft</category>
         <category>C++</category>
+        <category>Qt</category>
         <category>Algorithm</category>
+        <item>
+            <guid isPermalink="true">https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</guid>
+            <title>在Qt Creator中使用OpenSSL</title>
+            <link>https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</link>
+            <category>OpenSSL</category>
+            <category>Crypto</category>
+            <category>C++</category>
+            <category>Qt</category>
+            <pubDate>Tue, 14 Nov 2023 01:10:07 +0800</pubDate>
+            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;最近在折腾 Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在 Qt Creator 中集成 OpenSSL。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#环境&#34;&gt;#&lt;/a&gt; 环境&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;OS&lt;/strong&gt;: Windows 10/11&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;IDE&lt;/strong&gt;: Qt Creator 11.0.3 (Open Source)	下载链接：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cucXQuaW8vZG93bmxvYWQtcXQtaW5zdGFsbGVyLW9zcz9oc0N0YVRyYWNraW5nPTk5ZDlkZDRmLTU2ODEtNDhkMi1iMDk2LTQ3MDcyNTUxMGQzNCU3QzA3NGRkYWQwLWZkZWYtNGU1My04YWE4LTVlOGE4NzZkNmFiNA==&#34;&gt;Download Qt OSS: Get Qt Online Installer&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OpenSSL&lt;/strong&gt;: OpenSSL 3.1.2 Win64		 下载链接：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zbHByb3dlYi5jb20vcHJvZHVjdHMvV2luMzJPcGVuU1NMLmh0bWw=&#34;&gt;Win32/Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)&lt;/span&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;qmake&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#qmake&#34;&gt;#&lt;/a&gt; QMake&lt;/h2&gt;
+&lt;p&gt;QMake 集成 OpenSSL 非常简单。&lt;/p&gt;
+&lt;p&gt;新建 Qt 项目时选择 QMake，然后进入项目的 &lt;code&gt;.pro&lt;/code&gt;  文件，添加这两行：&lt;/p&gt;
+&lt;p&gt;（PS：把示例中的路径修改为你自己的 OpenSSL 安装路径）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-qmake&#34;&gt;INCLUDEPATH += D:\Lib\OpenSSL-Win64\include
+LIBS += -L&amp;quot;D:\Lib\OpenSSL-Win64\lib&amp;quot; -lssl -lcrypto
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;cmake&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cmake&#34;&gt;#&lt;/a&gt; CMake&lt;/h2&gt;
+&lt;p&gt;未完待续……&lt;/p&gt;
+ ]]></description>
+        </item>
         <item>
             <guid isPermalink="true">https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid>
             <title>在Visual Studio 2022中配置Crypto++开发环境</title>
@@ -110,9 +140,9 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</guid>
             <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
             <link>https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</link>
+            <category>Linux</category>
             <category>OpenSSL</category>
             <category>Crypto</category>
-            <category>Linux</category>
             <pubDate>Wed, 08 Nov 2023 16:33:53 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一篇简单的 OpenSSL 对称加密使用经验，偶尔更新。&lt;/p&gt;
@@ -360,9 +390,9 @@
             <guid isPermalink="true">https://bluemap1e.github.io/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</guid>
             <title>OpenSSL CLI 散列函数 个人使用经验</title>
             <link>https://bluemap1e.github.io/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</link>
+            <category>Linux</category>
             <category>OpenSSL</category>
             <category>Crypto</category>
-            <category>Linux</category>
             <pubDate>Mon, 06 Nov 2023 00:34:17 +0800</pubDate>
             <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;一篇简单的 OpenSSL 散列使用经验，偶尔更新。&lt;/p&gt;

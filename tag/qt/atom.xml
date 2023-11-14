@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://BlueMap1e.github.io</id>
+    <title>BlueMap1e Blog • Posts by &#34;qt&#34; tag</title>
+    <link href="https://BlueMap1e.github.io" />
+    <updated>2023-11-13T17:10:07.000Z</updated>
+    <category term="Linux" />
+    <category term="VPS" />
+    <category term="OpenSSL" />
+    <category term="Crypto" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
+    <category term="Circumvention" />
+    <category term="Network" />
+    <category term="MineCraft" />
+    <category term="C++" />
+    <category term="Qt" />
+    <category term="Algorithm" />
+    <entry>
+        <id>https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</id>
+        <title>在Qt Creator中使用OpenSSL</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+&lt;p&gt;最近在折腾 Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在 Qt Creator 中集成 OpenSSL。&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;环境&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#环境&#34;&gt;#&lt;/a&gt; 环境&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;OS&lt;/strong&gt;: Windows 10/11&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;IDE&lt;/strong&gt;: Qt Creator 11.0.3 (Open Source)	下载链接：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cucXQuaW8vZG93bmxvYWQtcXQtaW5zdGFsbGVyLW9zcz9oc0N0YVRyYWNraW5nPTk5ZDlkZDRmLTU2ODEtNDhkMi1iMDk2LTQ3MDcyNTUxMGQzNCU3QzA3NGRkYWQwLWZkZWYtNGU1My04YWE4LTVlOGE4NzZkNmFiNA==&#34;&gt;Download Qt OSS: Get Qt Online Installer&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OpenSSL&lt;/strong&gt;: OpenSSL 3.1.2 Win64		 下载链接：&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly9zbHByb3dlYi5jb20vcHJvZHVjdHMvV2luMzJPcGVuU1NMLmh0bWw=&#34;&gt;Win32/Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)&lt;/span&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;qmake&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#qmake&#34;&gt;#&lt;/a&gt; QMake&lt;/h2&gt;
+&lt;p&gt;QMake 集成 OpenSSL 非常简单。&lt;/p&gt;
+&lt;p&gt;新建 Qt 项目时选择 QMake，然后进入项目的 &lt;code&gt;.pro&lt;/code&gt;  文件，添加这两行：&lt;/p&gt;
+&lt;p&gt;（PS：把示例中的路径修改为你自己的 OpenSSL 安装路径）&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-qmake&#34;&gt;INCLUDEPATH += D:\Lib\OpenSSL-Win64\include
+LIBS += -L&amp;quot;D:\Lib\OpenSSL-Win64\lib&amp;quot; -lssl -lcrypto
+&lt;/code&gt;&lt;/pre&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;cmake&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#cmake&#34;&gt;#&lt;/a&gt; CMake&lt;/h2&gt;
+&lt;p&gt;未完待续……&lt;/p&gt;
+</content>
+        <category term="OpenSSL" />
+        <category term="Crypto" />
+        <category term="C++" />
+        <category term="Qt" />
+        <updated>2023-11-13T17:10:07.000Z</updated>
+    </entry>
+</feed>
