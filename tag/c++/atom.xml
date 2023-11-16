@@ -7,16 +7,16 @@
     <category term="OpenSSL" />
     <category term="Crypto" />
     <category term="Linux" />
+    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="VPS" />
-    <category term="MineCraft" />
-    <category term="Web Front-End" />
-    <category term="Hexo" />
     <category term="C++" />
     <category term="Qt" />
-    <category term="Crypto++" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
+    <category term="MineCraft" />
     <category term="Algorithm" />
+    <category term="Cryptopp" />
     <entry>
         <id>https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</id>
         <title>在Qt Creator中使用OpenSSL</title>
@@ -132,7 +132,7 @@ LIBS += -L&amp;quot;D:\Lib\OpenSSL-Win64\lib&amp;quot; -lssl -lcrypto
 </content>
         <category term="Crypto" />
         <category term="C++" />
-        <category term="Crypto++" />
+        <category term="Cryptopp" />
         <updated>2023-11-11T13:51:48.000Z</updated>
     </entry>
     <entry>

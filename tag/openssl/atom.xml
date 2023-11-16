@@ -7,16 +7,16 @@
     <category term="OpenSSL" />
     <category term="Crypto" />
     <category term="Linux" />
+    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="VPS" />
-    <category term="MineCraft" />
-    <category term="Web Front-End" />
-    <category term="Hexo" />
     <category term="C++" />
     <category term="Qt" />
-    <category term="Crypto++" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
+    <category term="MineCraft" />
     <category term="Algorithm" />
+    <category term="Cryptopp" />
     <entry>
         <id>https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
         <title>OpenSSL CLI 密钥对生成工具 个人使用经验</title>

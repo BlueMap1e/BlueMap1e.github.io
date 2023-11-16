@@ -1,34 +1,27 @@
 <?xml version="1.0"?>
-<rss version="2.0">
-    <channel>
-        <title>BlueMap1e Blog • Posts by &#34;crypto++&#34; tag</title>
-        <link>https://BlueMap1e.github.io</link>
-        <description>——By BlueMap1e</description>
-        <language>zh-CN</language>
-        <pubDate>Sat, 11 Nov 2023 21:51:48 +0800</pubDate>
-        <lastBuildDate>Sat, 11 Nov 2023 21:51:48 +0800</lastBuildDate>
-        <category>OpenSSL</category>
-        <category>Crypto</category>
-        <category>Linux</category>
-        <category>Circumvention</category>
-        <category>Network</category>
-        <category>VPS</category>
-        <category>MineCraft</category>
-        <category>Web Front-End</category>
-        <category>Hexo</category>
-        <category>C++</category>
-        <category>Qt</category>
-        <category>Crypto++</category>
-        <category>Algorithm</category>
-        <item>
-            <guid isPermalink="true">https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</guid>
-            <title>在Visual Studio 2022中配置Crypto++开发环境</title>
-            <link>https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</link>
-            <category>Crypto</category>
-            <category>C++</category>
-            <category>Crypto++</category>
-            <pubDate>Sat, 11 Nov 2023 21:51:48 +0800</pubDate>
-            <description><![CDATA[ &lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://BlueMap1e.github.io</id>
+    <title>BlueMap1e Blog • Posts by &#34;cryptopp&#34; tag</title>
+    <link href="https://BlueMap1e.github.io" />
+    <updated>2023-11-11T13:51:48.000Z</updated>
+    <category term="OpenSSL" />
+    <category term="Crypto" />
+    <category term="Linux" />
+    <category term="VPS" />
+    <category term="Circumvention" />
+    <category term="Network" />
+    <category term="C++" />
+    <category term="Qt" />
+    <category term="Web Front-End" />
+    <category term="Hexo" />
+    <category term="MineCraft" />
+    <category term="Algorithm" />
+    <category term="Cryptopp" />
+    <entry>
+        <id>https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</id>
+        <title>在Visual Studio 2022中配置Crypto++开发环境</title>
+        <link rel="alternate" href="https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/"/>
+        <content type="html">&lt;h2 id=&#34;前言&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#前言&#34;&gt;#&lt;/a&gt; 前言&lt;/h2&gt;
 &lt;p&gt;&lt;code&gt;Crypto++&lt;/code&gt;  是一个轻量、开源、受欢迎的 &lt;code&gt;C++&lt;/code&gt;  密码学库，采用了 OOP 的程序设计思想，总体比较契合 &lt;code&gt;C++&lt;/code&gt;  的程序设计风格。&lt;/p&gt;
 &lt;p&gt;本文主要介绍如何在 Visual Studio 2022 中配置 &lt;code&gt;Crypto++&lt;/code&gt;  的开发环境。本文作者是个菜逼，失败了很多次，因此可能存在很多纰漏。&lt;/p&gt;
 &lt;hr&gt;
@@ -107,7 +100,10 @@
 &lt;h2 id=&#34;结语&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#结语&#34;&gt;#&lt;/a&gt; 结语&lt;/h2&gt;
 &lt;p&gt;至此，Visual Studio 的 &lt;code&gt;Crypto++&lt;/code&gt;  开发环境配置完毕。&lt;/p&gt;
 &lt;p&gt;Release 模式的思路是一样的，只要把运行库改成 &lt;strong&gt;/MT 多线程&lt;/strong&gt; 即可。&lt;/p&gt;
- ]]></description>
-        </item>
-    </channel>
-</rss>
+</content>
+        <category term="Crypto" />
+        <category term="C++" />
+        <category term="Cryptopp" />
+        <updated>2023-11-11T13:51:48.000Z</updated>
+    </entry>
+</feed>
