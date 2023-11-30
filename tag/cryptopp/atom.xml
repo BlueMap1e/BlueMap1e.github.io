@@ -7,16 +7,16 @@
     <category term="OpenSSL" />
     <category term="Crypto" />
     <category term="Linux" />
-    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="C++" />
-    <category term="Qt" />
+    <category term="VPS" />
     <category term="Web Front-End" />
     <category term="Hexo" />
     <category term="MineCraft" />
-    <category term="Algorithm" />
+    <category term="C++" />
+    <category term="Qt" />
     <category term="Cryptopp" />
+    <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</id>
         <title>在Visual Studio 2022中配置Crypto++开发环境</title>

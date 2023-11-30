@@ -7,16 +7,16 @@
     <category term="OpenSSL" />
     <category term="Crypto" />
     <category term="Linux" />
-    <category term="VPS" />
     <category term="Circumvention" />
     <category term="Network" />
-    <category term="C++" />
-    <category term="Qt" />
+    <category term="VPS" />
     <category term="Web Front-End" />
     <category term="Hexo" />
     <category term="MineCraft" />
-    <category term="Algorithm" />
+    <category term="C++" />
+    <category term="Qt" />
     <category term="Cryptopp" />
+    <category term="Algorithm" />
     <entry>
         <id>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</id>
         <title>在Github Pages上使用Hexo搭建简单的个人博客</title>
