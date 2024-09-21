@@ -218,9 +218,8 @@
   <entry>
     <title>从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</title>
     <url>/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>（这篇教程还在施工中，随时可能出现较大改动）</p>
-<p><strong>行为（Actions）</strong>是Milovana Webtease的核心机制，它构成了一个互动文游的框架和主体。</p>
-<p>本文主要介绍一些<strong>基础的行为</strong>，以及它们的用法案例。阅读本文后，你应该能够制作一个简单的，单线的Webtease互动文游。</p>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong>行为（Actions）</strong>是Milovana Webtease的核心机制，它构成了一个互动文游的框架和主体。</p>
+<p>本文主要介绍一些<strong>基础的行为</strong>，以及它们的用法案例。阅读本文后，你应该能够制作一个简单的Webtease互动文游。</p>
 <span id="more"></span>
 
 <hr>
@@ -764,8 +763,8 @@
       </tags>
   </entry>
   <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战：制作一个单线文游</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98%EF%BC%9A%E5%88%B6%E4%BD%9C%E4%B8%80%E4%B8%AA%E5%8D%95%E7%BA%BF%E6%96%87%E6%B8%B8/</url>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
     <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>（恭喜你，你看到的是一个新建文件夹，还没动工的工地现场）</p>
 ]]></content>
       <categories>
