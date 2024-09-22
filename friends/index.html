@@ -30,7 +30,7 @@
 <meta property="og:description" content="友链 &#x2F; 推荐 技术Sukuna Blog - Sukuna学姐的个人博客，实验，硬件工程，学习资源。 Xylonx Blog - 向老师的个人博客，数据结构，算法，后端。 kaitaku’s blog - ShokaX作者的个人博客，前端，Hexo，博客主题，Go，Python。 筱崎侑怜 | ShinozakiYuurei  - 筱崎侑怜的个人博客，Web。 Symlpigeon’s">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-20T06:11:16.000Z">
-<meta property="article:modified_time" content="2024-09-22T09:21:21.394Z">
+<meta property="article:modified_time" content="2024-09-22T10:10:01.286Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="Web Front-End, Software Engineering, HTML, CSS, JavaScript, Vue.js, C++, Cyber Security">
 <meta name="twitter:card" content="summary">
@@ -257,10 +257,10 @@
 <p><a target="_blank" rel="noopener" href="https://www.pixiv.net/users/104994765">towis - pixiv</a> - M向，轻小说。</p>
 <p><a target="_blank" rel="noopener" href="https://www.pixiv.net/users/109358487">shiki0217 - pixiv</a> - M向，轻小说（连载）。</p>
 <hr>
-<h3 id="文援-前文援"><a href="#文援-前文援" class="headerlink" title="文援 &#x2F; 前文援"></a>文援 &#x2F; 前文援</h3><p><a target="_blank" rel="noopener" href="https://x.com/luyinsama">鹭鸣有音 (@luyinsama) &#x2F; X</a> - 轻小说写手，S&#x2F;Dom系文援，<del>半上岸状态的随性营业</del>。关注鹭音大人，<del>加入鹭音教谢谢喵</del>，<del>我们鹭音癖的音经真是太有鹭点啦</del>。</p>
-<p><a target="_blank" rel="noopener" href="https://x.com/baili_bingo">白黎 &#x2F; 黎雨 (@baili_bingo) &#x2F; X</a> - 温柔大姐姐人设的S&#x2F;Dom系文援，<del>然而腹黑</del>。</p>
-<p><a target="_blank" rel="noopener" href="https://x.com/_wind_chimes_">风铃 (@_wind_chimes_) &#x2F; X</a> - 文笔温柔细腻，不榨客人，<del>适合闲聊和树洞</del>。</p>
-<p><a target="_blank" rel="noopener" href="https://x.com/sakura_antenna">幻樱 (@sakura_antenna) &#x2F; X</a> - 退役文援，温柔清口，不榨客人，Web 3.0爱好者，<del>SMS代收</del>，<del>推特蓝标代购</del>，<del>加密货币支付</del>。</p>
+<h3 id="文援-前文援"><a href="#文援-前文援" class="headerlink" title="文援 &#x2F; 前文援"></a>文援 &#x2F; 前文援</h3><p><a target="_blank" rel="noopener" href="https://x.com/luyinsama">鹭鸣有音 (@luyinsama) &#x2F; X</a> - 现役文援，轻小说写手，S系文援，<del>半上岸状态的随性营业</del>。关注鹭音大人，<del>加入鹭音教谢谢喵</del>，<del>我们鹭音癖的音经真是太有鹭点啦</del>。</p>
+<p><a target="_blank" rel="noopener" href="https://x.com/baili_bingo">白黎 &#x2F; 黎雨 (@baili_bingo) &#x2F; X</a> - 现役文援，温柔大姐姐人设的S系文援，<del>然而腹黑</del>，<del>可以粗口重口</del>。</p>
+<p><a target="_blank" rel="noopener" href="https://x.com/_wind_chimes_">风铃 (@_wind_chimes_) &#x2F; X</a> - 现役文援，人设温柔，文笔细腻，不榨客人，<del>回复稍慢</del>，<del>适合闲聊和树洞</del>。</p>
+<p><a target="_blank" rel="noopener" href="https://x.com/sakura_antenna">幻樱 (@sakura_antenna) &#x2F; X</a> - 退役文援，温柔清口，不榨客人，Web 3.0爱好者，<del>SMS代收</del>，<del>推特蓝标代购</del>，<del>境外商品代购</del>，<del>加密货币（TRX，USDT）支付</del>。</p>
 <p><a target="_blank" rel="noopener" href="https://x.com/Kiri030724">雾切 (@Kiri030724) &#x2F; X</a> - 退役文援，心理咨询，闲聊树洞，<del>熟客Only</del>，<del>随机营业</del>，<del>赛博小天使</del>。</p>
 
       </div>
@@ -353,7 +353,7 @@
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
@@ -426,97 +426,6 @@
 
 
 
-<script>
-  (function() {
-    function leancloudSelector(url) {
-      url = encodeURI(url);
-      return document.getElementById(url).querySelector('.leancloud-visitors-count');
-    }
-
-    function addCount(Counter) {
-      var visitors = document.querySelector('.leancloud_visitors');
-      var url = decodeURI(visitors.id);
-      var title = visitors.dataset.flagTitle;
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          if (results.length > 0) {
-            var counter = results[0];
-            leancloudSelector(url).innerText = counter.time + 1;
-            Counter('put', '/classes/Counter/' + counter.objectId, { time: { '__op': 'Increment', 'amount': 1 } })
-              .catch(error => {
-                console.error('Failed to save visitor count', error);
-              });
-          } else {
-              Counter('post', '/classes/Counter', { title, url, time: 1 })
-                .then(response => response.json())
-                .then(() => {
-                  leancloudSelector(url).innerText = 1;
-                })
-                .catch(error => {
-                  console.error('Failed to create', error);
-                });
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    function showTime(Counter) {
-      var visitors = document.querySelectorAll('.leancloud_visitors');
-      var entries = [...visitors].map(element => {
-        return decodeURI(element.id);
-      });
-
-      Counter('get', '/classes/Counter?where=' + encodeURIComponent(JSON.stringify({ url: { '$in': entries } })))
-        .then(response => response.json())
-        .then(({ results }) => {
-          for (let url of entries) {
-            let target = results.find(item => item.url === url);
-            leancloudSelector(url).innerText = target ? target.time : 0;
-          }
-        })
-        .catch(error => {
-          console.error('LeanCloud Counter Error', error);
-        });
-    }
-
-    let { app_id, app_key, server_url } = {"enable":true,"app_id":"qzty6WvJP7uoCXS6cw88dVwF-MdYXbMMI","app_key":"YOJYyj1JtERCvdEM1TNHz5jf","server_url":null,"security":false};
-    function fetchData(api_server) {
-      var Counter = (method, url, data) => {
-        return fetch(`${api_server}/1.1${url}`, {
-          method,
-          headers: {
-            'X-LC-Id'     : app_id,
-            'X-LC-Key'    : app_key,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data)
-        });
-      };
-      if (CONFIG.page.isPost) {
-        if (CONFIG.hostname !== location.hostname) return;
-        addCount(Counter);
-      } else if (document.querySelectorAll('.post-title-link').length >= 1) {
-        showTime(Counter);
-      }
-    }
-
-    let api_server = app_id.slice(-9) !== '-MdYXbMMI' ? server_url : `https://${app_id.slice(0, 8).toLowerCase()}.api.lncldglobal.com`;
-
-    if (api_server) {
-      fetchData(api_server);
-    } else {
-      fetch('https://app-router.leancloud.cn/2/route?appId=' + app_id)
-        .then(response => response.json())
-        .then(({ api_server }) => {
-          fetchData('https://' + api_server);
-        });
-    }
-  })();
-</script>
 
 
       </div>
