@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://bluemap1e.github.io/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</loc>
+    
+    <lastmod>2024-09-23</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</loc>
     
     <lastmod>2024-09-23</lastmod>
@@ -251,14 +260,14 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/Circumvention/</loc>
+    <loc>https://bluemap1e.github.io/tags/BitTorrent/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
+    <loc>https://bluemap1e.github.io/tags/P2P/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -266,6 +275,27 @@
   
   <url>
     <loc>https://bluemap1e.github.io/tags/Network/</loc>
+    <lastmod>2024-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/Circumvention/</loc>
+    <lastmod>2024-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/Cloud/</loc>
+    <lastmod>2024-09-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -301,13 +331,6 @@
   
   <url>
     <loc>https://bluemap1e.github.io/tags/Qt/</loc>
-    <lastmod>2024-09-23</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://bluemap1e.github.io/tags/Cloud/</loc>
     <lastmod>2024-09-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
