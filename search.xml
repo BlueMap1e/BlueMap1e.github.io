@@ -1,6 +1,616 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
+    <url>/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 对称加密使用经验，偶尔更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -h</span><br></pre></td></tr></table></figure>
+
+<p>输入如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: enc [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List ciphers</span><br><span class="line"> -ciphers            Alias <span class="keyword">for</span> -list</span><br><span class="line"> -e                  Encrypt</span><br><span class="line"> -d                  Decrypt</span><br><span class="line"> -p                  Print the iv/key</span><br><span class="line"> -P                  Print the iv/key and <span class="built_in">exit</span></span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Input options:</span><br><span class="line"> -<span class="keyword">in</span> infile          Input file</span><br><span class="line"> -k val              Passphrase</span><br><span class="line"> -kfile infile       Read passphrase from file</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -pass val           Passphrase <span class="built_in">source</span></span><br><span class="line"> -v                  Verbose output</span><br><span class="line"> -a                  Base64 encode/decode, depending on encryption flag</span><br><span class="line"> -<span class="built_in">base64</span>             Same as option -a</span><br><span class="line"> -A                  Used with -[<span class="built_in">base64</span>|a] to specify <span class="built_in">base64</span> buffer as a single line</span><br><span class="line"></span><br><span class="line">Encryption options:</span><br><span class="line"> -nopad              Disable standard block padding</span><br><span class="line"> -salt               Use salt <span class="keyword">in</span> the KDF (default)</span><br><span class="line"> -nosalt             Do not use salt <span class="keyword">in</span> the KDF</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"> -bufsize val        Buffer size</span><br><span class="line"> -K val              Raw key, <span class="keyword">in</span> hex</span><br><span class="line"> -S val              Salt, <span class="keyword">in</span> hex</span><br><span class="line"> -iv val             IV <span class="keyword">in</span> hex</span><br><span class="line"> -md val             Use specified digest to create a key from the passphrase</span><br><span class="line"> -iter +int          Specify the iteration count and force the use of PBKDF2</span><br><span class="line">                     Default: 10000</span><br><span class="line"> -pbkdf2             Use password-based key derivation <span class="keyword">function</span> 2 (PBKDF2)</span><br><span class="line">                     Use -iter to change the iteration count from 10000</span><br><span class="line"> -none               Don<span class="string">&#x27;t encrypt</span></span><br><span class="line"><span class="string"> -*                  Any supported cipher</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Random state options:</span></span><br><span class="line"><span class="string"> -rand val           Load the given file(s) into the random number generator</span></span><br><span class="line"><span class="string"> -writerand outfile  Write random data to the specified file</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Provider options:</span></span><br><span class="line"><span class="string"> -provider-path val  Provider load path (must be before &#x27;</span>provider<span class="string">&#x27; argument if required)</span></span><br><span class="line"><span class="string"> -provider val       Provider to load (can be specified multiple times)</span></span><br><span class="line"><span class="string"> -propquery val      Property query used when fetching algorithms</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="列出支持的加密算法"><a href="#列出支持的加密算法" class="headerlink" title="列出支持的加密算法"></a>列出支持的加密算法</h2><p>可以通过<code>-list</code>或<code>-ciphers</code>参数来列出当前版本OpenSSL支持的对称加密算法：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -list</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -ciphers</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported ciphers:</span><br><span class="line">-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1</span><br><span class="line">-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb</span><br><span class="line">-aes-128-ofb               -aes-192-cbc               -aes-192-cfb</span><br><span class="line">-aes-192-cfb1              -aes-192-cfb8              -aes-192-ctr</span><br><span class="line">-aes-192-ecb               -aes-192-ofb               -aes-256-cbc</span><br><span class="line">-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8</span><br><span class="line">-aes-256-ctr               -aes-256-ecb               -aes-256-ofb</span><br><span class="line">-aes128                    -aes128-wrap               -aes192</span><br><span class="line">-aes192-wrap               -aes256                    -aes256-wrap</span><br><span class="line">-aria-128-cbc              -aria-128-cfb              -aria-128-cfb1</span><br><span class="line">-aria-128-cfb8             -aria-128-ctr              -aria-128-ecb</span><br><span class="line">-aria-128-ofb              -aria-192-cbc              -aria-192-cfb</span><br><span class="line">-aria-192-cfb1             -aria-192-cfb8             -aria-192-ctr</span><br><span class="line">-aria-192-ecb              -aria-192-ofb              -aria-256-cbc</span><br><span class="line">-aria-256-cfb              -aria-256-cfb1             -aria-256-cfb8</span><br><span class="line">-aria-256-ctr              -aria-256-ecb              -aria-256-ofb</span><br><span class="line">-aria128                   -aria192                   -aria256</span><br><span class="line">-bf                        -bf-cbc                    -bf-cfb</span><br><span class="line">-bf-ecb                    -bf-ofb                    -blowfish</span><br><span class="line">-camellia-128-cbc          -camellia-128-cfb          -camellia-128-cfb1</span><br><span class="line">-camellia-128-cfb8         -camellia-128-ctr          -camellia-128-ecb</span><br><span class="line">-camellia-128-ofb          -camellia-192-cbc          -camellia-192-cfb</span><br><span class="line">-camellia-192-cfb1         -camellia-192-cfb8         -camellia-192-ctr</span><br><span class="line">-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc</span><br><span class="line">-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8</span><br><span class="line">-camellia-256-ctr          -camellia-256-ecb          -camellia-256-ofb</span><br><span class="line">-camellia128               -camellia192               -camellia256</span><br><span class="line">-cast                      -cast-cbc                  -cast5-cbc</span><br><span class="line">-cast5-cfb                 -cast5-ecb                 -cast5-ofb</span><br><span class="line">-chacha20                  -des                       -des-cbc</span><br><span class="line">-des-cfb                   -des-cfb1                  -des-cfb8</span><br><span class="line">-des-ecb                   -des-ede                   -des-ede-cbc</span><br><span class="line">-des-ede-cfb               -des-ede-ecb               -des-ede-ofb</span><br><span class="line">-des-ede3                  -des-ede3-cbc              -des-ede3-cfb</span><br><span class="line">-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ecb</span><br><span class="line">-des-ede3-ofb              -des-ofb                   -des3</span><br><span class="line">-des3-wrap                 -desx                      -desx-cbc</span><br><span class="line">-id-aes128-wrap            -id-aes128-wrap-pad        -id-aes192-wrap</span><br><span class="line">-id-aes192-wrap-pad        -id-aes256-wrap            -id-aes256-wrap-pad</span><br><span class="line">-id-smime-alg-CMS3DESwrap  -idea                      -idea-cbc</span><br><span class="line">-idea-cfb                  -idea-ecb                  -idea-ofb</span><br><span class="line">-rc2                       -rc2-128                   -rc2-40</span><br><span class="line">-rc2-40-cbc                -rc2-64                    -rc2-64-cbc</span><br><span class="line">-rc2-cbc                   -rc2-cfb                   -rc2-ecb</span><br><span class="line">-rc2-ofb                   -rc4                       -rc4-40</span><br><span class="line">-seed                      -seed-cbc                  -seed-cfb</span><br><span class="line">-seed-ecb                  -seed-ofb                  -sm4</span><br><span class="line">-sm4-cbc                   -sm4-cfb                   -sm4-ctr</span><br><span class="line">-sm4-ecb                   -sm4-ofb</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="对称加密算法命名规则的简单介绍"><a href="#对称加密算法命名规则的简单介绍" class="headerlink" title="对称加密算法命名规则的简单介绍"></a>对称加密算法命名规则的简单介绍</h3><hr>
+<h4 id="可变密钥长度-分组加密算法"><a href="#可变密钥长度-分组加密算法" class="headerlink" title="可变密钥长度 分组加密算法"></a>可变密钥长度 分组加密算法</h4><p>一个可变密钥长度的分组加密算法参数通常由三部分组成，<strong>对称加密算法</strong> - <strong>密钥长度</strong> - <strong>分组密码工作模式</strong>。</p>
+<p>举个例子：<code>AES-128-CTR</code></p>
+<p><strong>AES</strong>：<strong>对称加密算法</strong> 为 <strong>高级加密标准（Advanced Encryption Standard，AES）</strong>，它支持128位、192位和256位的密钥长度</p>
+<p><strong>128</strong>：<strong>密钥长度</strong> 指定为 <strong>128位</strong></p>
+<p><strong>CTR</strong>：<strong>分组密码工作模式</strong> 是 <strong>计数器模式（Counter Mode, CTR）</strong></p>
+<hr>
+<h4 id="固定密钥长度-分组加密算法"><a href="#固定密钥长度-分组加密算法" class="headerlink" title="固定密钥长度 分组加密算法"></a>固定密钥长度 分组加密算法</h4><p>一个固定密钥长度的分组加密算法参数通常由两部分组成，<strong>对称加密算法</strong> - <strong>分组密码工作模式</strong>。</p>
+<p>举个例子：<code>SM4-CFB</code></p>
+<p><strong>SM4</strong>：<strong>对称加密算法</strong> 为 <strong>商密-4</strong>，它的 <strong>密钥长度默认固定为128位</strong></p>
+<p><strong>CFB</strong>：<strong>分组密码工作模式</strong> 是 <strong>密文反馈模式（Cipher FeedBack，CFB）</strong></p>
+<hr>
+<h4 id="流密码"><a href="#流密码" class="headerlink" title="流密码"></a>流密码</h4><p>一个流密码的参数通常就是对称加密算法本身：<strong>对称加密算法</strong>。</p>
+<p>举个例子：<code>Chacha20</code></p>
+<p>Chacha20：<strong>对称加密算法</strong> 为 <strong>Chacha20</strong></p>
+<hr>
+<h4 id="默认ECB模式"><a href="#默认ECB模式" class="headerlink" title="默认ECB模式"></a>默认ECB模式</h4><p>当使用分组密码对称加密算法时不指定分组密码工作模式，OpenSSL将会默认使用 <strong>ECB模式</strong> 对文件进行加密。</p>
+<p>举个例子：<code>BF</code></p>
+<p><code>BF</code>：<strong>对称加密算法</strong> 为 <strong>Blowfish</strong>，默认分组密码工作模式是 <strong>电子密码本模式（Electronic CodeBlock)<strong>，注意，这一模式是</strong>不安全的</strong>。</p>
+<hr>
+<h3 id="对称加密算法-简单介绍"><a href="#对称加密算法-简单介绍" class="headerlink" title="对称加密算法 简单介绍"></a>对称加密算法 简单介绍</h3><hr>
+<h4 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h4><p>高级加密标准（Advanced Encryption Standard，AES），NIST标准，原型是Rjindael，属于SPN密码。</p>
+<p>目前世界上最流行的加密算法，具有高度的安全性、高度的兼容性、强大的性能和广泛的硬件加速支持，是绝大多数情况下对称加密算法的首选。密文分组128位，密钥长度可选128位，192位或256位，对应的SPN迭代轮次分别为10轮、12轮与14轮。</p>
+<hr>
+<h4 id="ARIA"><a href="#ARIA" class="headerlink" title="ARIA"></a>ARIA</h4><p>ARIA是韩国密码学研究者基于AES修改而来的一种SPN密码，原型是AES。</p>
+<p>韩国用于取代AES而设计的加密算法，具有高度安全性和较好的性能，密文分组128位，密钥长度可选128位，192位或256位，对应的SPN迭代轮次分别是12轮、14轮和16轮。</p>
+<hr>
+<h4 id="BF（Blowfish）"><a href="#BF（Blowfish）" class="headerlink" title="BF（Blowfish）"></a>BF（Blowfish）</h4><p>Blowfish是<em>Bruce Schneier</em>设计的一种Feistel密码。</p>
+<p>一个相对较老的对称加密算法，密文分组64位，密钥长度可选32-448位，迭代固定16轮。目前仍然具有能够接受的安全性，最优的密文分析只能破解4轮BF，或将14轮BF与伪随机序列区分开来。但由于密文分组仅有64位，研究表明可能存在生日攻击问题。作者Bruce Schneier本人建议使用TwoFish进行替代。</p>
+<hr>
+<h4 id="Camellia"><a href="#Camellia" class="headerlink" title="Camellia"></a>Camellia</h4><p>卡梅利亚（Camellia）是日本NTT和MEC设计的一款Feistel加密算法，其计算量和安全性基本与AES相当，名称意为“山茶”。</p>
+<p>一个常见的加密算法，具有高度的安全性、较为广泛的支持、强大的性能，是AES的一种替代算法。密文分组128位，密钥长度可选128位、192位或256位，对应Feistel迭代轮次分别为18轮，24轮与24轮。</p>
+<hr>
+<h4 id="CAST-CAST5-CAST-128"><a href="#CAST-CAST5-CAST-128" class="headerlink" title="CAST &#x2F; CAST5 &#x2F; CAST-128"></a>CAST &#x2F; CAST5 &#x2F; CAST-128</h4><p>CAST是 <em>Carlisle Adams</em> 和 <em>Stafford Tavares</em> 设计的一款Feistel密码，在加拿大常用。</p>
+<p>CAST5的密文分组为64位，密钥长度40-128位，步长8位。80位以下采用12轮迭代，80位及以上采用16轮迭代。被GPG，PGP和OpenSSL等支持。</p>
+<hr>
+<h4 id="Chacha20"><a href="#Chacha20" class="headerlink" title="Chacha20"></a>Chacha20</h4><p>Chacha20是Daniel Julius Bernstein设计的一种流密码算法，是Salsa20的改进版本。</p>
+<p>Chacha20采用128位或256位密钥，ARX结构，512位状态位和20轮重复，具有高度的安全性。由于Chacha20是流密码算法，因此具有低延迟、高性能、算力需求低的优点，适合在移动设备上、ARM架构处理器与嵌入式设备上使用。常常与Poly1305校验码一同使用。</p>
+<hr>
+<h4 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h4><p>数据加密标准（Data Encryption Standard, DES），上古加密算法，上世纪70年代由DES开发，已经过时。</p>
+<p>DES采用56位密钥和64位密文分组，Feistel结构16轮迭代。在目前的算力下，蛮力攻击（穷举法）攻破DES已经成为可能。线性分析和选择明文攻击均能有效削弱DES的安全性。</p>
+<hr>
+<h4 id="DES-EDE-DES3-（3DES）"><a href="#DES-EDE-DES3-（3DES）" class="headerlink" title="DES-EDE &#x2F; DES3 （3DES）"></a>DES-EDE &#x2F; DES3 （3DES）</h4><p>三重数据加密标准（Triple Data Encryption Standard, 3DES）或DES-EDE（Data Encryption Standard - Encryption Decryption Encryption）是对DES的加强，通过三个使用不同密钥的DES分别对原始数据进行加密、解密、加密得到密文（密钥选项1），将密钥空间扩展到2^168^，但由于中途相遇攻击，其安全性实际为2^112^。</p>
+<p>当然，也存在K2 &#x3D; K1（密钥选项2）和K3 &#x3D; K2 &#x3D; K1（密钥选项3）的3DES版本。其中，根据NIST的评估，密钥选项2的有效安全性仅有约2^80^，而密钥选项3明显不合理，第二轮解密和第一轮加密直接抵消，因此相当于DES。密钥选项2与密钥选项3均已经弃用。目前的3DES或DES-EDE默认使用密钥选项1。</p>
+<p>3DES对于目前的算力和密码分析手段仍然属于安全的，但是其性能和理论安全性仍然弱于AES。其主要优势在于能与支持DES的老式通信系统兼容。如有可能，应尽量升级到AES。</p>
+<hr>
+<h4 id="DESX"><a href="#DESX" class="headerlink" title="DESX"></a>DESX</h4><p>使用64位密钥的DES，其中仍然是56位用于加密，8位用于校验。不推荐。</p>
+<hr>
+<h4 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h4><p>国际数据加密算法（International Data Encryption Algorithm，IDEA），最早称为改良建议加密标准（Improved Proposed Encryption Standard，IPES），是1991年提出的一种Feistel密码。</p>
+<p>IDEA的密文分组长度为64位，密钥长度为128位，迭代轮次为8.5。目前IDEA被认为是一种不再安全的加密算法，尽管目前最优的攻击方式复杂度仍然来到2^126.1^，超过了目前的常规算力破解能力。（资料来源：维基百科）</p>
+<hr>
+<h4 id="RC2-ARC2"><a href="#RC2-ARC2" class="headerlink" title="RC2 &#x2F; ARC2"></a>RC2 &#x2F; ARC2</h4><p>RC2（Rivest Cipher 2）是Ron Rivest设计的基于不平衡Feistel结构的分组加密算法，目前已经过时，面对相关密钥攻击脆弱。</p>
+<p>RC2的分组长度为64位，密钥长度1-128位。它采用16轮不平衡Feistel结构的混淆操作和2轮扰乱操作。</p>
+<hr>
+<h4 id="RC4-ARC4-ARCFOUR"><a href="#RC4-ARC4-ARCFOUR" class="headerlink" title="RC4 &#x2F; ARC4 &#x2F; ARCFOUR"></a>RC4 &#x2F; ARC4 &#x2F; ARCFOUR</h4><p>RC4（Rivest Cipher 4）是Ron Rivest设计的一种流密码，曾经非常流行，被广泛用于SSL和WPA等协议，但目前已经过时。</p>
+<p>RC4采用40-2048位的密钥，以及2064位的状态位（1684个有效状态位）对数据进行加密，拥有很快的加密速度。但是它的密钥流能够被与伪随机序列区分开来。在2015年，比利时的密码研究员宣布了RC4的破解，能够在75小时内取得Cookie的内容。目前现代的密码学协议通常已经弃用RC4。</p>
+<hr>
+<h4 id="SEED"><a href="#SEED" class="headerlink" title="SEED"></a>SEED</h4><p>SEED是韩国KISA研发的一种Feistel密码。</p>
+<p>SEED的密文分组为128位，密钥长度固定为128位，迭代轮数16轮，目前仍然具有较高的安全性。</p>
+<hr>
+<h4 id="SM4-SMS4"><a href="#SM4-SMS4" class="headerlink" title="SM4 &#x2F; SMS4"></a>SM4 &#x2F; SMS4</h4><p>SM4（商密-4）是中国国密算法系列中的对称加密算法，属于Feistel密码。</p>
+<p>SM4的分组长度为128位，密钥长度固定为128位，采用非对称Feistel结构32轮迭代，具有很强的安全性和较高的性能，广泛用于中国标准WLAN WAPI和TLS。</p>
+<hr>
+<h2 id="基本加解密指令"><a href="#基本加解密指令" class="headerlink" title="基本加解密指令"></a>基本加解密指令</h2><hr>
+<h3 id="简单的加密指令"><a href="#简单的加密指令" class="headerlink" title="简单的加密指令"></a>简单的加密指令</h3><p>一个最简单的加密文件的示例如下，该指令通过<code>AES-128-CTR</code>加密算法对<code>plaintext.txt</code>文件进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>OpenSSL此时会提醒你输入密码：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">enter AES-<span class="number">128</span>-CTR encryption password:</span><br></pre></td></tr></table></figure>
+
+<p>输入密钥后，OpenSSL会提醒你输入确认密码：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Verifying - enter AES-<span class="number">128</span>-CTR encryption password:</span><br></pre></td></tr></table></figure>
+
+<p>如果确认密码与密码一致，那么文件将开始加密。但是，这种加密方式已经过时，OpenSSL此时会弹出提示：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">*** WARNING : deprecated key derivation used.</span><br><span class="line">Using -iter or -pbkdf2 would be better.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="简单的解密指令"><a href="#简单的解密指令" class="headerlink" title="简单的解密指令"></a>简单的解密指令</h3><p>一个最简单的解密文件的示例如下，该指令尝试通过<code>AES-128-CTR</code>加密算法对<code>ciphertext.txt</code>文件进行解密：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -d -AES-128-CTR -<span class="keyword">in</span> ciphertext.txt -out decryptedtext.txt</span><br></pre></td></tr></table></figure>
+
+<p>OpenSSL此时会提醒你输入密码：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">enter AES-<span class="number">128</span>-CTR decryption password:</span><br></pre></td></tr></table></figure>
+
+<p>密码如果正确，OpenSSL将会解密文件。但它仍然会提醒你这种加密方式已经过时，会弹出提示：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">*** WARNING : deprecated key derivation used.</span><br><span class="line">Using -iter or -pbkdf2 would be better.</span><br></pre></td></tr></table></figure>
+
+<h3 id="PBKDF2、迭代次数与盐"><a href="#PBKDF2、迭代次数与盐" class="headerlink" title="PBKDF2、迭代次数与盐"></a>PBKDF2、迭代次数与盐</h3><p>OpenSSL目前并不鼓励直接使用字符串作为密钥，而是推荐使用PBKDF2生成加密密钥。</p>
+<p><code>openssl enc</code>有这两个KDF参数：</p>
+<p><code>-PBKDF2</code>：PBKDF2（Password-Based Key Derivation Function 2）是一种密钥推到函数，它能够从用户提供的密码中推导出实际的加密密钥，能够有效增强密码安全性，避免爆破原始密码。</p>
+<p><code>-iter</code>：迭代次数（Iterations）指定了PBKDF2的迭代轮数，迭代轮数越高，密码的安全性相对就越高，但也会消耗更多的计算资源。一般建议设置在80000以上。（建议来源：Bitwarden）</p>
+<p><code>-salt</code>：盐（Salt）是一个随机生成的唯一值，它在每一轮迭代中与输入值连接在一起参加KDF迭代，进一步增加了彩虹表攻击和爆破的难度。这个选项是<strong>默认开启</strong>的。</p>
+<h3 id="示例：使用PBKDF2与盐进行加解密"><a href="#示例：使用PBKDF2与盐进行加解密" class="headerlink" title="示例：使用PBKDF2与盐进行加解密"></a>示例：使用PBKDF2与盐进行加解密</h3><p>以下这条指令通过<code>AES-128-CTR</code>加密算法对<code>plaintext.txt</code>文件进行加密，使用加盐PBKDF2，迭代次数80000，输出文件为ciphertext.txt。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>以下这条指令通过<code>AES-128-CTR</code>加密算法对<code>ciphert.txt</code>文件进行解密，使用加盐PBKDF2，迭代次数80000，输出文件为decryptedtext.txt。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -d -AES-128-CTR -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> ciphertext.txt -out decryptedrtext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选择参数"><a href="#总体选择参数" class="headerlink" title="总体选择参数"></a>总体选择参数</h2><hr>
+<h3 id="help"><a href="#help" class="headerlink" title="-help"></a>-help</h3><p>陈列<code>OpenSSL enc</code>指令的帮助：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -h</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: enc [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List ciphers</span><br><span class="line"> -ciphers            Alias <span class="keyword">for</span> -list</span><br><span class="line"> -e                  Encrypt</span><br><span class="line"> -d                  Decrypt</span><br><span class="line"> -p                  Print the iv/key</span><br><span class="line"> -P                  Print the iv/key and <span class="built_in">exit</span></span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Input options:</span><br><span class="line"> -<span class="keyword">in</span> infile          Input file</span><br><span class="line"> -k val              Passphrase</span><br><span class="line"> -kfile infile       Read passphrase from file</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -pass val           Passphrase <span class="built_in">source</span></span><br><span class="line"> -v                  Verbose output</span><br><span class="line"> -a                  Base64 encode/decode, depending on encryption flag</span><br><span class="line"> -<span class="built_in">base64</span>             Same as option -a</span><br><span class="line"> -A                  Used with -[<span class="built_in">base64</span>|a] to specify <span class="built_in">base64</span> buffer as a single line</span><br><span class="line"></span><br><span class="line">Encryption options:</span><br><span class="line"> -nopad              Disable standard block padding</span><br><span class="line"> -salt               Use salt <span class="keyword">in</span> the KDF (default)</span><br><span class="line"> -nosalt             Do not use salt <span class="keyword">in</span> the KDF</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"> -bufsize val        Buffer size</span><br><span class="line"> -K val              Raw key, <span class="keyword">in</span> hex</span><br><span class="line"> -S val              Salt, <span class="keyword">in</span> hex</span><br><span class="line"> -iv val             IV <span class="keyword">in</span> hex</span><br><span class="line"> -md val             Use specified digest to create a key from the passphrase</span><br><span class="line"> -iter +int          Specify the iteration count and force the use of PBKDF2</span><br><span class="line">                     Default: 10000</span><br><span class="line"> -pbkdf2             Use password-based key derivation <span class="keyword">function</span> 2 (PBKDF2)</span><br><span class="line">                     Use -iter to change the iteration count from 10000</span><br><span class="line"> -none               Don<span class="string">&#x27;t encrypt</span></span><br><span class="line"><span class="string"> -*                  Any supported cipher</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Random state options:</span></span><br><span class="line"><span class="string"> -rand val           Load the given file(s) into the random number generator</span></span><br><span class="line"><span class="string"> -writerand outfile  Write random data to the specified file</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Provider options:</span></span><br><span class="line"><span class="string"> -provider-path val  Provider load path (must be before &#x27;</span>provider<span class="string">&#x27; argument if required)</span></span><br><span class="line"><span class="string"> -provider val       Provider to load (can be specified multiple times)</span></span><br><span class="line"><span class="string"> -propquery val      Property query used when fetching algorithms</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="list-或-ciphers"><a href="#list-或-ciphers" class="headerlink" title="-list 或 -ciphers"></a>-list 或 -ciphers</h3><p>列出OpenSSL支持的对称加密算法：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -list</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -ciphers</span><br></pre></td></tr></table></figure>
+
+<p>以OpenSSL 3.1.2版本为例，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported ciphers:</span><br><span class="line">-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1</span><br><span class="line">-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb</span><br><span class="line">-aes-128-ofb               -aes-192-cbc               -aes-192-cfb</span><br><span class="line">-aes-192-cfb1              -aes-192-cfb8              -aes-192-ctr</span><br><span class="line">-aes-192-ecb               -aes-192-ofb               -aes-256-cbc</span><br><span class="line">-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8</span><br><span class="line">-aes-256-ctr               -aes-256-ecb               -aes-256-ofb</span><br><span class="line">-aes128                    -aes128-wrap               -aes192</span><br><span class="line">-aes192-wrap               -aes256                    -aes256-wrap</span><br><span class="line">-aria-128-cbc              -aria-128-cfb              -aria-128-cfb1</span><br><span class="line">-aria-128-cfb8             -aria-128-ctr              -aria-128-ecb</span><br><span class="line">-aria-128-ofb              -aria-192-cbc              -aria-192-cfb</span><br><span class="line">-aria-192-cfb1             -aria-192-cfb8             -aria-192-ctr</span><br><span class="line">-aria-192-ecb              -aria-192-ofb              -aria-256-cbc</span><br><span class="line">-aria-256-cfb              -aria-256-cfb1             -aria-256-cfb8</span><br><span class="line">-aria-256-ctr              -aria-256-ecb              -aria-256-ofb</span><br><span class="line">-aria128                   -aria192                   -aria256</span><br><span class="line">-bf                        -bf-cbc                    -bf-cfb</span><br><span class="line">-bf-ecb                    -bf-ofb                    -blowfish</span><br><span class="line">-camellia-128-cbc          -camellia-128-cfb          -camellia-128-cfb1</span><br><span class="line">-camellia-128-cfb8         -camellia-128-ctr          -camellia-128-ecb</span><br><span class="line">-camellia-128-ofb          -camellia-192-cbc          -camellia-192-cfb</span><br><span class="line">-camellia-192-cfb1         -camellia-192-cfb8         -camellia-192-ctr</span><br><span class="line">-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc</span><br><span class="line">-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8</span><br><span class="line">-camellia-256-ctr          -camellia-256-ecb          -camellia-256-ofb</span><br><span class="line">-camellia128               -camellia192               -camellia256</span><br><span class="line">-cast                      -cast-cbc                  -cast5-cbc</span><br><span class="line">-cast5-cfb                 -cast5-ecb                 -cast5-ofb</span><br><span class="line">-chacha20                  -des                       -des-cbc</span><br><span class="line">-des-cfb                   -des-cfb1                  -des-cfb8</span><br><span class="line">-des-ecb                   -des-ede                   -des-ede-cbc</span><br><span class="line">-des-ede-cfb               -des-ede-ecb               -des-ede-ofb</span><br><span class="line">-des-ede3                  -des-ede3-cbc              -des-ede3-cfb</span><br><span class="line">-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ecb</span><br><span class="line">-des-ede3-ofb              -des-ofb                   -des3</span><br><span class="line">-des3-wrap                 -desx                      -desx-cbc</span><br><span class="line">-id-aes128-wrap            -id-aes128-wrap-pad        -id-aes192-wrap</span><br><span class="line">-id-aes192-wrap-pad        -id-aes256-wrap            -id-aes256-wrap-pad</span><br><span class="line">-id-smime-alg-CMS3DESwrap  -idea                      -idea-cbc</span><br><span class="line">-idea-cfb                  -idea-ecb                  -idea-ofb</span><br><span class="line">-rc2                       -rc2-128                   -rc2-40</span><br><span class="line">-rc2-40-cbc                -rc2-64                    -rc2-64-cbc</span><br><span class="line">-rc2-cbc                   -rc2-cfb                   -rc2-ecb</span><br><span class="line">-rc2-ofb                   -rc4                       -rc4-40</span><br><span class="line">-seed                      -seed-cbc                  -seed-cfb</span><br><span class="line">-seed-ecb                  -seed-ofb                  -sm4</span><br><span class="line">-sm4-cbc                   -sm4-cfb                   -sm4-ctr</span><br><span class="line">-sm4-ecb                   -sm4-ofb</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="e"><a href="#e" class="headerlink" title="-e"></a>-e</h3><p>加密指令，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>这条指令通过<code>AES-128-CTR</code>加密算法对<code>plaintext.txt</code>进行加密，输出到<code>ciphertext.txt</code>当中，密钥派生函数采用<code>PBKDF2</code>，迭代次数<code>80000</code>，加盐。</p>
+<h3 id="d"><a href="#d" class="headerlink" title="-d"></a>-d</h3><p>解密指令，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -d -pbkdf2 -iter 80000 -salt ciphertext.txt -out decrypted.txt</span><br></pre></td></tr></table></figure>
+
+<p>这条指令通过<code>AES-128-CTR</code>加密算法对<code>ciphertext.txt</code>进行解密，输出到<code>decrypted.txt</code>当中，密钥派生函数采用<code>PBKDF2</code>，迭代次数<code>80000</code>，加盐。</p>
+<h3 id="p-或-P"><a href="#p-或-P" class="headerlink" title="-p 或 -P"></a>-p 或 -P</h3><p>输出IV（Initialization Vector，初始化向量）和密钥，加盐也会输出盐值。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -p -AES-128-CTR -e -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>它的输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">salt=EEADC4C2FABA433D</span><br><span class="line">key=BD956B91B899D59A02DA992B65908A6F</span><br><span class="line">iv =<span class="number">6</span>AC35A79C1EE8C7192680E294696D279</span><br></pre></td></tr></table></figure>
+
+<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定加密引擎，一般来说并不需要这么做，除非你有特殊需求。</p>
+<hr>
+<h2 id="输入参数"><a href="#输入参数" class="headerlink" title="输入参数"></a>输入参数</h2><hr>
+<h3 id="in"><a href="#in" class="headerlink" title="-in"></a>-in</h3><p>指定输入文档，例如<code>-in plaintext.txt</code>就是指以<code>plaintext.txt</code>文件作为输入。</p>
+<hr>
+<h3 id="k"><a href="#k" class="headerlink" title="-k"></a>-k</h3><p>指定加密密钥，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>-k your_awesome_password</code>就指定了初始密钥为”your_awesome_password”</p>
+<hr>
+<h3 id="kfile"><a href="#kfile" class="headerlink" title="-kfile"></a>-kfile</h3><p>从指定文件的第一行中导入密钥，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -kfile your_awesome_password.bin -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>-kfile your_awesome_password.bin</code>就指定了初始密钥从<code>your_awesome_password.bin</code>这个文件的第一行中导入。</p>
+<hr>
+<h2 id="输出参数"><a href="#输出参数" class="headerlink" title="输出参数"></a>输出参数</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文档，例如<code>-out ciphertext.txt</code>就是指输出到<code>ciphertext.txt</code>这个文件中。如果没有这个文件，那么就新建。</p>
+<hr>
+<h3 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h3><p>指定密码的来源。</p>
+<h4 id="直接在命令行中提供密码"><a href="#直接在命令行中提供密码" class="headerlink" title="直接在命令行中提供密码"></a>直接在命令行中提供密码</h4><p>例如这条命令，直接指定密码为<code>your_awesome_password</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pass pass:your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="从文件中读取密码"><a href="#从文件中读取密码" class="headerlink" title="从文件中读取密码"></a>从文件中读取密码</h4><p>例如这条命令，从<code>password.txt</code>中的第一行读取密码：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pass file:password.txt -<span class="keyword">in</span> plaintext.txxt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用环境变量提供密码"><a href="#使用环境变量提供密码" class="headerlink" title="使用环境变量提供密码"></a>使用环境变量提供密码</h4><p>例如这条命令，将尝试从系统的<code>OPENSSL_PASSWORD</code>环境变量读取密码：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pass <span class="built_in">env</span>:OPENSSL_PASSWORD -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="v"><a href="#v" class="headerlink" title="-v"></a>-v</h3><p>输出详细信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -v -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>这是它的输出：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">bufsize=<span class="number">8192</span></span><br><span class="line">bytes read   :       <span class="number">64</span></span><br><span class="line">bytes written:       <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="a-或-base64"><a href="#a-或-base64" class="headerlink" title="-a 或 -base64"></a>-a 或 -base64</h3><p>Base64编解码选项，如果是加密则将输出进行Base64编码，如果是解密则对输入先进行Base64解码。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -<span class="built_in">base64</span> -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>这样你就会得到Base64编码的输出，而不是一堆乱码了：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">U2FsdGVkX18mc9HLpslcxebFcULw/x3pPduiYwtum8dFM0AFH0h0o3Wri6K4LXVF</span><br><span class="line">HFj/F0SeXy4Ma3odakvf2oRuM8C4CGPHICzSq2/X830=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="A"><a href="#A" class="headerlink" title="-A"></a>-A</h3><p>与<code>-a</code>或<code>-base64</code>一同使用，将Base64编码的缓冲区输出为单行文本。对于需要嵌入单行数据或者脚本的场景或许很有用。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -A -<span class="built_in">base64</span> -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>得到的输出：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">U2FsdGVkX19CVxeyE43LfGZf9QR73J7HXEYgc2PmfcElfbIwwvrUS1VRrCfKUqjkL9k2ldAVxTXdmf0c41rluoMKY+On4rKwzRpZlY2Vv84=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="加密选项"><a href="#加密选项" class="headerlink" title="加密选项"></a>加密选项</h2><hr>
+<h3 id="nopad"><a href="#nopad" class="headerlink" title="-nopad"></a>-nopad</h3><p>禁用分组加密算法的块填充。此时如果数据长度不是分组大小的整数倍，可能会出错。</p>
+<hr>
+<h3 id="salt"><a href="#salt" class="headerlink" title="-salt"></a>-salt</h3><p>为KDF加盐，默认就是开启的。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="nosalt"><a href="#nosalt" class="headerlink" title="-nosalt"></a>-nosalt</h3><p>手动指定KDF不使用盐，<strong>不推荐</strong>且<strong>不安全</strong>，这会削弱加密面对彩虹表攻击和爆破攻击的强度。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -nosalt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="debug"><a href="#debug" class="headerlink" title="-debug"></a>-debug</h3><p>输出调试信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -debug -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出是：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">in plaintext<span class="selector-class">.txt</span> -out ciphertext<span class="selector-class">.txt</span></span><br><span class="line">BIO<span class="selector-attr">[0x1e9bc5cf7f0]</span>: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">8</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: write return <span class="number">1</span> processed: <span class="number">8</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">8</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: write return <span class="number">1</span> processed: <span class="number">8</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: <span class="built_in">ctrl</span>(<span class="number">6</span>) - cipher</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">ctrl</span>(<span class="number">6</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">10</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">2</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">read</span>(<span class="number">0</span>,<span class="number">8192</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: read return <span class="number">1</span> processed: <span class="number">64</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">64</span>) - cipher</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">64</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: write return <span class="number">1</span> processed: <span class="number">64</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: write return <span class="number">1</span> processed: <span class="number">64</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">10</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">2</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">1</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: <span class="built_in">ctrl</span>(<span class="number">11</span>) - cipher</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">ctrl</span>(<span class="number">11</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: ctrl return <span class="number">1</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: ctrl return <span class="number">1</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: Free - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: Free - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: Free - cipher</span><br></pre></td></tr></table></figure>
+
+<p>这其实是OpenSSL API给出的一些日志信息，其中涉及到C语言的操作，希望了解底层实现或者需要功能调试的可能会用到这个选项。</p>
+<hr>
+<h3 id="bufsize"><a href="#bufsize" class="headerlink" title="-bufsize"></a>-bufsize</h3><p>手动调整OpenSSL缓冲区的大小，这个值默认情况下是8192B，个人认为大多数情况下没必要修改。</p>
+<p>更大的缓冲区在处理大文件时能减少IO次数，提升性能，但会引起更大的内存开销；更小的缓冲区处理小文件时能节省内存，但是处理大文件时IO次数会提高，性能会受到影响。</p>
+<p>一个示例，把缓冲区修改为1024B：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -bufsize 1024 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="K"><a href="#K" class="headerlink" title="-K"></a>-K</h3><p>手动指定初始密钥（Raw Key），绕过KDF。输入形式为16进制。必须与<code>-iv</code>一同使用。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将Raw Key手动覆盖为<code>dc76d65a6ccf7f33fd8ecb7fe640e272</code>，将IV手动覆盖为<code>12caf7e7136907d82c6a01a0e3b7fc16</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -K dc76d65a6ccf7f33fd8ecb7fe640e272 -iv 12caf7e7136907d82c6a01a0e3b7fc16 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="iv"><a href="#iv" class="headerlink" title="-iv"></a>-iv</h3><p>手动指定初始化向量（Initialization Vector, IV），绕过自带的IV发生器。输入形式为16进制。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将Raw Key手动覆盖为<code>dc76d65a6ccf7f33fd8ecb7fe640e272</code>，将IV手动覆盖为<code>12caf7e7136907d82c6a01a0e3b7fc16</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -K dc76d65a6ccf7f33fd8ecb7fe640e272 -iv 12caf7e7136907d82c6a01a0e3b7fc16 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="S"><a href="#S" class="headerlink" title="-S"></a>-S</h3><p>手动指定KDF的盐值（Salt），绕过自带的Salt发生器。输入形式为16进制。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将盐值手动覆盖为<code>4351431709882387</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -S 4351431709882387 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="md"><a href="#md" class="headerlink" title="-md"></a>-md</h3><p>手动指定KDF使用的散列算法，绕过默认的散列算法。一般而言，没必要。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将散列算法手动修改为<code>SM3</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -md SM3 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="iter"><a href="#iter" class="headerlink" title="-iter"></a>-iter</h3><p>手动指定KDF的迭代次数，覆盖默认的迭代次数（10000）。</p>
+<p>例如，将KDF的迭代次数手动修改为<code>80000</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="pbkdf2"><a href="#pbkdf2" class="headerlink" title="-pbkdf2"></a>-pbkdf2</h3><p>使用PBKDF2来生成初始密钥，这是一种良好的安全实践：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="none"><a href="#none" class="headerlink" title="-none"></a>-none</h3><p>不进行加密，通常是调试时使用的。</p>
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>将选定的文件加载到随机数生成器当中，提供额外的安全性。最好使用可靠的随机源，例如在Linux系统上：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt -rand /dev/urandom</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="writerand"></a>writerand</h3><p>向选定的文件输出生成的随机数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt -writerand random.txt</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenSSL CLI 散列函数 个人使用经验</title>
+    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
+
+<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
+<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
+<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
+<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
+<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
+<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
+<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
+<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
+<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
+<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
+<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
+<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
+<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
+<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
+<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
+<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
+<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
+<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
+<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
+<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
+<hr>
+<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
+
+<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
+<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它们的输出一样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
+
+<p>可以尝试把它输出到文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
+<p>例如，这是默认的SHAKE-128：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它的输出为128位：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
+<p>例如，将输出调节为24字节（192位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
+
+<p>将输出调节为32字节（256位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
+
+<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenSSL CLI 密钥对生成工具 个人使用经验</title>
+    <url>/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: genpkey [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"> -paramfile infile   Parameters file</span><br><span class="line"> -algorithm val      The public key algorithm</span><br><span class="line"> -quiet              Do not output status <span class="keyword">while</span> generating keys</span><br><span class="line"> -pkeyopt val        Set the public key algorithm option as opt:value</span><br><span class="line"> -config infile      Load a configuration file (this may load modules)</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -outform PEM|DER    output format (DER or PEM)</span><br><span class="line"> -pass val           Output file pass phrase <span class="built_in">source</span></span><br><span class="line"> -genparam           Generate parameters, not key</span><br><span class="line"> -text               Print the <span class="keyword">in</span> text</span><br><span class="line"> -*                  Cipher to use to encrypt the key</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line">Order of options may be important!  See the documentation.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="简单的生成密钥对指令"><a href="#简单的生成密钥对指令" class="headerlink" title="简单的生成密钥对指令"></a>简单的生成密钥对指令</h2><hr>
+<h3 id="私钥生成"><a href="#私钥生成" class="headerlink" title="私钥生成"></a>私钥生成</h3><p>为了生成一个密钥对，至少需要指定一个算法，指定输出文件的名称。</p>
+<p>例如以下命令，它将会生成一个Ed25519私钥文件，文件名是<code>private-key-Ed25519.pem</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm Ed25519 -out private-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="公钥提取"><a href="#公钥提取" class="headerlink" title="公钥提取"></a>公钥提取</h3><p>可以从私钥文件中提取公钥。</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>私钥文件中提取对应的Ed25519公钥文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -pubout -out public-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="查看公钥与私钥内容"><a href="#查看公钥与私钥内容" class="headerlink" title="查看公钥与私钥内容"></a>查看公钥与私钥内容</h3><p>可以用<code>pkey</code>指令访问OpenSSL的私钥文件，可以输出私钥、公钥的算法与内容：</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>文件中读取算法、私钥内容、公钥内容，并显示在屏幕上：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">ED25519 Private-Key:</span><br><span class="line">priv:</span><br><span class="line">    ea:f7:<span class="number">04</span>:a2:<span class="number">20</span>:b6:e8:<span class="number">65</span>:<span class="number">40</span>:<span class="number">65</span>:ad:<span class="number">44</span>:df:b4:<span class="number">9</span>f:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">9</span>b:<span class="number">6</span>c:b6:<span class="number">8</span>d:<span class="number">92</span>:<span class="number">66</span>:a9:<span class="number">73</span>:<span class="number">96</span>:cb:ae:aa:bd:<span class="number">52</span>:</span><br><span class="line">    <span class="number">28</span>:<span class="number">69</span></span><br><span class="line">pub:</span><br><span class="line">    <span class="number">42</span>:a3:<span class="number">68</span>:<span class="number">18</span>:<span class="number">8</span>e:df:<span class="number">3</span>e:<span class="number">0</span>c:c0:<span class="number">49</span>:<span class="number">29</span>:ef:e3:<span class="number">27</span>:c7:</span><br><span class="line">    <span class="number">31</span>:<span class="number">75</span>:b1:<span class="number">39</span>:<span class="number">43</span>:f4:<span class="number">26</span>:<span class="number">2</span>c:<span class="number">38</span>:<span class="number">07</span>:d4:d9:<span class="number">43</span>:e1:a1:</span><br><span class="line">    <span class="number">70</span>:<span class="number">45</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定引擎，通常没必要（实则我也不会）</p>
+<hr>
+<h3 id="paramfile"><a href="#paramfile" class="headerlink" title="-paramfile"></a>-paramfile</h3><p>输入参数文件</p>
+<hr>
+<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="-algorithm"></a>-algorithm</h3><p>指定算法，目前支持的算法有<code>RSA</code>, <code>RSA-PSS</code>, <code>EC</code>, <code>X25519</code>, <code>X448</code>, <code>Ed25519</code>, <code>Ed448</code>。（版本<code>3.1.3</code>）</p>
+<p>举个例子，生成RSA-2048私钥（这里不用指定参数是因为RSA默认2048位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="quiet"><a href="#quiet" class="headerlink" title="-quiet"></a>-quiet</h3><p>生成密钥时不输出信息，例如熵池等等。</p>
+<hr>
+<h3 id="pkeyopt"><a href="#pkeyopt" class="headerlink" title="-pkeyopt"></a>-pkeyopt</h3><p>修改算法的安全参数，这里很难一一列举，具体可以去看OpenSSL的文档：<a href="https://www.openssl.org/docs/manmaster/man1/openssl-genpkey.html#KEY-GENERATION-OPTIONS">&#x2F;docs&#x2F;manmaster&#x2F;man1&#x2F;openssl-genpkey.html</a></p>
+<p>安全参数是否可用需要根据选择的算法来判断。</p>
+<p>例如，这一串命令可以生成一个RSA-4096私钥：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out RSA-4096-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="config"><a href="#config" class="headerlink" title="-config"></a>-config</h3><p>外部导入配置文件，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-4096-Private-Key.pem -config my-config.cnf</span><br></pre></td></tr></table></figure>
+
+<p>Config文件，我个人还没弄清楚怎么写，这就不做误导性示范了。</p>
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文件名，例如输出为<code>RSA-2048-Private-Key.pem</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="outform"><a href="#outform" class="headerlink" title="-outform"></a>-outform</h3><p>指定输出文件格式，支持两种格式——<code>PEM</code>和<code>DER</code></p>
+<p>**PEM(Privacy Enhanced Mail)**：可读的文本格式，包括边界标记、数据类型，编码为Base64。</p>
+<p>**DER(Distinguished Encoding Rules)**：不可读的二进制格式，格式紧凑，无边界标记。</p>
+<p>通常而言，为了提高兼容性和可读性，PEM是常见的选择，也是默认选项。</p>
+<p>如果要以DER格式输出文件，一个例子如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -outform DER -out RSA-2048-Private-Key.der</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="pass"><a href="#pass" class="headerlink" title="-pass"></a>-pass</h3><p>类似于对称加密的密钥，可以通过各种方式指定输出密钥文件的密码短语（Pass Phrase），例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm X25519 -out X25519-Private-Key.pem -pass pass:your_password</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="genparam"><a href="#genparam" class="headerlink" title="-genparam"></a>-genparam</h3><p>只生成参数而不生成密钥，此时<code>genpkey</code>指令可以兼容更多的算法，其中额外的有<code>DH</code>，<code>DSA</code>：</p>
+<p>例如，生成DSA参数：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm DSA -genparam</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+.....+..+.......+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">...........................+.....+.+....+...................+.............+........+.......+........................+.+...........+.+.....+......+..............+.....................+...........+....+...+.+........+.....+...+..+..........+..+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">---<span class="attr">--BEGIN</span> DSA PARAMETERS-----</span><br><span class="line">MIICKAKCAQEAruL2N9/nisKseg6CFjB/mXNC0FFRTcnecvbF+<span class="number">9</span>eD6UepnH7mv0K1</span><br><span class="line">+RFL8ECrHGxlYgAkLA9MN+ZiQQ7BSE6qQt0CEGMkgIW6GFUPt6opupB5Ql+qmEBo</span><br><span class="line">uivQr44/VJKjC0vzli85I+UD2f24xrroqssAf4n9B4t22Bg6dxV2AGAfDLdzsNwQ</span><br><span class="line">GITaruJmEj6Xkgyx3rx3KTvQfLtiHdMUJ9rBs5JonomNrEuX5kjf55chFub9IYDF</span><br><span class="line">Vpjsp57hvEJmDU6kQKihkax69V+NmF4T8cs3kAukYfLn/VubbF+FOEZuzQQsAO5n</span><br><span class="line">tGCedKsKmXCtxCgCqZu+FLIxil+A0w36OQIdAI4/RI2+Im2ZhBKGdtJ2Y8a9ndsU</span><br><span class="line">w5bAokSt+tECggEAEct/e8totsdL3RkD+qMq31Gk58yZoda876Uej6YJYYgt7RwB</span><br><span class="line">CCzOEYP/Hf/ditPSpJ4kFc8/qFp0nHAq4pctZKtywVE3T2XVwdzgBF0uLwIb505G</span><br><span class="line">o92Gcb/eEir8mBxSOvVT6X1hmZsnwHehWyasYYcNrjdorH9UvQ9VwAE5nnkK/HLH</span><br><span class="line">KxQ9P7MAdc6dGYxjFjW36ljlRCUvvNeeVPc+J5a0/JJxfm19YLatWaCnpfp1nHes</span><br><span class="line">YsQ3QdB6LKWd7OFwP6lw+OEKWRc3XhczfUBzOBPqj/QBUfHCQX6PgUJyLgiZTD/N</span><br><span class="line">YGOQzq0L9umxt/lrDQbrIKIuDLyWxe8gVyQ41g==</span><br><span class="line">---<span class="attr">--END</span> DSA PARAMETERS-----</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="text"><a href="#text" class="headerlink" title="-text"></a>-text</h3><p>把整个算法的过程结果直接全部输出到stdout，也就是打印到屏幕上，其中包括各种中间参数和密钥例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -text</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+...+..........+..+.........+....+...+++++++++++++++++++++++++++++++++++++++*.+.+............+...+......+.....+++++++++++++++++++++++++++++++++++++++*....+...........+...+.........+.......+...........+.........+...+.+..+...............+...+....+.....+.+.....+....+...........+......+.+.....+...+............+.........+....+..+...+......+....+..+....+.....+...+...+.......+......+......+...+......+...........+....+.........+..+......+.........+.............+..+.+...+......+.....+...+......+.+......+..+...+...+.......+..+.+......+......+........+.+......+............+......+.........+......+..............+...+.......+......+..........................++++++</span><br><span class="line">..........+++++++++++++++++++++++++++++++++++++++*...+.............................+...+...+....+......+.....+.............+.....+..........+..+...+.+...+...+.....+.......+++++++++++++++++++++++++++++++++++++++*...............+....+........................+.....+.+.....+.......+..+.............+.....+....+......+........+.......+...............+.....+.........+...+.+..++++++</span><br><span class="line">---<span class="attr">--BEGIN</span> PRIVATE KEY-----</span><br><span class="line">MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7n8puayHyAh0</span><br><span class="line">lU6/QfL9XrnyXcMKs4onmdPntVP2UO17jHvYXStNKhLKJkZKEta0yEKihdZdOzmN</span><br><span class="line">AJd2Er5uVWOixQAwphFurajknfEerfe6dOKiTXObWNjgwcHw/xUOT7FKNop8h5DG</span><br><span class="line">X56OwHzWQMma9fWarqxEYR36b8pIno/D7+rKZxrZaJObWoexu/KQT0JCusW1qgTM</span><br><span class="line">i3XFXw4/Lzv/joP/knoxmAIzGb5+YNRAL9TIZioA3AwgiRJrgQNdB9HQTijZplbJ</span><br><span class="line"><span class="number">705</span>eEwVoUSM1AddlS+wV2uhVSSThM/i87MQtSbsvfkUZauYLioJSfxaGWW4Y3Ybe</span><br><span class="line"><span class="number">7</span>ej4ELufAgMBAAECggEAG44bi/DPZa6JQosAN05Ilm+XISOOJva2OFNtL0Ryl6EH</span><br><span class="line">u7lkkhxQbdvJCNRJbte30fFAfUYbe0Wn04ofKpFQIqsm/<span class="number">2</span>vm5giQm18UR4ZDyF9U</span><br><span class="line">I0Phm9vKWbKaXb79JZRWGOmC37oZyMpMIS+Dq4FWW5RhzjcEguCvFNBKlYkak9GV</span><br><span class="line">eKYWdNLA0au4AXRqVmaI7YmGxakHSpVHPIGULk33dlll3/iLNQS3YH9vqvoe3GK8</span><br><span class="line"><span class="number">87</span>ekSAAWTsOZUiJ0MAWMhfkfEDjG3zFq632rg2S+m4e2J1pGVcXPTuHjTSdacWCM</span><br><span class="line">DNekPsKEBByMi00aZtcogxO6zHm121EoHPulcK26oQKBgQDYRq9JQFOCk6ZpeCeb</span><br><span class="line">U6slj+QcAnc95XaXtdg1Kh17IISTLJD1p3tSnbziBWmmugpL9P8tJC63ZcdadYqn</span><br><span class="line">cMzYctNSgMuOgNWKBtXPH4qxWJ8JL8I4Ft8NOiajfVonSjGz+emNzWnNUdDYx5PP</span><br><span class="line">w2WkD82mbAOOUu81Uj4h5WWi+QKBgQDH9avwENMi60WARd1vb+jfS78yuSf3zTe9</span><br><span class="line">s5XgSr2hAHjX0xODAOAEiX253Ube83n9oEkhHMKTcQfzrIgoJ3G5UZ6Pd43tiqrp</span><br><span class="line">ejygyxlOpH+grSiwHc7i3WZWx31kjBCmoFgCQUBfH4UUYzwOqvZgoC3G4lVvYug/</span><br><span class="line"><span class="number">33S</span>RqXZhVwKBgHI8I6nVSEbYJjXfOUxZzTRx5FLHGqSe5x0K98BdFmVKr7vs9kRK</span><br><span class="line">ymDA4Fuh8EQYUAf+yCnXyrUkFUA6hZobgpdxTx1s2hfTBPd61MQqLN+vp5D6oONv</span><br><span class="line">cTFTXcVNGKlYDxi5EBvOO+wvItjd0b0TwEP/<span class="number">9</span>OfKdbZfJ+pKHndY625BAoGAIlif</span><br><span class="line">fO/W5GOXH45gl7iYPmqrX9IP/<span class="selector-tag">G</span>+CiJIlR05vPg1vtFqsOk9XK1BWiStp9ffKV3dF</span><br><span class="line">uGtRPLQokoFrLcKAtT1AyBHYDhpIeywk59Wa9jgpN/cmSwIDvFIdNwCzGCc64PQf</span><br><span class="line">ydtdbDlkyXi2IyrYgQZidov/<span class="number">8s</span>8BZ59BTZfXHqcCgYEAtciV66BhhLSJ0P2hn453</span><br><span class="line">Q2/XvHXU68CKhl/<span class="number">8s</span>G8CyrPxO6Wk3oCIeZPhV0k8HAoU00r1L+j4uwY43/WDJtR5</span><br><span class="line">ljEn5xndTNmd0WWfaV1BruM7ql0I/URwpE6D6rsFq4SFHnKkVsB1Hb6d7YxRt+ct</span><br><span class="line">kjGDW1ZkJzDWKlf7Lf9oKqc=</span><br><span class="line">---<span class="attr">--END</span> PRIVATE KEY-----</span><br><span class="line">Private-Key: (<span class="number">2048</span> bit, <span class="number">2</span> primes)</span><br><span class="line">modulus:</span><br><span class="line">    <span class="number">00</span>:a8:ee:<span class="number">7</span>f:<span class="number">29</span>:b9:ac:<span class="number">87</span>:c8:<span class="number">08</span>:<span class="number">74</span>:<span class="number">95</span>:<span class="number">4</span>e:bf:<span class="number">41</span>:</span><br><span class="line">    f2:fd:<span class="number">5</span>e:b9:f2:<span class="number">5</span>d:c3:<span class="number">0</span>a:b3:<span class="number">8</span>a:<span class="number">27</span>:<span class="number">99</span>:d3:e7:b5:</span><br><span class="line">    <span class="number">53</span>:f6:<span class="number">50</span>:ed:<span class="number">7</span>b:<span class="number">8</span>c:<span class="number">7</span>b:d8:<span class="number">5</span>d:<span class="number">2</span>b:<span class="number">4</span>d:<span class="number">2</span>a:<span class="number">12</span>:ca:<span class="number">26</span>:</span><br><span class="line">    <span class="number">46</span>:<span class="number">4</span>a:<span class="number">12</span>:d6:b4:c8:<span class="number">42</span>:a2:<span class="number">85</span>:d6:<span class="number">5</span>d:<span class="number">3</span>b:<span class="number">39</span>:<span class="number">8</span>d:<span class="number">00</span>:</span><br><span class="line">    <span class="number">97</span>:<span class="number">76</span>:<span class="number">12</span>:be:<span class="number">6</span>e:<span class="number">55</span>:<span class="number">63</span>:a2:c5:<span class="number">00</span>:<span class="number">30</span>:a6:<span class="number">11</span>:<span class="number">6</span>e:ad:</span><br><span class="line">    a8:e4:<span class="number">9</span>d:f1:<span class="number">1</span>e:ad:f7:ba:<span class="number">74</span>:e2:a2:<span class="number">4</span>d:<span class="number">73</span>:<span class="number">9</span>b:<span class="number">58</span>:</span><br><span class="line">    d8:e0:c1:c1:f0:ff:<span class="number">15</span>:<span class="number">0</span>e:<span class="number">4</span>f:b1:<span class="number">4</span>a:<span class="number">36</span>:<span class="number">8</span>a:<span class="number">7</span>c:<span class="number">87</span>:</span><br><span class="line">    <span class="number">90</span>:c6:<span class="number">5</span>f:<span class="number">9</span>e:<span class="number">8</span>e:c0:<span class="number">7</span>c:d6:<span class="number">40</span>:c9:<span class="number">9</span>a:f5:f5:<span class="number">9</span>a:ae:</span><br><span class="line">    ac:<span class="number">44</span>:<span class="number">61</span>:<span class="number">1</span>d:fa:<span class="number">6</span>f:ca:<span class="number">48</span>:<span class="number">9</span>e:<span class="number">8</span>f:c3:ef:ea:ca:<span class="number">67</span>:</span><br><span class="line">    <span class="number">1</span>a:d9:<span class="number">68</span>:<span class="number">93</span>:<span class="number">9</span>b:<span class="number">5</span>a:<span class="number">87</span>:b1:bb:f2:<span class="number">90</span>:<span class="number">4</span>f:<span class="number">42</span>:<span class="number">42</span>:ba:</span><br><span class="line">    c5:b5:aa:<span class="number">04</span>:cc:<span class="number">8</span>b:<span class="number">75</span>:c5:<span class="number">5</span>f:<span class="number">0</span>e:<span class="number">3</span>f:<span class="number">2</span>f:<span class="number">3</span>b:ff:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">83</span>:ff:<span class="number">92</span>:<span class="number">7</span>a:<span class="number">31</span>:<span class="number">98</span>:<span class="number">02</span>:<span class="number">33</span>:<span class="number">19</span>:be:<span class="number">7</span>e:<span class="number">60</span>:d4:<span class="number">40</span>:<span class="number">2</span>f:</span><br><span class="line">    d4:c8:<span class="number">66</span>:<span class="number">2</span>a:<span class="number">00</span>:dc:<span class="number">0</span>c:<span class="number">20</span>:<span class="number">89</span>:<span class="number">12</span>:<span class="number">6</span>b:<span class="number">81</span>:<span class="number">03</span>:<span class="number">5</span>d:<span class="number">07</span>:</span><br><span class="line">    d1:d0:<span class="number">4</span>e:<span class="number">28</span>:d9:a6:<span class="number">56</span>:c9:ef:<span class="number">4</span>e:<span class="number">5</span>e:<span class="number">13</span>:<span class="number">05</span>:<span class="number">68</span>:<span class="number">51</span>:</span><br><span class="line">    <span class="number">23</span>:<span class="number">35</span>:<span class="number">01</span>:d7:<span class="number">65</span>:<span class="number">4</span>b:ec:<span class="number">15</span>:da:e8:<span class="number">55</span>:<span class="number">49</span>:<span class="number">24</span>:e1:<span class="number">33</span>:</span><br><span class="line">    f8:bc:ec:c4:<span class="number">2</span>d:<span class="number">49</span>:bb:<span class="number">2</span>f:<span class="number">7</span>e:<span class="number">45</span>:<span class="number">19</span>:<span class="number">6</span>a:e6:<span class="number">0</span>b:<span class="number">8</span>a:</span><br><span class="line">    <span class="number">82</span>:<span class="number">52</span>:<span class="number">7</span>f:<span class="number">16</span>:<span class="number">86</span>:<span class="number">59</span>:<span class="number">6</span>e:<span class="number">18</span>:dd:<span class="number">86</span>:de:ed:e8:f8:<span class="number">10</span>:</span><br><span class="line">    bb:<span class="number">9</span>f</span><br><span class="line">publicExponent: <span class="number">65537</span> (<span class="number">0</span>x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    <span class="number">1</span>b:<span class="number">8</span>e:<span class="number">1</span>b:<span class="number">8</span>b:f0:cf:<span class="number">65</span>:ae:<span class="number">89</span>:<span class="number">42</span>:<span class="number">8</span>b:<span class="number">00</span>:<span class="number">37</span>:<span class="number">4</span>e:<span class="number">48</span>:</span><br><span class="line">    <span class="number">96</span>:<span class="number">6</span>f:<span class="number">97</span>:<span class="number">21</span>:<span class="number">23</span>:<span class="number">8</span>e:<span class="number">26</span>:f6:b6:<span class="number">38</span>:<span class="number">53</span>:<span class="number">6</span>d:<span class="number">2</span>f:<span class="number">44</span>:<span class="number">72</span>:</span><br><span class="line">    <span class="number">97</span>:a1:<span class="number">07</span>:bb:b9:<span class="number">64</span>:<span class="number">92</span>:<span class="number">1</span>c:<span class="number">50</span>:<span class="number">6</span>d:db:c9:<span class="number">08</span>:d4:<span class="number">49</span>:</span><br><span class="line">    <span class="number">6</span>e:d7:b7:d1:f1:<span class="number">40</span>:<span class="number">7</span>d:<span class="number">46</span>:<span class="number">1</span>b:<span class="number">7</span>b:<span class="number">45</span>:a7:d3:<span class="number">8</span>a:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">2</span>a:<span class="number">91</span>:<span class="number">50</span>:<span class="number">22</span>:ab:<span class="number">26</span>:ff:<span class="number">6</span>b:e6:e6:<span class="number">08</span>:<span class="number">90</span>:<span class="number">9</span>b:<span class="number">5</span>f:<span class="number">14</span>:</span><br><span class="line">    <span class="number">47</span>:<span class="number">86</span>:<span class="number">43</span>:c8:<span class="number">5</span>f:<span class="number">54</span>:<span class="number">23</span>:<span class="number">43</span>:e1:<span class="number">9</span>b:db:ca:<span class="number">59</span>:b2:<span class="number">9</span>a:</span><br><span class="line">    <span class="number">5</span>d:be:fd:<span class="number">25</span>:<span class="number">94</span>:<span class="number">56</span>:<span class="number">18</span>:e9:<span class="number">82</span>:df:ba:<span class="number">19</span>:c8:ca:<span class="number">4</span>c:</span><br><span class="line">    <span class="number">21</span>:<span class="number">2</span>f:<span class="number">83</span>:ab:<span class="number">81</span>:<span class="number">56</span>:<span class="number">5</span>b:<span class="number">94</span>:<span class="number">61</span>:ce:<span class="number">37</span>:<span class="number">04</span>:<span class="number">82</span>:e0:af:</span><br><span class="line">    <span class="number">14</span>:d0:<span class="number">4</span>a:<span class="number">95</span>:<span class="number">89</span>:<span class="number">1</span>a:<span class="number">93</span>:d1:<span class="number">95</span>:<span class="number">78</span>:a6:<span class="number">16</span>:<span class="number">74</span>:d2:c0:</span><br><span class="line">    d1:ab:b8:<span class="number">01</span>:<span class="number">74</span>:<span class="number">6</span>a:<span class="number">56</span>:<span class="number">66</span>:<span class="number">88</span>:ed:<span class="number">89</span>:<span class="number">86</span>:c5:a9:<span class="number">07</span>:</span><br><span class="line">    <span class="number">4</span>a:<span class="number">95</span>:<span class="number">47</span>:<span class="number">3</span>c:<span class="number">81</span>:<span class="number">94</span>:<span class="number">2</span>e:<span class="number">4</span>d:f7:<span class="number">76</span>:<span class="number">59</span>:<span class="number">65</span>:df:f8:<span class="number">8</span>b:</span><br><span class="line">    <span class="number">35</span>:<span class="number">04</span>:b7:<span class="number">60</span>:<span class="number">7</span>f:<span class="number">6</span>f:aa:fa:<span class="number">1</span>e:dc:<span class="number">62</span>:bc:f3:b7:a4:</span><br><span class="line">    <span class="number">48</span>:<span class="number">00</span>:<span class="number">16</span>:<span class="number">4</span>e:c3:<span class="number">99</span>:<span class="number">52</span>:<span class="number">22</span>:<span class="number">74</span>:<span class="number">30</span>:<span class="number">05</span>:<span class="number">8</span>c:<span class="number">85</span>:f9:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">10</span>:<span class="number">38</span>:c6:df:<span class="number">31</span>:<span class="number">6</span>a:eb:<span class="number">7</span>d:ab:<span class="number">83</span>:<span class="number">64</span>:be:<span class="number">9</span>b:<span class="number">87</span>:b6:</span><br><span class="line">    <span class="number">27</span>:<span class="number">5</span>a:<span class="number">46</span>:<span class="number">55</span>:c5:cf:<span class="number">4</span>e:e1:e3:<span class="number">4</span>d:<span class="number">27</span>:<span class="number">5</span>a:<span class="number">71</span>:<span class="number">60</span>:<span class="number">8</span>c:</span><br><span class="line">    <span class="number">0</span>c:d7:a4:<span class="number">3</span>e:c2:<span class="number">84</span>:<span class="number">04</span>:<span class="number">1</span>c:<span class="number">8</span>c:<span class="number">8</span>b:<span class="number">4</span>d:<span class="number">1</span>a:<span class="number">66</span>:d7:<span class="number">28</span>:</span><br><span class="line">    <span class="number">83</span>:<span class="number">13</span>:ba:cc:<span class="number">79</span>:b5:db:<span class="number">51</span>:<span class="number">28</span>:<span class="number">1</span>c:fb:a5:<span class="number">70</span>:ad:ba:</span><br><span class="line">    a1</span><br><span class="line">prime1:</span><br><span class="line">    <span class="number">00</span>:d8:<span class="number">46</span>:af:<span class="number">49</span>:<span class="number">40</span>:<span class="number">53</span>:<span class="number">82</span>:<span class="number">93</span>:a6:<span class="number">69</span>:<span class="number">78</span>:<span class="number">27</span>:<span class="number">9</span>b:<span class="number">53</span>:</span><br><span class="line">    ab:<span class="number">25</span>:<span class="number">8</span>f:e4:<span class="number">1</span>c:<span class="number">02</span>:<span class="number">77</span>:<span class="number">3</span>d:e5:<span class="number">76</span>:<span class="number">97</span>:b5:d8:<span class="number">35</span>:<span class="number">2</span>a:</span><br><span class="line">    <span class="number">1</span>d:<span class="number">7</span>b:<span class="number">20</span>:<span class="number">84</span>:<span class="number">93</span>:<span class="number">2</span>c:<span class="number">90</span>:f5:a7:<span class="number">7</span>b:<span class="number">52</span>:<span class="number">9</span>d:bc:e2:<span class="number">05</span>:</span><br><span class="line">    <span class="number">69</span>:a6:ba:<span class="number">0</span>a:<span class="number">4</span>b:f4:ff:<span class="number">2</span>d:<span class="number">24</span>:<span class="number">2</span>e:b7:<span class="number">65</span>:c7:<span class="number">5</span>a:<span class="number">75</span>:</span><br><span class="line">    <span class="number">8</span>a:a7:<span class="number">70</span>:cc:d8:<span class="number">72</span>:d3:<span class="number">52</span>:<span class="number">80</span>:cb:<span class="number">8</span>e:<span class="number">80</span>:d5:<span class="number">8</span>a:<span class="number">06</span>:</span><br><span class="line">    d5:cf:<span class="number">1</span>f:<span class="number">8</span>a:b1:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">09</span>:<span class="number">2</span>f:c2:<span class="number">38</span>:<span class="number">16</span>:df:<span class="number">0</span>d:<span class="number">3</span>a:</span><br><span class="line">    <span class="number">26</span>:a3:<span class="number">7</span>d:<span class="number">5</span>a:<span class="number">27</span>:<span class="number">4</span>a:<span class="number">31</span>:b3:f9:e9:<span class="number">8</span>d:cd:<span class="number">69</span>:cd:<span class="number">51</span>:</span><br><span class="line">    d0:d8:c7:<span class="number">93</span>:cf:c3:<span class="number">65</span>:a4:<span class="number">0</span>f:cd:a6:<span class="number">6</span>c:<span class="number">03</span>:<span class="number">8</span>e:<span class="number">52</span>:</span><br><span class="line">    ef:<span class="number">35</span>:<span class="number">52</span>:<span class="number">3</span>e:<span class="number">21</span>:e5:<span class="number">65</span>:a2:f9</span><br><span class="line">prime2:</span><br><span class="line">    <span class="number">00</span>:c7:f5:ab:f0:<span class="number">10</span>:d3:<span class="number">22</span>:eb:<span class="number">45</span>:<span class="number">80</span>:<span class="number">45</span>:dd:<span class="number">6</span>f:<span class="number">6</span>f:</span><br><span class="line">    e8:df:<span class="number">4</span>b:bf:<span class="number">32</span>:b9:<span class="number">27</span>:f7:cd:<span class="number">37</span>:bd:b3:<span class="number">95</span>:e0:<span class="number">4</span>a:</span><br><span class="line">    bd:a1:<span class="number">00</span>:<span class="number">78</span>:d7:d3:<span class="number">13</span>:<span class="number">83</span>:<span class="number">00</span>:e0:<span class="number">04</span>:<span class="number">89</span>:<span class="number">7</span>d:b9:dd:</span><br><span class="line">    <span class="number">46</span>:de:f3:<span class="number">79</span>:fd:a0:<span class="number">49</span>:<span class="number">21</span>:<span class="number">1</span>c:c2:<span class="number">93</span>:<span class="number">71</span>:<span class="number">07</span>:f3:ac:</span><br><span class="line">    <span class="number">88</span>:<span class="number">28</span>:<span class="number">27</span>:<span class="number">71</span>:b9:<span class="number">51</span>:<span class="number">9</span>e:<span class="number">8</span>f:<span class="number">77</span>:<span class="number">8</span>d:ed:<span class="number">8</span>a:aa:e9:<span class="number">7</span>a:</span><br><span class="line">    <span class="number">3</span>c:a0:cb:<span class="number">19</span>:<span class="number">4</span>e:a4:<span class="number">7</span>f:a0:ad:<span class="number">28</span>:b0:<span class="number">1</span>d:ce:e2:dd:</span><br><span class="line">    <span class="number">66</span>:<span class="number">56</span>:c7:<span class="number">7</span>d:<span class="number">64</span>:<span class="number">8</span>c:<span class="number">10</span>:a6:a0:<span class="number">58</span>:<span class="number">02</span>:<span class="number">41</span>:<span class="number">40</span>:<span class="number">5</span>f:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">85</span>:<span class="number">14</span>:<span class="number">63</span>:<span class="number">3</span>c:<span class="number">0</span>e:aa:f6:<span class="number">60</span>:a0:<span class="number">2</span>d:c6:e2:<span class="number">55</span>:<span class="number">6</span>f:<span class="number">62</span>:</span><br><span class="line">    e8:<span class="number">3</span>f:df:<span class="number">74</span>:<span class="number">91</span>:a9:<span class="number">76</span>:<span class="number">61</span>:<span class="number">57</span></span><br><span class="line">exponent1:</span><br><span class="line">    <span class="number">72</span>:<span class="number">3</span>c:<span class="number">23</span>:a9:d5:<span class="number">48</span>:<span class="number">46</span>:d8:<span class="number">26</span>:<span class="number">35</span>:df:<span class="number">39</span>:<span class="number">4</span>c:<span class="number">59</span>:cd:</span><br><span class="line">    <span class="number">34</span>:<span class="number">71</span>:e4:<span class="number">52</span>:c7:<span class="number">1</span>a:a4:<span class="number">9</span>e:e7:<span class="number">1</span>d:<span class="number">0</span>a:f7:c0:<span class="number">5</span>d:<span class="number">16</span>:</span><br><span class="line">    <span class="number">65</span>:<span class="number">4</span>a:af:bb:ec:f6:<span class="number">44</span>:<span class="number">4</span>a:ca:<span class="number">60</span>:c0:e0:<span class="number">5</span>b:a1:f0:</span><br><span class="line">    <span class="number">44</span>:<span class="number">18</span>:<span class="number">50</span>:<span class="number">07</span>:fe:c8:<span class="number">29</span>:d7:ca:b5:<span class="number">24</span>:<span class="number">15</span>:<span class="number">40</span>:<span class="number">3</span>a:<span class="number">85</span>:</span><br><span class="line">    <span class="number">9</span>a:<span class="number">1</span>b:<span class="number">82</span>:<span class="number">97</span>:<span class="number">71</span>:<span class="number">4</span>f:<span class="number">1</span>d:<span class="number">6</span>c:da:<span class="number">17</span>:d3:<span class="number">04</span>:f7:<span class="number">7</span>a:d4:</span><br><span class="line">    c4:<span class="number">2</span>a:<span class="number">2</span>c:df:af:a7:<span class="number">90</span>:fa:a0:e3:<span class="number">6</span>f:<span class="number">71</span>:<span class="number">31</span>:<span class="number">53</span>:<span class="number">5</span>d:</span><br><span class="line">    c5:<span class="number">4</span>d:<span class="number">18</span>:a9:<span class="number">58</span>:<span class="number">0</span>f:<span class="number">18</span>:b9:<span class="number">10</span>:<span class="number">1</span>b:ce:<span class="number">3</span>b:ec:<span class="number">2</span>f:<span class="number">22</span>:</span><br><span class="line">    d8:dd:d1:bd:<span class="number">13</span>:c0:<span class="number">43</span>:ff:f4:e7:ca:<span class="number">75</span>:b6:<span class="number">5</span>f:<span class="number">27</span>:</span><br><span class="line">    ea:<span class="number">4</span>a:<span class="number">1</span>e:<span class="number">77</span>:<span class="number">58</span>:eb:<span class="number">6</span>e:<span class="number">41</span></span><br><span class="line">exponent2:</span><br><span class="line">    <span class="number">22</span>:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">7</span>c:ef:d6:e4:<span class="number">63</span>:<span class="number">97</span>:<span class="number">1</span>f:<span class="number">8</span>e:<span class="number">60</span>:<span class="number">97</span>:b8:<span class="number">98</span>:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">6</span>a:ab:<span class="number">5</span>f:d2:<span class="number">0</span>f:fc:<span class="number">6</span>f:<span class="number">82</span>:<span class="number">88</span>:<span class="number">92</span>:<span class="number">25</span>:<span class="number">47</span>:<span class="number">4</span>e:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">0</span>d:<span class="number">6</span>f:b4:<span class="number">5</span>a:ac:<span class="number">3</span>a:<span class="number">4</span>f:<span class="number">57</span>:<span class="number">2</span>b:<span class="number">50</span>:<span class="number">56</span>:<span class="number">89</span>:<span class="number">2</span>b:<span class="number">69</span>:</span><br><span class="line">    f5:f7:ca:<span class="number">57</span>:<span class="number">77</span>:<span class="number">45</span>:b8:<span class="number">6</span>b:<span class="number">51</span>:<span class="number">3</span>c:b4:<span class="number">28</span>:<span class="number">92</span>:<span class="number">81</span>:<span class="number">6</span>b:</span><br><span class="line">    <span class="number">2</span>d:c2:<span class="number">80</span>:b5:<span class="number">3</span>d:<span class="number">40</span>:c8:<span class="number">11</span>:d8:<span class="number">0</span>e:<span class="number">1</span>a:<span class="number">48</span>:<span class="number">7</span>b:<span class="number">2</span>c:<span class="number">24</span>:</span><br><span class="line">    e7:d5:<span class="number">9</span>a:f6:<span class="number">38</span>:<span class="number">29</span>:<span class="number">37</span>:f7:<span class="number">26</span>:<span class="number">4</span>b:<span class="number">02</span>:<span class="number">03</span>:bc:<span class="number">52</span>:<span class="number">1</span>d:</span><br><span class="line">    <span class="number">37</span>:<span class="number">00</span>:b3:<span class="number">18</span>:<span class="number">27</span>:<span class="number">3</span>a:e0:f4:<span class="number">1</span>f:c9:db:<span class="number">5</span>d:<span class="number">6</span>c:<span class="number">39</span>:<span class="number">64</span>:</span><br><span class="line">    c9:<span class="number">78</span>:b6:<span class="number">23</span>:<span class="number">2</span>a:d8:<span class="number">81</span>:<span class="number">06</span>:<span class="number">62</span>:<span class="number">76</span>:<span class="number">8</span>b:ff:f2:cf:<span class="number">01</span>:</span><br><span class="line">    <span class="number">67</span>:<span class="number">9</span>f:<span class="number">41</span>:<span class="number">4</span>d:<span class="number">97</span>:d7:<span class="number">1</span>e:a7</span><br><span class="line">coefficient:</span><br><span class="line">    <span class="number">00</span>:b5:c8:<span class="number">95</span>:eb:a0:<span class="number">61</span>:<span class="number">84</span>:b4:<span class="number">89</span>:d0:fd:a1:<span class="number">9</span>f:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">77</span>:<span class="number">43</span>:<span class="number">6</span>f:d7:bc:<span class="number">75</span>:d4:eb:c0:<span class="number">8</span>a:<span class="number">86</span>:<span class="number">5</span>f:fc:b0:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">02</span>:ca:b3:f1:<span class="number">3</span>b:a5:a4:de:<span class="number">80</span>:<span class="number">88</span>:<span class="number">79</span>:<span class="number">93</span>:e1:<span class="number">57</span>:<span class="number">49</span>:</span><br><span class="line">    <span class="number">3</span>c:<span class="number">1</span>c:<span class="number">0</span>a:<span class="number">14</span>:d3:<span class="number">4</span>a:f5:<span class="number">2</span>f:e8:f8:bb:<span class="number">06</span>:<span class="number">38</span>:df:f5:</span><br><span class="line">    <span class="number">83</span>:<span class="number">26</span>:d4:<span class="number">79</span>:<span class="number">96</span>:<span class="number">31</span>:<span class="number">27</span>:e7:<span class="number">19</span>:dd:<span class="number">4</span>c:d9:<span class="number">9</span>d:d1:<span class="number">65</span>:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">69</span>:<span class="number">5</span>d:<span class="number">41</span>:ae:e3:<span class="number">3</span>b:aa:<span class="number">5</span>d:<span class="number">08</span>:fd:<span class="number">44</span>:<span class="number">70</span>:a4:<span class="number">4</span>e:</span><br><span class="line">    <span class="number">83</span>:ea:bb:<span class="number">05</span>:ab:<span class="number">84</span>:<span class="number">85</span>:<span class="number">1</span>e:<span class="number">72</span>:a4:<span class="number">56</span>:c0:<span class="number">75</span>:<span class="number">1</span>d:be:</span><br><span class="line">    <span class="number">9</span>d:ed:<span class="number">8</span>c:<span class="number">51</span>:b7:e7:<span class="number">2</span>d:<span class="number">92</span>:<span class="number">31</span>:<span class="number">83</span>:<span class="number">5</span>b:<span class="number">56</span>:<span class="number">64</span>:<span class="number">27</span>:<span class="number">30</span>:</span><br><span class="line">    d6:<span class="number">2</span>a:<span class="number">57</span>:fb:<span class="number">2</span>d:ff:<span class="number">68</span>:<span class="number">2</span>a:a7</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id=""><a href="#" class="headerlink" title="-*"></a>-*</h3><p>这个指令的意思是可以自己指定用于保护密钥文件的对称加密算法，当然前提是当前版本的OpenSSL支持。</p>
+<p>例如，使用<code>AES-128-CTR</code>对这个密钥文件进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -AES-128-CTR -out RSA-2048-Encrypted-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
+    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
+<p>一个输出示例是这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
+<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
+
+<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
+
+<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
+
+<p>这代表生成32字节（256位）的随机数。</p>
+<hr>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</title>
     <url>/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/</url>
     <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong>EOS Editor</strong>是<strong>Milovana</strong>的一个Web UI，可以用于制作简单的互动小游戏。</p>
@@ -205,110 +815,6 @@
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了注册Milovana的过程，以及简单介绍了一下左侧侧边栏UI的功能。</p>
 <p>可能略显冗长，包含了很多常识性甚至是宝宝巴士的内容，主要是为了照顾英语能力有限的人。</p>
 <p>下一篇，主要讲解Edit界面的Action，主要是一些基础行为。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>R-18</tag>
-        <tag>Webtease</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
-<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
-<span id="more"></span>
-
-<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
-<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
-<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
-<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
-<hr>
-<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
-<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
-<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
-<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
-<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
-
-<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
-<hr>
-<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
-
-<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
-<hr>
-<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
-<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
-
-<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
-<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
-
-<hr>
-<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
-<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
-<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
-<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
-<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
-
-<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
-<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
-<hr>
-<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
-
-<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
-
-<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
-<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
-<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
-<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
-<p>就类似于这样。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
-
-<hr>
-<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
-<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
-<hr>
-<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
-<p>举个例子，就像这样：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
-
-<hr>
-<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
-<p>类似于这种：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
-
-<hr>
-<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
-
-<p>一个Audio，播放音频，不阻塞。</p>
-<p>一个Timer，计时，阻塞。</p>
-<p>一个Eval，通过一行JS代码停止播放音频。</p>
-<hr>
-<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
-<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
-<p>是否允许用户跳过看你自己。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
-
-<hr>
-<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
-<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
-<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
-
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
-<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
@@ -866,6 +1372,731 @@
         <tag>JavaScript</tag>
         <tag>R-18</tag>
         <tag>Webtease</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
+<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
+<span id="more"></span>
+
+<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
+<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
+<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
+<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
+<hr>
+<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
+<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
+<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
+<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
+<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
+
+<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
+<hr>
+<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
+
+<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
+<hr>
+<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
+<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
+
+<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
+<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+
+<hr>
+<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
+<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
+<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
+<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
+<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
+
+<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
+<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
+<hr>
+<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+
+<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+
+<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
+<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
+<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
+<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
+<p>就类似于这样。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+
+<hr>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
+<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<hr>
+<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
+<p>举个例子，就像这样：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+
+<hr>
+<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
+<p>类似于这种：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+
+<hr>
+<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+
+<p>一个Audio，播放音频，不阻塞。</p>
+<p>一个Timer，计时，阻塞。</p>
+<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<hr>
+<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
+<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
+<p>是否允许用户跳过看你自己。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+
+<hr>
+<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
+<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
+<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
+<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>R-18</tag>
+        <tag>Webtease</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
+    <url>/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>VMess是V2Ray设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。</p>
+<p>本文主要简单介绍如何在Debian 12上搭建VMess + TCP这种最基本的VMess服务器。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="安装V2Ray"><a href="#安装V2Ray" class="headerlink" title="安装V2Ray"></a>安装V2Ray</h2><p>SSH连接VPS的过程略。</p>
+<p>建议通过官方安装脚本安装V2Ray：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
+
+<p>安装最新的geoip.dat和geosite.dat：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="配置V2Ray"><a href="#配置V2Ray" class="headerlink" title="配置V2Ray"></a>配置V2Ray</h2><hr>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开V2Ray的配置文件，这里以最简单的文本编辑器nano为例。当然，如果会用vim自然是更好的：</p>
+<p>（不同云服务器供应商的文件结构可能不同，请注意找一下自己的V2Ray配置文件位置，并根据自己的情况修改目录）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>一个非常简单的示例配置文件如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;inbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">8443</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;clients&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;766ff83e-c497-4ea9-8ad8-434be59c6bb9&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;outbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;freedom&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Ctrl+X退出，Y保存，回车，完成编辑。</p>
+<hr>
+<h3 id="配置文件简单说明："><a href="#配置文件简单说明：" class="headerlink" title="配置文件简单说明："></a>配置文件简单说明：</h3><p><code>inbounds</code>：入站配置</p>
+<p><code>port</code>：服务器监听端口，可以自己修改</p>
+<p><code>protocol</code>：入站协议，此处使用VMess</p>
+<p><code>settings</code>：VMess的设置</p>
+<p><code>clients</code>：客户端</p>
+<p><code>id</code>：一个UUID，用于加密通信和身份验证，可以用UUID生成器生成：<a href="https://www.uuidgenerator.net/version4">Online UUID Generator Tool</a></p>
+<p><code>outbounds</code>：出站设置</p>
+<p><code>protocol</code>：出站协议，此处使用freedom，即无限制</p>
+<hr>
+<h2 id="启动并连接到V2Ray服务器"><a href="#启动并连接到V2Ray服务器" class="headerlink" title="启动并连接到V2Ray服务器"></a>启动并连接到V2Ray服务器</h2><p>使用<code>v2ray run</code>命令来启动v2ray服务端，<code>-c</code>参数可用于指定配置文件路径，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">v2ray run -c /usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>在客户端配置指定服务器的IP地址、端口、UUID即可连接，传输层协议默认TCP，加密方式可以选择Auto，VMess的服务端能自适应解密。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台简单的VMess + TCP的代理服务器搭建完成，可以用于代理上网。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Circumvention</tag>
+        <tag>VPS</tag>
+        <tag>Network</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
+    <url>/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>昨天看到了阿里云的经济型e服务器，感觉性价比挺不错的，因此尝试用来搭一台MineCraft服务器玩玩，这样用Curtain之类的模组挂机很方便。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="VPS基本配置信息"><a href="#VPS基本配置信息" class="headerlink" title="VPS基本配置信息"></a>VPS基本配置信息</h2><p>阿里云经济型e服务器购买地址：<a href="https://www.aliyun.com/daily-act/ecs/ecs/detail/e">云服务器ECS e实例-阿里云 (aliyun.com)</a></p>
+<p><strong>CPU</strong>: 2vCPU</p>
+<p><strong>RAM</strong>: 8GB</p>
+<p><strong>SSD</strong>: 20GB</p>
+<p><strong>Bandwidth</strong>: 5Mbps</p>
+<p><strong>OS</strong>: Debian 12.2 x64</p>
+<hr>
+<h2 id="MineCraft配置信息"><a href="#MineCraft配置信息" class="headerlink" title="MineCraft配置信息"></a>MineCraft配置信息</h2><p><strong>Version</strong>: 1.18.2 Java Edition</p>
+<p><strong>Mod API</strong>: Forge 40.2.10</p>
+<p><strong>JDK</strong>：OpenJDK 17</p>
+<hr>
+<h2 id="搭建使用工具"><a href="#搭建使用工具" class="headerlink" title="搭建使用工具"></a>搭建使用工具</h2><p>XShell Community + XFTP Community	免费下载地址：<a href="https://www.netsarang.com/en/xshell/">XSHELL - The Industry’s Most Powerful SSH Client (netsarang.com)</a></p>
+<p>当然其他工具包应该也是完全可以的，MobaXterm之类的，不过如果只用PuTTY之类的简单工具可能在模组传输过程中有点麻烦，这方面个人没研究过。</p>
+<p>或许可以试试FTP之类的工具，实在不行就用curl或者wget慢慢下（？）</p>
+<hr>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenJDK"><a href="#安装OpenJDK" class="headerlink" title="安装OpenJDK"></a>安装OpenJDK</h3><p>首先通过密钥对或用户名+密码的方式，使用XShell登录远程服务器。</p>
+<p>首先是例行更新一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update -y</span><br><span class="line">apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+
+<p>这里以我决定搭建的MineCraft 1.18.2 JE为例，它需要Java 16+，那么我安装Java 17。</p>
+<p>（PS：Java版本通常而言越高越好，但这并非绝对，例如1.12.2及以下的一些版本就只能通过Java 8运行，这里需要根据自己的需求来修改）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install openjdk-17-jdk</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Forge服务端部署"><a href="#Forge服务端部署" class="headerlink" title="Forge服务端部署"></a>Forge服务端部署</h3><h4 id="获取Forge下载链接"><a href="#获取Forge下载链接" class="headerlink" title="获取Forge下载链接"></a>获取Forge下载链接</h4><p>打开Forge的官方网站 <a href="https://files.minecraftforge.net/net/minecraftforge/forge/">Downloads for Minecraft Forge</a>，找到自己对应游戏版本的Forge。</p>
+<p>这里以1.18.2 Forge 40.2.10为例：</p>
+<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Forge-Web-Download.png" class="" title="Forge-Web-Download">
+
+<p>右键Installer，点击复制链接，复制到剪贴板，此时你会得到这样的一条链接：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">https://adfoc.us/serve/sitelinks/?id=<span class="number">271228</span>&amp;url=https://maven.minecraftforge.net/net/minecraftforge/forge/<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>/forge-<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>-installer.jar</span><br></pre></td></tr></table></figure>
+
+<p>此时，你需要把第二个”https:&#x2F;&#x2F;“之前的部分去掉，得到这样的一条链接：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">https://maven.minecraftforge.net/net/minecraftforge/forge/<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>/forge-<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>-installer.jar</span><br></pre></td></tr></table></figure>
+
+<p>这就是需要用到的链接</p>
+<h4 id="安装Forge服务端"><a href="#安装Forge服务端" class="headerlink" title="安装Forge服务端"></a>安装Forge服务端</h4><p>此时需要写一条下载Forge的命令，注意，这条命令根据自己刚才得到的链接来修改：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -O installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.2.10/forge-1.18.2-40.2.10-installer.jar</span><br></pre></td></tr></table></figure>
+
+<p>在服务端根目录下创建一个MineCraft Forge自己的文件夹吧，这样方便管理，不容易混淆。</p>
+<p>当然，你完全可以自己修改到一个想要安装的位置：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line"><span class="built_in">mkdir</span> Forge</span><br><span class="line"><span class="built_in">cd</span> /Forge</span><br></pre></td></tr></table></figure>
+
+<p>下载完成之后，就可以用Java运行Forge安装包来安装MineCraft Forge服务端了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar installer.jar --installServer</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="安装模组"><a href="#安装模组" class="headerlink" title="安装模组"></a>安装模组</h4><p>新建一个mods文件夹，用来存放模组：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> mods</span><br></pre></td></tr></table></figure>
+
+<p>此时，如果有XFTP这样的文件传输工具，你可以直接连接到VPS，然后直接用GUI操作，把本地已经准备好的模组文件都复制到服务端的&#x2F;Forge&#x2F;mods文件夹当中就可以了。</p>
+<p>（注意：最好查一下 <a href="https://www.mcmod.cn/">MC百科</a> 或 <a href="https://www.curseforge.com/minecraft">CurseForge</a> 来确认一部分模组是否有必要在服务端安装。一些“服务端可选”的模组安装了也问题不大，但是一些“服务端无效”的模组请尽量删除（例如：Rubidium，Oculus等），否则可能会造成服务器启动失败。）</p>
+<h4 id="首次启动"><a href="#首次启动" class="headerlink" title="首次启动"></a>首次启动</h4><h5 id="尝试运行服务端"><a href="#尝试运行服务端" class="headerlink" title="尝试运行服务端"></a>尝试运行服务端</h5><p>Forge 1.17+自带了这样的一个一键脚本，可以运行MineCraft服务端，你只需要启用一键脚本就可以了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
+
+<p>Forge 之前版本需要Java设置一些参数来启动，这里以MineCraft 1.12.2 JE Forge 23.5.2859为例，之后的启动方法同理：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar -Xmx4096M -Xms2048M forge-1.12.2-14.23.5.2859.jar nogui</span><br></pre></td></tr></table></figure>
+
+<p>（PS：如果你有Xmanager，那么可以去掉”nogui”，因为XShell会自动调用Xmanager处理GUI的交互部分）</p>
+<h5 id="同意用户协议"><a href="#同意用户协议" class="headerlink" title="同意用户协议"></a>同意用户协议</h5><p>首次启动会失败，然后创建一个eula.txt文件，这是用户协议，我们必须同意协议才能进行游戏。</p>
+<p>我们可以用各种文本编辑器来修改它，nano、vim都可以。这里以最简单的nano为例：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano eula.txt</span><br></pre></td></tr></table></figure>
+
+<p>此时就进入了eula.txt的编辑界面：</p>
+<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/eula-txt.png" class="" title="eula.txt">
+
+<p>通过上下左右键可以操作光标，只要把false改成true就可以了，代表同意用户协议。</p>
+<p>然后Ctrl+X退出，Y保存修改，回车，这样就保存了更改。</p>
+<h4 id="第二次启动"><a href="#第二次启动" class="headerlink" title="第二次启动"></a>第二次启动</h4><h5 id="尝试运行服务端-1"><a href="#尝试运行服务端-1" class="headerlink" title="尝试运行服务端"></a>尝试运行服务端</h5><p>现在可以第二次运行MineCraft服务器了，这会生成一个世界，加载模组资源，并初始化所有配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
+
+<p>如果启动失败，那么基本上有两种原因。如果显示killed，那么是服务器资源不足，如果显示大量的报错信息，那么基本可以确定是模组冲突。</p>
+<h5 id="资源不足"><a href="#资源不足" class="headerlink" title="资源不足"></a>资源不足</h5><h6 id="1-17"><a href="#1-17" class="headerlink" title="1.17+"></a>1.17+</h6><p>可以尝试调整user_jvm_args.txt文件中的配置，把内存拉低一些，但是通常而言最好不要低于1G。</p>
+<h6 id="1-17-1"><a href="#1-17-1" class="headerlink" title="1.17-"></a>1.17-</h6><p>可以尝试调整运行参数，把运行参数降下来。因为一般而言killed都是内存不足导致的。</p>
+<h5 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h5><p>阅读红色的报错日志，看看究竟是什么模组出问题了，是什么模组之间发生冲突了。</p>
+<p>然后进入mods文件夹，通过rm指令删除对应的模组即可，有XFTP的可以通过图形化界面来操作，更容易。</p>
+<h5 id="退出-修改服务端配置文件"><a href="#退出-修改服务端配置文件" class="headerlink" title="退出 修改服务端配置文件"></a>退出 修改服务端配置文件</h5><p>世界生成完毕后，个人的建议是先退出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/stop</span><br></pre></td></tr></table></figure>
+
+<p>此时你可以检查一下目前的&#x2F;Forge文件夹，发现创建了很多文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p>可以尝试修改一下服务端配置文件，定制化你的游戏体验，这一部分不详细赘述：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano server.properties</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="正式启动"><a href="#正式启动" class="headerlink" title="正式启动"></a>正式启动</h4><h5 id="使用Screen分屏功能-在后台运行MineCraft"><a href="#使用Screen分屏功能-在后台运行MineCraft" class="headerlink" title="使用Screen分屏功能 在后台运行MineCraft"></a>使用Screen分屏功能 在后台运行MineCraft</h5><p>个人推荐使用screen分屏功能来简单地管理MineCraft服务器，这样只需要后台挂一个窗口就行，期间服务器可以做别的事情。</p>
+<p>安装screen：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install screen</span><br></pre></td></tr></table></figure>
+
+<p>使用screen进行分屏操作（示例，分屏名称完全可以自选）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -S Forge</span><br></pre></td></tr></table></figure>
+
+<p>运行MineCraft服务端：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
+
+<p>退出分屏：</p>
+<p>Ctrl + A + D</p>
+<h5 id="管理之前的分屏"><a href="#管理之前的分屏" class="headerlink" title="管理之前的分屏"></a>管理之前的分屏</h5><p>查看现有分屏：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -<span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p>恢复上一次的分屏会话：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -r</span><br></pre></td></tr></table></figure>
+
+<p>恢复特定的分屏会话（示例，选择你自己想要进入的那个分屏）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -r Forge</span><br></pre></td></tr></table></figure>
+
+<p>至此，MineCraft Forge服务端搭建过程已经完成。</p>
+<h2 id="配置防火墙规则"><a href="#配置防火墙规则" class="headerlink" title="配置防火墙规则"></a>配置防火墙规则</h2><h3 id="云服务供应商控制台"><a href="#云服务供应商控制台" class="headerlink" title="云服务供应商控制台"></a>云服务供应商控制台</h3><p>个人使用的服务器为阿里云，这类云服务厂商提供单独的安全组&#x2F;防火墙策略。需要在控制面板上找到安全组，手动添加一条TCP规则。</p>
+<p>端口默认是25565，如果你修改过server.properties文件，那么请根据你自己设置的端口号开放端口访问权限。</p>
+<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Security-Group.png" class="" title="Security-Group-Example">
+
+<h3 id="UFW等内置防火墙"><a href="#UFW等内置防火墙" class="headerlink" title="UFW等内置防火墙"></a>UFW等内置防火墙</h3><p>如果你的服务器没有控制台的防火墙规则，你又不希望把所有端口全部开放，那么可以尝试使用ufw这样的简单防火墙工具。</p>
+<p>首先检查一下ufw是否安装好了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install ufw</span><br></pre></td></tr></table></figure>
+
+<p>然后开放ufw的几个关键端口：</p>
+<p>（PS：请一定要确认SSH端口是不是默认的22，有些云服务供应商不是的，别一个防火墙把自己的SSH连接给掐断了）</p>
+<p>（PS：这里的25565端口也是MineCraft默认的服务器端口，如果改过server.properties文件，还是要根据自己的设置来调整）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw allow ssh</span><br><span class="line">ufw allow 25565</span><br></pre></td></tr></table></figure>
+
+<p>启用ufw防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>简单检查一下防火墙的运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw status</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="客户端连接MineCraft服务器进行游玩"><a href="#客户端连接MineCraft服务器进行游玩" class="headerlink" title="客户端连接MineCraft服务器进行游玩"></a>客户端连接MineCraft服务器进行游玩</h2><h3 id="关于模组兼容"><a href="#关于模组兼容" class="headerlink" title="关于模组兼容"></a>关于模组兼容</h3><p>根据个人经验，客户端模组和服务端模组是这样的关系：</p>
+<p>如果某个模组要求客户端需装，服务端需装，那么客户端和服务端必须同时安装这个模组。（此类模组多为内容模组，例如世界生成、科技、魔法、农业等）</p>
+<p>如果某个模组要求客户端需装，服务端可选，那么通常而言，客户端安装这个模组即可。（此类模组多为辅助模组，例如操作、面板、管理、地图、优化等）</p>
+<p>如果某个模组要求客户端需装，服务端无效，那么最好不要在服务端安装这个模组。（此类模组多为深度优化模组，例如Rubidium, Sodium, Oculus, Iris）</p>
+<h3 id="客户端连接方式"><a href="#客户端连接方式" class="headerlink" title="客户端连接方式"></a>客户端连接方式</h3><p>打开游戏，多人游戏，添加服务器。</p>
+<p>输入备注，服务器IP地址、端口即可。不填端口的话就会尝试连接默认的25565端口。</p>
+<p>提示模组不兼容很正常，这通常是因为客户端和服务端优化模组等差异造成的。此时不要直接放弃，一定要尝试连接一下。如果有一些模组不匹配，通常会收到一些信息，那么你可以在服务器后台或者客户端安装一些模组来补全。大多数情况下，就算模组列表不匹配，还是可以游玩的。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台可运行的MineCraft Forge服务器已经搭建完成并上线运行。</p>
+<p>个人水平有限，应该还有很多没有讲到的地方，之后如果发现了也会尝试补充完善。</p>
+<p>本教程比较依赖XShell &#x2F; XFTP工具包，因此操作中出现很多“偷懒”的地方。</p>
+<p>希望这篇文章能对想要自建MineCraft Forge服务器的用户有所帮助。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>VPS</tag>
+        <tag>MineCraft</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
+    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
+<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
+<span id="more"></span>
+
+<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
+<p>一般而言npm也是会一并安装的</p>
+<p>装好了以后确认一下有没有成功安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，确认一下Hexo的版本信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
+<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
+
+<p>使用Hexo初始化博客文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+
+<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
+<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
+
+<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
+<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+
+<p>可以重复生成时使用的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
+<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
+<p>直接拉到底，进行修改：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完成后保存，可以退出</p>
+<p>使用npm安装Hexo的Git部署工具：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
+
+<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
+<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
+<p>创建新博文：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>更新本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>尝试查看本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>Web Front-End</tag>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Qt Creator中使用OpenSSL</title>
+    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
+<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
+<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<hr>
+<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
+<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
+<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
+        <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单的Cloudflare Warp使用方法</title>
+    <url>/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。</p>
+<p>本文字教程主要介绍在个人设备上使用Cloudflare Warp连接到互联网，并通过Cloudflare Zero Trust登录客户端，解除Warp自身的流量限制。</p>
+<span id="more"></span>
+
+<h2 id="安装与连接"><a href="#安装与连接" class="headerlink" title="安装与连接"></a>安装与连接</h2><p>安装非常简单，在Cloudflare 1.1.1.1的官方网站下载适合自己设备的客户端即可。</p>
+<p>下载链接：<a href="https://1.1.1.1/">1.1.1.1 — The free app that makes your Internet faster.</a></p>
+<p>打开安装包，按照指示完成安装即可。打开Cloudflare Warp客户端。</p>
+<p>点击连接，即可尝试连接。这一步有一定的可能性会失败。如果成功，已经可以访问国际互联网，而且性能通常不错。但是有一定的流量限制。</p>
+<p>如果是轻度使用者，不在意流量限制，到这一步即可完成。</p>
+<h2 id="注册Zero-Trust"><a href="#注册Zero-Trust" class="headerlink" title="注册Zero Trust"></a>注册Zero Trust</h2><p>登录Cloudflare Dashboard：<a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
+<p>当然，如果没有账号可以先注册一个，很容易。注册过程略。</p>
+<p>在左侧找到Zero Trust，注册一个Zero Trust账号，团队名称可以自由选择。注册过程略。</p>
+<p>注册成功后，找到左侧的<code>My Team</code>一栏，找到<code>Devices</code>选项。选择<code>Connect a Device</code>选项。</p>
+<p>单击<code>Create an Enrollment</code>，输入需要注册的邮箱后缀名，例如<code>@gmail.com</code>，然后点击<code>save</code>。</p>
+<h2 id="Zero-Trust登录与连接"><a href="#Zero-Trust登录与连接" class="headerlink" title="Zero Trust登录与连接"></a>Zero Trust登录与连接</h2><p>打开自己的Cloudflare Warp客户端，在右键菜单中找到<code>偏好设置</code>，找到<code>账户</code>一栏，点击<code>使用Cloudflare Zero Trust登录</code>。</p>
+<p>输入自己之前注册Zero Trust使用的团队名称，点击确认，会跳转到团队的一个Web验证界面。</p>
+<p>输入自己使用的邮箱。</p>
+<p>在自己的邮箱当中找到Cloudflare发送的验证码，填写验证码，确认。</p>
+<p>稍作等待，Cloudflare Warp客户端的Zero Trust将成功登陆。</p>
+<p>打开Cloudflare Warp客户端，现在Warp的标志将被替换为Zero Trust。点击连接按钮，即可尝试连接到Cloudflare Warp服务。</p>
+<p>这一步的成功率很高，通常能够连接成功。并且1G的流量限制已经解除。</p>
+<p>现在可以尝试访问一些网站，例如<a href="https://google.com/">Google</a>。</p>
+<p>也可以尝试进行网络测速。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Cloudflare Warp + Zero Trust的简单使用方法已经介绍完毕。Warp能够通过WireGuard协议保护互联网协议，拥有强大的安全性、高效的协议设计和很高的下行速率（有一个问题是上行速率较低），并通过1.1.1.1 DNS解析来提高DNS解析的效率，避免DNS污染的影响，改善综合上网体验。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Circumvention</tag>
+        <tag>Network</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</title>
+    <url>/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的Shadowsocks-Libev服务器搭建过程，系统为Ubuntu，因为自带了Snap应用商店等多种工具包，很方便。</p>
+<p>当然你得提前准备一台VPS，建议用Vultr，Digital Ocean之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。</p>
+<p>如果你追求稳定，那么建议最好还是不要用Shadowsocks协议。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="系统更新与软件安装"><a href="#系统更新与软件安装" class="headerlink" title="系统更新与软件安装"></a>系统更新与软件安装</h2><p>首先例行更新：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update -y</span><br><span class="line">apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+
+<p>然后用Snap应用商店安装Core</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">snap install core</span><br></pre></td></tr></table></figure>
+
+<p>Snap安装Shadowsocks-Libev</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">snap install shadowsocks-libev --edge</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>用nano打开Shadowsocks配置文件路径，当然如果你会vim，那更好</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano /var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json</span><br></pre></td></tr></table></figure>
+
+<p>以下是一个示例的配置文件：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;::0&quot;</span><span class="punctuation">,</span><span class="string">&quot;0.0.0.0&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;IRBa9FdVrSL147CL&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span><span class="string">&quot;tcp_and_udp&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>简单介绍一下这个配置文件中可能需要修改的地方：</p>
+<h3 id="服务器端口号"><a href="#服务器端口号" class="headerlink" title="服务器端口号"></a>服务器端口号</h3><p>这是Shadowsocks服务端的监听端口号，你可以随便换一个你喜欢的端口号，但是换成80, 443之类的常用端口也不能提高你的安全性</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="对称加密算法"><a href="#对称加密算法" class="headerlink" title="对称加密算法"></a>对称加密算法</h3><p>Shadowsocks使用多种对称加密算法，这里建议选择AEAD加密算法（性能高、抗重放攻击、兼容性好），Shadowsocks支持的AEAD加密算法包括：</p>
+<ol>
+<li><p>AES-128-GCM</p>
+</li>
+<li><p>AES-192-GCM</p>
+</li>
+<li><p>AES-256-GCM</p>
+</li>
+<li><p>Chacha20-IETF-Poly1305</p>
+</li>
+<li><p>XChacha20-IETF-Poly1305</p>
+</li>
+<li><p>2022-BLAKE3-AES-128-GCM</p>
+</li>
+<li><p>2022-BLAKE3-AES-256-GCM</p>
+</li>
+<li><p>2022-BLAKE3-Chacha20-IETF-Poly1305</p>
+</li>
+</ol>
+<p>这个选择就看你心情了，记得客户端和服务端的加密算法选择必须是一致的，否则无法成功解密</p>
+<p>AES-GCM的话，密钥长度越大理论上安全性就越高（然而实际上128位也非常安全），同时对硬件的压力就越大，不过一般而言压力都不算很大</p>
+<p>Chacha20-IETF-Poly1305是一种AEAD流密码，性能很高，如果你的设备CPU不太好可以选，不过一般而言AES-128-GCM也足够快</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<p>当然，如果你很叛逆，你一定要用老式流密码或者不带认证的块密码，那也是完全可以的。只要你的客户端和服务端同时支持，而且你很自信：</p>
+<ol>
+<li><p>RC4</p>
+</li>
+<li><p>RC4-MD5</p>
+</li>
+<li><p>AES-128-CTR</p>
+</li>
+<li><p>xxxxxxxxxx hexo dbash</p>
+</li>
+<li><p>AES-256-CTR</p>
+</li>
+<li><p>AES-128-CFB</p>
+</li>
+<li><p>AES-192-CFB</p>
+</li>
+<li><p>AES-256-CFB</p>
+</li>
+<li><p>AES-128-CFB8</p>
+</li>
+<li><p>AES-192-CFB8</p>
+</li>
+<li><p>AES-256-CFB8</p>
+</li>
+<li><p>AES-128-OFB</p>
+</li>
+<li><p>AES-192-OFB</p>
+</li>
+<li><p>AES-256-OFB</p>
+</li>
+<li><p>BF-CFB</p>
+</li>
+<li><p>CAST5-CFB</p>
+</li>
+<li><p>DES-CFB</p>
+</li>
+<li><p>IDEA-CFB</p>
+</li>
+<li><p>RC2-CFB</p>
+</li>
+<li><p>SEED-CFB</p>
+</li>
+<li><p>Camellia-128-CFB</p>
+</li>
+<li><p>Camellia-192-CFB</p>
+</li>
+<li><p>Camellia-256-CFB</p>
+</li>
+<li><p>Camellia-128-CFB8</p>
+</li>
+<li><p>Camellia-192-CFB8</p>
+</li>
+<li><p>Camellia-256-CFB8</p>
+</li>
+<li><p>Salsa20</p>
+</li>
+<li><p>Chacha20</p>
+</li>
+<li><p>Chacha20-IETF</p>
+</li>
+<li><p>XChacha20</p>
+<p>那么举个例子，你就可以这样设置，当然很多客户端和服务端已经弃用流密码了，不保证这些加密算法都还能兼容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;method&quot;</span>:<span class="string">&quot;rc4-md5&quot;</span>,</span><br></pre></td></tr></table></figure>
+
+<p>如果你用这些老加密算法设置失败了，服务端会自动把加密算法设置为Chacha20-IETF-Poly1305。</p>
+</li>
+</ol>
+<h3 id="预共享密钥（PSK）"><a href="#预共享密钥（PSK）" class="headerlink" title="预共享密钥（PSK）"></a>预共享密钥（PSK）</h3><p>客户端与服务端之间共享的一个密钥字符串，Shadowsocks安全性的基石。客户端与服务器的PSK必须是一致的。</p>
+<p>虽然说你输入的这个密钥并不会真的直接被加密算法使用，但是还是建议使用12字节以上的，具有一定随机性的PSK。</p>
+<p>这并不是说AES-GCM或者Chacha20不可靠，而是Shadowsocks长期依赖一个PSK进行通信。以下是一个例子：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;xMZpoL46GhfrJgEP&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="传输层协议"><a href="#传输层协议" class="headerlink" title="传输层协议"></a>传输层协议</h3><p>使用的传输层协议，看你自己的需求来设置</p>
+<p>TCP + UDP：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span><span class="string">&quot;tcp_and_udp&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<p>TCP：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span><span class="string">&quot;tcp_only&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="TCP-Fast-Open"><a href="#TCP-Fast-Open" class="headerlink" title="TCP Fast Open"></a>TCP Fast Open</h3><p>打开没问题，因为目前Shadowsocks的密码学安全性似乎没什么问题：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br></pre></td></tr></table></figure>
+
+<p>当然你要是就是不想开，那你就把它关了：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure>
+
+<p>至此，Shadowsocks服务端配置文件基本参数设置完毕，nano可以Ctrl+X退出，保存Y，并回车。</p>
+<h2 id="运行Shadowsocks服务与防火墙"><a href="#运行Shadowsocks服务与防火墙" class="headerlink" title="运行Shadowsocks服务与防火墙"></a>运行Shadowsocks服务与防火墙</h2><h3 id="运行Shadowsocks服务"><a href="#运行Shadowsocks服务" class="headerlink" title="运行Shadowsocks服务"></a>运行Shadowsocks服务</h3><p>使用以下命令来开启服务端的Shadowsocks-Libev服务：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl start snap.shadowsocks-libev.ss-server-daemon.service</span><br></pre></td></tr></table></figure>
+
+<p>可以使用这个命令来查看你的Shadowsocks-Libev服务器运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl status snap.shadowsocks-libev.ss-server-daemon.service</span><br></pre></td></tr></table></figure>
+
+<p>如果正常运行，那么你会看到绿色的提示信息。记得观察一下加密算法，如果你的加密算法设置不被兼容或者拼写出错，那么服务器会将其自动修改为Chacha20-IETF-Poly1305，客户端连接的时候别弄错了。</p>
+<p>可以设置一下Shadowsocks的开机自启动，以免一个reboot或者IDC维护了一下就掉线了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> snap.shadowsocks-libev.ss-server-daemon.service</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h3><p>很简单，首先，如果你是通过SSH连接的VPS，给防火墙添加这条规则，以免开了防火墙以后掉线：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ufw allow ssh</span><br></pre></td></tr></table></figure>
+
+<p>然后让防火墙开放Shadowsocks的监听端口，注意，把此处的端口号改成自己的端口号：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw allow 16384</span><br></pre></td></tr></table></figure>
+
+<p>最后开启防火墙，并允许开机自启动，SSH用户需要确认一下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>最后，在客户端配置相同的加密算法，预共享密钥，端口号，并填上服务器的IPv4或IPv6地址，即可完成连接，使用Shadowsocks代理服务器。</p>
+<p>这是一个Shadowsocks-Windows的GUI客户端的下载地址：<a href="https://github.com/shadowsocks/shadowsocks-windows/releases">Shadowsocks-Windows(C#)</a></p>
+<p>当然你也可以使用其它的代理客户端进行连接，如v2rayN，Sing-Box等，这里不一一列举。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Circumvention</tag>
+        <tag>VPS</tag>
+        <tag>Network</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
+    <url>/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>常规VPS在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装BBR来有效提升带宽。</p>
+<span id="more"></span>
+
+<h3 id="安装BBR一键脚本"><a href="#安装BBR一键脚本" class="headerlink" title="安装BBR一键脚本"></a>安装BBR一键脚本</h3><p>通过这行命令可以安装tcp.sh一键脚本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -N --no-check-certificate <span class="string">&quot;https://gist.github.com/zeruns/a0ec603f20d1b86de6a774a8ba27588f/raw/4f9957ae23f5efb2bb7c57a198ae2cffebfb1c56/tcp.sh&quot;</span> &amp;&amp; <span class="built_in">chmod</span> +x tcp.sh &amp;&amp; ./tcp.sh</span><br></pre></td></tr></table></figure>
+
+<p>启动脚本之后，你可以先更新脚本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0</span><br></pre></td></tr></table></figure>
+
+<p>然后再次启动脚本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/root/tcp.sh</span><br></pre></td></tr></table></figure>
+
+<p>之后根据界面自己选择需要的BBR进行加速即可，根据脚本的指示操作即可完成安装。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Circumvention</tag>
+        <tag>Network</tag>
+        <tag>Cloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
+    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
+<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
+<span id="more"></span>
+
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
+<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
+<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
+<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
+
+<p>如果安装成功，就会返回一个版本信息，例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果正常运行，这个程序输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
+    <url>/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ChatGPT之前封锁了很多大机房的IP段，这导致Vultr、Digital Ocean等常用的VPS供应商机房访问OpenAI的服务会被屏蔽。</p>
+<p>本文介绍如何简单地配置CloudFlare Warp进行出站流量转发，以绕过OpenAI的屏蔽策略，访问OpenAI的服务。</p>
+<span id="more"></span>
+
+<h3 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h3><p>非常简单，只需要一行命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -fsSL git.io/warp.sh) d</span><br></pre></td></tr></table></figure>
+
+<p>部署已完成，所有出站流量都走CloudFlare Warp。可能会引入些许延迟和轻微降速，但是几乎无感。</p>
+<p>喜欢的可以去给脚本的作者点个Star：<a href="https://github.com/P3TERX/warp.sh">P3TERX&#x2F;warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)</a></p>
+<p>更详细的文档在作者的文档当中也已经说明。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Circumvention</tag>
+        <tag>VPS</tag>
+        <tag>Network</tag>
       </tags>
   </entry>
 </search>

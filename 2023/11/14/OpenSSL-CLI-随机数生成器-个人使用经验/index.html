@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="yiAqKf4X9lW3cPfeZKNMVcRsbvQdKqs5MlVHPx_boRY">
+  <meta name="msvalidate.01" content="E84F90825F4DA1490ABE1253333BB892">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenSSL CLI 随机数生成器 个人使用经验">
+<meta property="og:url" content="https://bluemap1e.github.io/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/index.html">
+<meta property="og:site_name" content="BlueMap1e&#39;s Blog">
+<meta property="og:description" content="前言一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-14T07:55:23.000Z">
+<meta property="article:modified_time" content="2024-09-23T07:02:13.567Z">
+<meta property="article:author" content="BlueMap1e">
+<meta property="article:tag" content="OpenSSL">
+<meta property="article:tag" content="Crypto">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bluemap1e.github.io/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>OpenSSL CLI 随机数生成器 个人使用经验 | BlueMap1e's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5VBM6R3END');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="BlueMap1e's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BlueMap1e's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">——By BlueMap1e</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>Friends</a>
+
+  </li>
+        <li class="menu-item menu-item-support">
+
+    <a href="/support/" rel="section"><i class="fa fa-heart fa-fw"></i>Support</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenSSL CLI 随机数生成器 个人使用经验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-14 15:55:23" itemprop="dateCreated datePublished" datetime="2023-11-14T15:55:23+08:00">2023-11-14</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-09-23 15:02:13" itemprop="dateModified" datetime="2024-09-23T15:02:13+08:00">2024-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/14/OpenSSL-CLI-随机数生成器-个人使用经验/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>697</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
+<p>一个输出示例是这样：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
+<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
+
+<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
+
+<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
+
+<p>这代表生成32字节（256位）的随机数。</p>
+<hr>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\08\OpenSSL-CLI-对称加密算法-个人使用经验\" rel="bookmark">OpenSSL CLI 对称加密算法 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\06\OpenSSL-CLI-散列函数-个人使用经验\" rel="bookmark">OpenSSL CLI 散列函数 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\15\OpenSSL-CLI-密钥对生成工具-个人使用经验\" rel="bookmark">OpenSSL CLI 密钥对生成工具 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\在Qt-Creator中使用OpenSSL\" rel="bookmark">在Qt Creator中使用OpenSSL</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\01\简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建\" rel="bookmark">简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>鹭音大人是我的主人喵~关注鹭音大人谢谢喵~所有收益都会上贡的喵~.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/OpenSSL/" rel="tag"><i class="fa fa-tag"></i> OpenSSL</a>
+              <a href="/tags/Crypto/" rel="tag"><i class="fa fa-tag"></i> Crypto</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/" rel="prev" title="在Qt Creator中使用OpenSSL">
+      <i class="fa fa-chevron-left"></i> 在Qt Creator中使用OpenSSL
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" rel="next" title="OpenSSL CLI 密钥对生成工具 个人使用经验">
+      OpenSSL CLI 密钥对生成工具 个人使用经验 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%B8%AE%E5%8A%A9"><span class="nav-number">2.</span> <span class="nav-text">获取帮助</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E9%9A%8F%E6%9C%BA%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">生成随机数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E9%80%89%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">总体选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#help-%E6%88%96-h"><span class="nav-number">4.1.</span> <span class="nav-text">-help 或 -h</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#engine"><span class="nav-number">4.2.</span> <span class="nav-text">engine</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E9%80%89%E9%A1%B9"><span class="nav-number">5.</span> <span class="nav-text">输出选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#out"><span class="nav-number">5.1.</span> <span class="nav-text">-out</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#base64"><span class="nav-number">5.2.</span> <span class="nav-text">-base64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hex"><span class="nav-number">5.3.</span> <span class="nav-text">-hex</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E7%8A%B6%E6%80%81%E9%80%89%E9%A1%B9"><span class="nav-number">6.</span> <span class="nav-text">随机状态选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rand"><span class="nav-number">6.1.</span> <span class="nav-text">-rand</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#writerand"><span class="nav-number">6.2.</span> <span class="nav-text">-writerand</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">7.</span> <span class="nav-text">参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#num"><span class="nav-number">7.1.</span> <span class="nav-text">num</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BlueMap1e"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">BlueMap1e</p>
+  <div class="site-description" itemprop="description">一个关于前端、日常、折腾和搞黄色的，不正经的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BlueMap1e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BlueMap1e" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/C_E_104" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;C_E_104" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.pixiv.net/users/65253737" title="Pixiv → https:&#x2F;&#x2F;www.pixiv.net&#x2F;users&#x2F;65253737" rel="noopener" target="_blank"><i class="fa fa-link fa-fw"></i>Pixiv</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BlueMap1e</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">26k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:12</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://BlueMap1e.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://bluemap1e.github.io/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/";
+    this.page.identifier = "2023/11/14/OpenSSL-CLI-随机数生成器-个人使用经验/";
+    this.page.title = "OpenSSL CLI 随机数生成器 个人使用经验";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://BlueMap1e.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

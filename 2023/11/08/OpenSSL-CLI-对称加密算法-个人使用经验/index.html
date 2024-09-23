@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="yiAqKf4X9lW3cPfeZKNMVcRsbvQdKqs5MlVHPx_boRY">
+  <meta name="msvalidate.01" content="E84F90825F4DA1490ABE1253333BB892">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言一篇简单的OpenSSL 对称加密使用经验，偶尔更新。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenSSL CLI 对称加密算法 个人使用经验">
+<meta property="og:url" content="https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/index.html">
+<meta property="og:site_name" content="BlueMap1e&#39;s Blog">
+<meta property="og:description" content="前言一篇简单的OpenSSL 对称加密使用经验，偶尔更新。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-08T08:33:53.000Z">
+<meta property="article:modified_time" content="2024-09-23T07:02:00.256Z">
+<meta property="article:author" content="BlueMap1e">
+<meta property="article:tag" content="OpenSSL">
+<meta property="article:tag" content="Crypto">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>OpenSSL CLI 对称加密算法 个人使用经验 | BlueMap1e's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5VBM6R3END');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="BlueMap1e's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BlueMap1e's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">——By BlueMap1e</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>Friends</a>
+
+  </li>
+        <li class="menu-item menu-item-support">
+
+    <a href="/support/" rel="section"><i class="fa fa-heart fa-fw"></i>Support</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenSSL CLI 对称加密算法 个人使用经验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-08 16:33:53" itemprop="dateCreated datePublished" datetime="2023-11-08T16:33:53+08:00">2023-11-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-09-23 15:02:00" itemprop="dateModified" datetime="2024-09-23T15:02:00+08:00">2024-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/08/OpenSSL-CLI-对称加密算法-个人使用经验/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>5.7k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>29 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 对称加密使用经验，偶尔更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -h</span><br></pre></td></tr></table></figure>
+
+<p>输入如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Usage: enc [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List ciphers</span><br><span class="line"> -ciphers            Alias <span class="keyword">for</span> -list</span><br><span class="line"> -e                  Encrypt</span><br><span class="line"> -d                  Decrypt</span><br><span class="line"> -p                  Print the iv/key</span><br><span class="line"> -P                  Print the iv/key and <span class="built_in">exit</span></span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Input options:</span><br><span class="line"> -<span class="keyword">in</span> infile          Input file</span><br><span class="line"> -k val              Passphrase</span><br><span class="line"> -kfile infile       Read passphrase from file</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -pass val           Passphrase <span class="built_in">source</span></span><br><span class="line"> -v                  Verbose output</span><br><span class="line"> -a                  Base64 encode/decode, depending on encryption flag</span><br><span class="line"> -<span class="built_in">base64</span>             Same as option -a</span><br><span class="line"> -A                  Used with -[<span class="built_in">base64</span>|a] to specify <span class="built_in">base64</span> buffer as a single line</span><br><span class="line"></span><br><span class="line">Encryption options:</span><br><span class="line"> -nopad              Disable standard block padding</span><br><span class="line"> -salt               Use salt <span class="keyword">in</span> the KDF (default)</span><br><span class="line"> -nosalt             Do not use salt <span class="keyword">in</span> the KDF</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"> -bufsize val        Buffer size</span><br><span class="line"> -K val              Raw key, <span class="keyword">in</span> hex</span><br><span class="line"> -S val              Salt, <span class="keyword">in</span> hex</span><br><span class="line"> -iv val             IV <span class="keyword">in</span> hex</span><br><span class="line"> -md val             Use specified digest to create a key from the passphrase</span><br><span class="line"> -iter +int          Specify the iteration count and force the use of PBKDF2</span><br><span class="line">                     Default: 10000</span><br><span class="line"> -pbkdf2             Use password-based key derivation <span class="keyword">function</span> 2 (PBKDF2)</span><br><span class="line">                     Use -iter to change the iteration count from 10000</span><br><span class="line"> -none               Don<span class="string">&#x27;t encrypt</span></span><br><span class="line"><span class="string"> -*                  Any supported cipher</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Random state options:</span></span><br><span class="line"><span class="string"> -rand val           Load the given file(s) into the random number generator</span></span><br><span class="line"><span class="string"> -writerand outfile  Write random data to the specified file</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Provider options:</span></span><br><span class="line"><span class="string"> -provider-path val  Provider load path (must be before &#x27;</span>provider<span class="string">&#x27; argument if required)</span></span><br><span class="line"><span class="string"> -provider val       Provider to load (can be specified multiple times)</span></span><br><span class="line"><span class="string"> -propquery val      Property query used when fetching algorithms</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="列出支持的加密算法"><a href="#列出支持的加密算法" class="headerlink" title="列出支持的加密算法"></a>列出支持的加密算法</h2><p>可以通过<code>-list</code>或<code>-ciphers</code>参数来列出当前版本OpenSSL支持的对称加密算法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -list</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -ciphers</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Supported ciphers:</span><br><span class="line">-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1</span><br><span class="line">-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb</span><br><span class="line">-aes-128-ofb               -aes-192-cbc               -aes-192-cfb</span><br><span class="line">-aes-192-cfb1              -aes-192-cfb8              -aes-192-ctr</span><br><span class="line">-aes-192-ecb               -aes-192-ofb               -aes-256-cbc</span><br><span class="line">-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8</span><br><span class="line">-aes-256-ctr               -aes-256-ecb               -aes-256-ofb</span><br><span class="line">-aes128                    -aes128-wrap               -aes192</span><br><span class="line">-aes192-wrap               -aes256                    -aes256-wrap</span><br><span class="line">-aria-128-cbc              -aria-128-cfb              -aria-128-cfb1</span><br><span class="line">-aria-128-cfb8             -aria-128-ctr              -aria-128-ecb</span><br><span class="line">-aria-128-ofb              -aria-192-cbc              -aria-192-cfb</span><br><span class="line">-aria-192-cfb1             -aria-192-cfb8             -aria-192-ctr</span><br><span class="line">-aria-192-ecb              -aria-192-ofb              -aria-256-cbc</span><br><span class="line">-aria-256-cfb              -aria-256-cfb1             -aria-256-cfb8</span><br><span class="line">-aria-256-ctr              -aria-256-ecb              -aria-256-ofb</span><br><span class="line">-aria128                   -aria192                   -aria256</span><br><span class="line">-bf                        -bf-cbc                    -bf-cfb</span><br><span class="line">-bf-ecb                    -bf-ofb                    -blowfish</span><br><span class="line">-camellia-128-cbc          -camellia-128-cfb          -camellia-128-cfb1</span><br><span class="line">-camellia-128-cfb8         -camellia-128-ctr          -camellia-128-ecb</span><br><span class="line">-camellia-128-ofb          -camellia-192-cbc          -camellia-192-cfb</span><br><span class="line">-camellia-192-cfb1         -camellia-192-cfb8         -camellia-192-ctr</span><br><span class="line">-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc</span><br><span class="line">-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8</span><br><span class="line">-camellia-256-ctr          -camellia-256-ecb          -camellia-256-ofb</span><br><span class="line">-camellia128               -camellia192               -camellia256</span><br><span class="line">-cast                      -cast-cbc                  -cast5-cbc</span><br><span class="line">-cast5-cfb                 -cast5-ecb                 -cast5-ofb</span><br><span class="line">-chacha20                  -des                       -des-cbc</span><br><span class="line">-des-cfb                   -des-cfb1                  -des-cfb8</span><br><span class="line">-des-ecb                   -des-ede                   -des-ede-cbc</span><br><span class="line">-des-ede-cfb               -des-ede-ecb               -des-ede-ofb</span><br><span class="line">-des-ede3                  -des-ede3-cbc              -des-ede3-cfb</span><br><span class="line">-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ecb</span><br><span class="line">-des-ede3-ofb              -des-ofb                   -des3</span><br><span class="line">-des3-wrap                 -desx                      -desx-cbc</span><br><span class="line">-id-aes128-wrap            -id-aes128-wrap-pad        -id-aes192-wrap</span><br><span class="line">-id-aes192-wrap-pad        -id-aes256-wrap            -id-aes256-wrap-pad</span><br><span class="line">-id-smime-alg-CMS3DESwrap  -idea                      -idea-cbc</span><br><span class="line">-idea-cfb                  -idea-ecb                  -idea-ofb</span><br><span class="line">-rc2                       -rc2-128                   -rc2-40</span><br><span class="line">-rc2-40-cbc                -rc2-64                    -rc2-64-cbc</span><br><span class="line">-rc2-cbc                   -rc2-cfb                   -rc2-ecb</span><br><span class="line">-rc2-ofb                   -rc4                       -rc4-40</span><br><span class="line">-seed                      -seed-cbc                  -seed-cfb</span><br><span class="line">-seed-ecb                  -seed-ofb                  -sm4</span><br><span class="line">-sm4-cbc                   -sm4-cfb                   -sm4-ctr</span><br><span class="line">-sm4-ecb                   -sm4-ofb</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="对称加密算法命名规则的简单介绍"><a href="#对称加密算法命名规则的简单介绍" class="headerlink" title="对称加密算法命名规则的简单介绍"></a>对称加密算法命名规则的简单介绍</h3><hr>
+<h4 id="可变密钥长度-分组加密算法"><a href="#可变密钥长度-分组加密算法" class="headerlink" title="可变密钥长度 分组加密算法"></a>可变密钥长度 分组加密算法</h4><p>一个可变密钥长度的分组加密算法参数通常由三部分组成，<strong>对称加密算法</strong> - <strong>密钥长度</strong> - <strong>分组密码工作模式</strong>。</p>
+<p>举个例子：<code>AES-128-CTR</code></p>
+<p><strong>AES</strong>：<strong>对称加密算法</strong> 为 <strong>高级加密标准（Advanced Encryption Standard，AES）</strong>，它支持128位、192位和256位的密钥长度</p>
+<p><strong>128</strong>：<strong>密钥长度</strong> 指定为 <strong>128位</strong></p>
+<p><strong>CTR</strong>：<strong>分组密码工作模式</strong> 是 <strong>计数器模式（Counter Mode, CTR）</strong></p>
+<hr>
+<h4 id="固定密钥长度-分组加密算法"><a href="#固定密钥长度-分组加密算法" class="headerlink" title="固定密钥长度 分组加密算法"></a>固定密钥长度 分组加密算法</h4><p>一个固定密钥长度的分组加密算法参数通常由两部分组成，<strong>对称加密算法</strong> - <strong>分组密码工作模式</strong>。</p>
+<p>举个例子：<code>SM4-CFB</code></p>
+<p><strong>SM4</strong>：<strong>对称加密算法</strong> 为 <strong>商密-4</strong>，它的 <strong>密钥长度默认固定为128位</strong></p>
+<p><strong>CFB</strong>：<strong>分组密码工作模式</strong> 是 <strong>密文反馈模式（Cipher FeedBack，CFB）</strong></p>
+<hr>
+<h4 id="流密码"><a href="#流密码" class="headerlink" title="流密码"></a>流密码</h4><p>一个流密码的参数通常就是对称加密算法本身：<strong>对称加密算法</strong>。</p>
+<p>举个例子：<code>Chacha20</code></p>
+<p>Chacha20：<strong>对称加密算法</strong> 为 <strong>Chacha20</strong></p>
+<hr>
+<h4 id="默认ECB模式"><a href="#默认ECB模式" class="headerlink" title="默认ECB模式"></a>默认ECB模式</h4><p>当使用分组密码对称加密算法时不指定分组密码工作模式，OpenSSL将会默认使用 <strong>ECB模式</strong> 对文件进行加密。</p>
+<p>举个例子：<code>BF</code></p>
+<p><code>BF</code>：<strong>对称加密算法</strong> 为 <strong>Blowfish</strong>，默认分组密码工作模式是 <strong>电子密码本模式（Electronic CodeBlock)<strong>，注意，这一模式是</strong>不安全的</strong>。</p>
+<hr>
+<h3 id="对称加密算法-简单介绍"><a href="#对称加密算法-简单介绍" class="headerlink" title="对称加密算法 简单介绍"></a>对称加密算法 简单介绍</h3><hr>
+<h4 id="AES"><a href="#AES" class="headerlink" title="AES"></a>AES</h4><p>高级加密标准（Advanced Encryption Standard，AES），NIST标准，原型是Rjindael，属于SPN密码。</p>
+<p>目前世界上最流行的加密算法，具有高度的安全性、高度的兼容性、强大的性能和广泛的硬件加速支持，是绝大多数情况下对称加密算法的首选。密文分组128位，密钥长度可选128位，192位或256位，对应的SPN迭代轮次分别为10轮、12轮与14轮。</p>
+<hr>
+<h4 id="ARIA"><a href="#ARIA" class="headerlink" title="ARIA"></a>ARIA</h4><p>ARIA是韩国密码学研究者基于AES修改而来的一种SPN密码，原型是AES。</p>
+<p>韩国用于取代AES而设计的加密算法，具有高度安全性和较好的性能，密文分组128位，密钥长度可选128位，192位或256位，对应的SPN迭代轮次分别是12轮、14轮和16轮。</p>
+<hr>
+<h4 id="BF（Blowfish）"><a href="#BF（Blowfish）" class="headerlink" title="BF（Blowfish）"></a>BF（Blowfish）</h4><p>Blowfish是<em>Bruce Schneier</em>设计的一种Feistel密码。</p>
+<p>一个相对较老的对称加密算法，密文分组64位，密钥长度可选32-448位，迭代固定16轮。目前仍然具有能够接受的安全性，最优的密文分析只能破解4轮BF，或将14轮BF与伪随机序列区分开来。但由于密文分组仅有64位，研究表明可能存在生日攻击问题。作者Bruce Schneier本人建议使用TwoFish进行替代。</p>
+<hr>
+<h4 id="Camellia"><a href="#Camellia" class="headerlink" title="Camellia"></a>Camellia</h4><p>卡梅利亚（Camellia）是日本NTT和MEC设计的一款Feistel加密算法，其计算量和安全性基本与AES相当，名称意为“山茶”。</p>
+<p>一个常见的加密算法，具有高度的安全性、较为广泛的支持、强大的性能，是AES的一种替代算法。密文分组128位，密钥长度可选128位、192位或256位，对应Feistel迭代轮次分别为18轮，24轮与24轮。</p>
+<hr>
+<h4 id="CAST-CAST5-CAST-128"><a href="#CAST-CAST5-CAST-128" class="headerlink" title="CAST &#x2F; CAST5 &#x2F; CAST-128"></a>CAST &#x2F; CAST5 &#x2F; CAST-128</h4><p>CAST是 <em>Carlisle Adams</em> 和 <em>Stafford Tavares</em> 设计的一款Feistel密码，在加拿大常用。</p>
+<p>CAST5的密文分组为64位，密钥长度40-128位，步长8位。80位以下采用12轮迭代，80位及以上采用16轮迭代。被GPG，PGP和OpenSSL等支持。</p>
+<hr>
+<h4 id="Chacha20"><a href="#Chacha20" class="headerlink" title="Chacha20"></a>Chacha20</h4><p>Chacha20是Daniel Julius Bernstein设计的一种流密码算法，是Salsa20的改进版本。</p>
+<p>Chacha20采用128位或256位密钥，ARX结构，512位状态位和20轮重复，具有高度的安全性。由于Chacha20是流密码算法，因此具有低延迟、高性能、算力需求低的优点，适合在移动设备上、ARM架构处理器与嵌入式设备上使用。常常与Poly1305校验码一同使用。</p>
+<hr>
+<h4 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h4><p>数据加密标准（Data Encryption Standard, DES），上古加密算法，上世纪70年代由DES开发，已经过时。</p>
+<p>DES采用56位密钥和64位密文分组，Feistel结构16轮迭代。在目前的算力下，蛮力攻击（穷举法）攻破DES已经成为可能。线性分析和选择明文攻击均能有效削弱DES的安全性。</p>
+<hr>
+<h4 id="DES-EDE-DES3-（3DES）"><a href="#DES-EDE-DES3-（3DES）" class="headerlink" title="DES-EDE &#x2F; DES3 （3DES）"></a>DES-EDE &#x2F; DES3 （3DES）</h4><p>三重数据加密标准（Triple Data Encryption Standard, 3DES）或DES-EDE（Data Encryption Standard - Encryption Decryption Encryption）是对DES的加强，通过三个使用不同密钥的DES分别对原始数据进行加密、解密、加密得到密文（密钥选项1），将密钥空间扩展到2^168^，但由于中途相遇攻击，其安全性实际为2^112^。</p>
+<p>当然，也存在K2 &#x3D; K1（密钥选项2）和K3 &#x3D; K2 &#x3D; K1（密钥选项3）的3DES版本。其中，根据NIST的评估，密钥选项2的有效安全性仅有约2^80^，而密钥选项3明显不合理，第二轮解密和第一轮加密直接抵消，因此相当于DES。密钥选项2与密钥选项3均已经弃用。目前的3DES或DES-EDE默认使用密钥选项1。</p>
+<p>3DES对于目前的算力和密码分析手段仍然属于安全的，但是其性能和理论安全性仍然弱于AES。其主要优势在于能与支持DES的老式通信系统兼容。如有可能，应尽量升级到AES。</p>
+<hr>
+<h4 id="DESX"><a href="#DESX" class="headerlink" title="DESX"></a>DESX</h4><p>使用64位密钥的DES，其中仍然是56位用于加密，8位用于校验。不推荐。</p>
+<hr>
+<h4 id="IDEA"><a href="#IDEA" class="headerlink" title="IDEA"></a>IDEA</h4><p>国际数据加密算法（International Data Encryption Algorithm，IDEA），最早称为改良建议加密标准（Improved Proposed Encryption Standard，IPES），是1991年提出的一种Feistel密码。</p>
+<p>IDEA的密文分组长度为64位，密钥长度为128位，迭代轮次为8.5。目前IDEA被认为是一种不再安全的加密算法，尽管目前最优的攻击方式复杂度仍然来到2^126.1^，超过了目前的常规算力破解能力。（资料来源：维基百科）</p>
+<hr>
+<h4 id="RC2-ARC2"><a href="#RC2-ARC2" class="headerlink" title="RC2 &#x2F; ARC2"></a>RC2 &#x2F; ARC2</h4><p>RC2（Rivest Cipher 2）是Ron Rivest设计的基于不平衡Feistel结构的分组加密算法，目前已经过时，面对相关密钥攻击脆弱。</p>
+<p>RC2的分组长度为64位，密钥长度1-128位。它采用16轮不平衡Feistel结构的混淆操作和2轮扰乱操作。</p>
+<hr>
+<h4 id="RC4-ARC4-ARCFOUR"><a href="#RC4-ARC4-ARCFOUR" class="headerlink" title="RC4 &#x2F; ARC4 &#x2F; ARCFOUR"></a>RC4 &#x2F; ARC4 &#x2F; ARCFOUR</h4><p>RC4（Rivest Cipher 4）是Ron Rivest设计的一种流密码，曾经非常流行，被广泛用于SSL和WPA等协议，但目前已经过时。</p>
+<p>RC4采用40-2048位的密钥，以及2064位的状态位（1684个有效状态位）对数据进行加密，拥有很快的加密速度。但是它的密钥流能够被与伪随机序列区分开来。在2015年，比利时的密码研究员宣布了RC4的破解，能够在75小时内取得Cookie的内容。目前现代的密码学协议通常已经弃用RC4。</p>
+<hr>
+<h4 id="SEED"><a href="#SEED" class="headerlink" title="SEED"></a>SEED</h4><p>SEED是韩国KISA研发的一种Feistel密码。</p>
+<p>SEED的密文分组为128位，密钥长度固定为128位，迭代轮数16轮，目前仍然具有较高的安全性。</p>
+<hr>
+<h4 id="SM4-SMS4"><a href="#SM4-SMS4" class="headerlink" title="SM4 &#x2F; SMS4"></a>SM4 &#x2F; SMS4</h4><p>SM4（商密-4）是中国国密算法系列中的对称加密算法，属于Feistel密码。</p>
+<p>SM4的分组长度为128位，密钥长度固定为128位，采用非对称Feistel结构32轮迭代，具有很强的安全性和较高的性能，广泛用于中国标准WLAN WAPI和TLS。</p>
+<hr>
+<h2 id="基本加解密指令"><a href="#基本加解密指令" class="headerlink" title="基本加解密指令"></a>基本加解密指令</h2><hr>
+<h3 id="简单的加密指令"><a href="#简单的加密指令" class="headerlink" title="简单的加密指令"></a>简单的加密指令</h3><p>一个最简单的加密文件的示例如下，该指令通过<code>AES-128-CTR</code>加密算法对<code>plaintext.txt</code>文件进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>OpenSSL此时会提醒你输入密码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enter AES-<span class="number">128</span>-CTR encryption password:</span><br></pre></td></tr></table></figure>
+
+<p>输入密钥后，OpenSSL会提醒你输入确认密码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Verifying - enter AES-<span class="number">128</span>-CTR encryption password:</span><br></pre></td></tr></table></figure>
+
+<p>如果确认密码与密码一致，那么文件将开始加密。但是，这种加密方式已经过时，OpenSSL此时会弹出提示：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*** WARNING : deprecated key derivation used.</span><br><span class="line">Using -iter or -pbkdf2 would be better.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="简单的解密指令"><a href="#简单的解密指令" class="headerlink" title="简单的解密指令"></a>简单的解密指令</h3><p>一个最简单的解密文件的示例如下，该指令尝试通过<code>AES-128-CTR</code>加密算法对<code>ciphertext.txt</code>文件进行解密：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -d -AES-128-CTR -<span class="keyword">in</span> ciphertext.txt -out decryptedtext.txt</span><br></pre></td></tr></table></figure>
+
+<p>OpenSSL此时会提醒你输入密码：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">enter AES-<span class="number">128</span>-CTR decryption password:</span><br></pre></td></tr></table></figure>
+
+<p>密码如果正确，OpenSSL将会解密文件。但它仍然会提醒你这种加密方式已经过时，会弹出提示：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*** WARNING : deprecated key derivation used.</span><br><span class="line">Using -iter or -pbkdf2 would be better.</span><br></pre></td></tr></table></figure>
+
+<h3 id="PBKDF2、迭代次数与盐"><a href="#PBKDF2、迭代次数与盐" class="headerlink" title="PBKDF2、迭代次数与盐"></a>PBKDF2、迭代次数与盐</h3><p>OpenSSL目前并不鼓励直接使用字符串作为密钥，而是推荐使用PBKDF2生成加密密钥。</p>
+<p><code>openssl enc</code>有这两个KDF参数：</p>
+<p><code>-PBKDF2</code>：PBKDF2（Password-Based Key Derivation Function 2）是一种密钥推到函数，它能够从用户提供的密码中推导出实际的加密密钥，能够有效增强密码安全性，避免爆破原始密码。</p>
+<p><code>-iter</code>：迭代次数（Iterations）指定了PBKDF2的迭代轮数，迭代轮数越高，密码的安全性相对就越高，但也会消耗更多的计算资源。一般建议设置在80000以上。（建议来源：Bitwarden）</p>
+<p><code>-salt</code>：盐（Salt）是一个随机生成的唯一值，它在每一轮迭代中与输入值连接在一起参加KDF迭代，进一步增加了彩虹表攻击和爆破的难度。这个选项是<strong>默认开启</strong>的。</p>
+<h3 id="示例：使用PBKDF2与盐进行加解密"><a href="#示例：使用PBKDF2与盐进行加解密" class="headerlink" title="示例：使用PBKDF2与盐进行加解密"></a>示例：使用PBKDF2与盐进行加解密</h3><p>以下这条指令通过<code>AES-128-CTR</code>加密算法对<code>plaintext.txt</code>文件进行加密，使用加盐PBKDF2，迭代次数80000，输出文件为ciphertext.txt。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>以下这条指令通过<code>AES-128-CTR</code>加密算法对<code>ciphert.txt</code>文件进行解密，使用加盐PBKDF2，迭代次数80000，输出文件为decryptedtext.txt。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -d -AES-128-CTR -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> ciphertext.txt -out decryptedrtext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选择参数"><a href="#总体选择参数" class="headerlink" title="总体选择参数"></a>总体选择参数</h2><hr>
+<h3 id="help"><a href="#help" class="headerlink" title="-help"></a>-help</h3><p>陈列<code>OpenSSL enc</code>指令的帮助：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -h</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Usage: enc [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List ciphers</span><br><span class="line"> -ciphers            Alias <span class="keyword">for</span> -list</span><br><span class="line"> -e                  Encrypt</span><br><span class="line"> -d                  Decrypt</span><br><span class="line"> -p                  Print the iv/key</span><br><span class="line"> -P                  Print the iv/key and <span class="built_in">exit</span></span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Input options:</span><br><span class="line"> -<span class="keyword">in</span> infile          Input file</span><br><span class="line"> -k val              Passphrase</span><br><span class="line"> -kfile infile       Read passphrase from file</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -pass val           Passphrase <span class="built_in">source</span></span><br><span class="line"> -v                  Verbose output</span><br><span class="line"> -a                  Base64 encode/decode, depending on encryption flag</span><br><span class="line"> -<span class="built_in">base64</span>             Same as option -a</span><br><span class="line"> -A                  Used with -[<span class="built_in">base64</span>|a] to specify <span class="built_in">base64</span> buffer as a single line</span><br><span class="line"></span><br><span class="line">Encryption options:</span><br><span class="line"> -nopad              Disable standard block padding</span><br><span class="line"> -salt               Use salt <span class="keyword">in</span> the KDF (default)</span><br><span class="line"> -nosalt             Do not use salt <span class="keyword">in</span> the KDF</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"> -bufsize val        Buffer size</span><br><span class="line"> -K val              Raw key, <span class="keyword">in</span> hex</span><br><span class="line"> -S val              Salt, <span class="keyword">in</span> hex</span><br><span class="line"> -iv val             IV <span class="keyword">in</span> hex</span><br><span class="line"> -md val             Use specified digest to create a key from the passphrase</span><br><span class="line"> -iter +int          Specify the iteration count and force the use of PBKDF2</span><br><span class="line">                     Default: 10000</span><br><span class="line"> -pbkdf2             Use password-based key derivation <span class="keyword">function</span> 2 (PBKDF2)</span><br><span class="line">                     Use -iter to change the iteration count from 10000</span><br><span class="line"> -none               Don<span class="string">&#x27;t encrypt</span></span><br><span class="line"><span class="string"> -*                  Any supported cipher</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Random state options:</span></span><br><span class="line"><span class="string"> -rand val           Load the given file(s) into the random number generator</span></span><br><span class="line"><span class="string"> -writerand outfile  Write random data to the specified file</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Provider options:</span></span><br><span class="line"><span class="string"> -provider-path val  Provider load path (must be before &#x27;</span>provider<span class="string">&#x27; argument if required)</span></span><br><span class="line"><span class="string"> -provider val       Provider to load (can be specified multiple times)</span></span><br><span class="line"><span class="string"> -propquery val      Property query used when fetching algorithms</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="list-或-ciphers"><a href="#list-或-ciphers" class="headerlink" title="-list 或 -ciphers"></a>-list 或 -ciphers</h3><p>列出OpenSSL支持的对称加密算法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -list</span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -ciphers</span><br></pre></td></tr></table></figure>
+
+<p>以OpenSSL 3.1.2版本为例，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">Supported ciphers:</span><br><span class="line">-aes-128-cbc               -aes-128-cfb               -aes-128-cfb1</span><br><span class="line">-aes-128-cfb8              -aes-128-ctr               -aes-128-ecb</span><br><span class="line">-aes-128-ofb               -aes-192-cbc               -aes-192-cfb</span><br><span class="line">-aes-192-cfb1              -aes-192-cfb8              -aes-192-ctr</span><br><span class="line">-aes-192-ecb               -aes-192-ofb               -aes-256-cbc</span><br><span class="line">-aes-256-cfb               -aes-256-cfb1              -aes-256-cfb8</span><br><span class="line">-aes-256-ctr               -aes-256-ecb               -aes-256-ofb</span><br><span class="line">-aes128                    -aes128-wrap               -aes192</span><br><span class="line">-aes192-wrap               -aes256                    -aes256-wrap</span><br><span class="line">-aria-128-cbc              -aria-128-cfb              -aria-128-cfb1</span><br><span class="line">-aria-128-cfb8             -aria-128-ctr              -aria-128-ecb</span><br><span class="line">-aria-128-ofb              -aria-192-cbc              -aria-192-cfb</span><br><span class="line">-aria-192-cfb1             -aria-192-cfb8             -aria-192-ctr</span><br><span class="line">-aria-192-ecb              -aria-192-ofb              -aria-256-cbc</span><br><span class="line">-aria-256-cfb              -aria-256-cfb1             -aria-256-cfb8</span><br><span class="line">-aria-256-ctr              -aria-256-ecb              -aria-256-ofb</span><br><span class="line">-aria128                   -aria192                   -aria256</span><br><span class="line">-bf                        -bf-cbc                    -bf-cfb</span><br><span class="line">-bf-ecb                    -bf-ofb                    -blowfish</span><br><span class="line">-camellia-128-cbc          -camellia-128-cfb          -camellia-128-cfb1</span><br><span class="line">-camellia-128-cfb8         -camellia-128-ctr          -camellia-128-ecb</span><br><span class="line">-camellia-128-ofb          -camellia-192-cbc          -camellia-192-cfb</span><br><span class="line">-camellia-192-cfb1         -camellia-192-cfb8         -camellia-192-ctr</span><br><span class="line">-camellia-192-ecb          -camellia-192-ofb          -camellia-256-cbc</span><br><span class="line">-camellia-256-cfb          -camellia-256-cfb1         -camellia-256-cfb8</span><br><span class="line">-camellia-256-ctr          -camellia-256-ecb          -camellia-256-ofb</span><br><span class="line">-camellia128               -camellia192               -camellia256</span><br><span class="line">-cast                      -cast-cbc                  -cast5-cbc</span><br><span class="line">-cast5-cfb                 -cast5-ecb                 -cast5-ofb</span><br><span class="line">-chacha20                  -des                       -des-cbc</span><br><span class="line">-des-cfb                   -des-cfb1                  -des-cfb8</span><br><span class="line">-des-ecb                   -des-ede                   -des-ede-cbc</span><br><span class="line">-des-ede-cfb               -des-ede-ecb               -des-ede-ofb</span><br><span class="line">-des-ede3                  -des-ede3-cbc              -des-ede3-cfb</span><br><span class="line">-des-ede3-cfb1             -des-ede3-cfb8             -des-ede3-ecb</span><br><span class="line">-des-ede3-ofb              -des-ofb                   -des3</span><br><span class="line">-des3-wrap                 -desx                      -desx-cbc</span><br><span class="line">-id-aes128-wrap            -id-aes128-wrap-pad        -id-aes192-wrap</span><br><span class="line">-id-aes192-wrap-pad        -id-aes256-wrap            -id-aes256-wrap-pad</span><br><span class="line">-id-smime-alg-CMS3DESwrap  -idea                      -idea-cbc</span><br><span class="line">-idea-cfb                  -idea-ecb                  -idea-ofb</span><br><span class="line">-rc2                       -rc2-128                   -rc2-40</span><br><span class="line">-rc2-40-cbc                -rc2-64                    -rc2-64-cbc</span><br><span class="line">-rc2-cbc                   -rc2-cfb                   -rc2-ecb</span><br><span class="line">-rc2-ofb                   -rc4                       -rc4-40</span><br><span class="line">-seed                      -seed-cbc                  -seed-cfb</span><br><span class="line">-seed-ecb                  -seed-ofb                  -sm4</span><br><span class="line">-sm4-cbc                   -sm4-cfb                   -sm4-ctr</span><br><span class="line">-sm4-ecb                   -sm4-ofb</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="e"><a href="#e" class="headerlink" title="-e"></a>-e</h3><p>加密指令，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>这条指令通过<code>AES-128-CTR</code>加密算法对<code>plaintext.txt</code>进行加密，输出到<code>ciphertext.txt</code>当中，密钥派生函数采用<code>PBKDF2</code>，迭代次数<code>80000</code>，加盐。</p>
+<h3 id="d"><a href="#d" class="headerlink" title="-d"></a>-d</h3><p>解密指令，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -d -pbkdf2 -iter 80000 -salt ciphertext.txt -out decrypted.txt</span><br></pre></td></tr></table></figure>
+
+<p>这条指令通过<code>AES-128-CTR</code>加密算法对<code>ciphertext.txt</code>进行解密，输出到<code>decrypted.txt</code>当中，密钥派生函数采用<code>PBKDF2</code>，迭代次数<code>80000</code>，加盐。</p>
+<h3 id="p-或-P"><a href="#p-或-P" class="headerlink" title="-p 或 -P"></a>-p 或 -P</h3><p>输出IV（Initialization Vector，初始化向量）和密钥，加盐也会输出盐值。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -p -AES-128-CTR -e -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>它的输出为：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">salt=EEADC4C2FABA433D</span><br><span class="line">key=BD956B91B899D59A02DA992B65908A6F</span><br><span class="line">iv =<span class="number">6</span>AC35A79C1EE8C7192680E294696D279</span><br></pre></td></tr></table></figure>
+
+<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定加密引擎，一般来说并不需要这么做，除非你有特殊需求。</p>
+<hr>
+<h2 id="输入参数"><a href="#输入参数" class="headerlink" title="输入参数"></a>输入参数</h2><hr>
+<h3 id="in"><a href="#in" class="headerlink" title="-in"></a>-in</h3><p>指定输入文档，例如<code>-in plaintext.txt</code>就是指以<code>plaintext.txt</code>文件作为输入。</p>
+<hr>
+<h3 id="k"><a href="#k" class="headerlink" title="-k"></a>-k</h3><p>指定加密密钥，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>-k your_awesome_password</code>就指定了初始密钥为”your_awesome_password”</p>
+<hr>
+<h3 id="kfile"><a href="#kfile" class="headerlink" title="-kfile"></a>-kfile</h3><p>从指定文件的第一行中导入密钥，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -kfile your_awesome_password.bin -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>-kfile your_awesome_password.bin</code>就指定了初始密钥从<code>your_awesome_password.bin</code>这个文件的第一行中导入。</p>
+<hr>
+<h2 id="输出参数"><a href="#输出参数" class="headerlink" title="输出参数"></a>输出参数</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文档，例如<code>-out ciphertext.txt</code>就是指输出到<code>ciphertext.txt</code>这个文件中。如果没有这个文件，那么就新建。</p>
+<hr>
+<h3 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h3><p>指定密码的来源。</p>
+<h4 id="直接在命令行中提供密码"><a href="#直接在命令行中提供密码" class="headerlink" title="直接在命令行中提供密码"></a>直接在命令行中提供密码</h4><p>例如这条命令，直接指定密码为<code>your_awesome_password</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pass pass:your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="从文件中读取密码"><a href="#从文件中读取密码" class="headerlink" title="从文件中读取密码"></a>从文件中读取密码</h4><p>例如这条命令，从<code>password.txt</code>中的第一行读取密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pass file:password.txt -<span class="keyword">in</span> plaintext.txxt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<h4 id="使用环境变量提供密码"><a href="#使用环境变量提供密码" class="headerlink" title="使用环境变量提供密码"></a>使用环境变量提供密码</h4><p>例如这条命令，将尝试从系统的<code>OPENSSL_PASSWORD</code>环境变量读取密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -AES-128-CTR -e -pass <span class="built_in">env</span>:OPENSSL_PASSWORD -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="v"><a href="#v" class="headerlink" title="-v"></a>-v</h3><p>输出详细信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -v -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>这是它的输出：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bufsize=<span class="number">8192</span></span><br><span class="line">bytes read   :       <span class="number">64</span></span><br><span class="line">bytes written:       <span class="number">80</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="a-或-base64"><a href="#a-或-base64" class="headerlink" title="-a 或 -base64"></a>-a 或 -base64</h3><p>Base64编解码选项，如果是加密则将输出进行Base64编码，如果是解密则对输入先进行Base64解码。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -<span class="built_in">base64</span> -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>这样你就会得到Base64编码的输出，而不是一堆乱码了：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">U2FsdGVkX18mc9HLpslcxebFcULw/x3pPduiYwtum8dFM0AFH0h0o3Wri6K4LXVF</span><br><span class="line">HFj/F0SeXy4Ma3odakvf2oRuM8C4CGPHICzSq2/X830=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="A"><a href="#A" class="headerlink" title="-A"></a>-A</h3><p>与<code>-a</code>或<code>-base64</code>一同使用，将Base64编码的缓冲区输出为单行文本。对于需要嵌入单行数据或者脚本的场景或许很有用。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -A -<span class="built_in">base64</span> -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -k your_awesome_password -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>得到的输出：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">U2FsdGVkX19CVxeyE43LfGZf9QR73J7HXEYgc2PmfcElfbIwwvrUS1VRrCfKUqjkL9k2ldAVxTXdmf0c41rluoMKY+On4rKwzRpZlY2Vv84=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="加密选项"><a href="#加密选项" class="headerlink" title="加密选项"></a>加密选项</h2><hr>
+<h3 id="nopad"><a href="#nopad" class="headerlink" title="-nopad"></a>-nopad</h3><p>禁用分组加密算法的块填充。此时如果数据长度不是分组大小的整数倍，可能会出错。</p>
+<hr>
+<h3 id="salt"><a href="#salt" class="headerlink" title="-salt"></a>-salt</h3><p>为KDF加盐，默认就是开启的。</p>
+<p>例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="nosalt"><a href="#nosalt" class="headerlink" title="-nosalt"></a>-nosalt</h3><p>手动指定KDF不使用盐，<strong>不推荐</strong>且<strong>不安全</strong>，这会削弱加密面对彩虹表攻击和爆破攻击的强度。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pbkdf2 -iter 80000 -nosalt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="debug"><a href="#debug" class="headerlink" title="-debug"></a>-debug</h3><p>输出调试信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -debug -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出是：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">in plaintext<span class="selector-class">.txt</span> -out ciphertext<span class="selector-class">.txt</span></span><br><span class="line">BIO<span class="selector-attr">[0x1e9bc5cf7f0]</span>: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">8</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: write return <span class="number">1</span> processed: <span class="number">8</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">8</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: write return <span class="number">1</span> processed: <span class="number">8</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: <span class="built_in">ctrl</span>(<span class="number">6</span>) - cipher</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">ctrl</span>(<span class="number">6</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">10</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">2</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">read</span>(<span class="number">0</span>,<span class="number">8192</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: read return <span class="number">1</span> processed: <span class="number">64</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">64</span>) - cipher</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">write</span>(<span class="number">0</span>,<span class="number">64</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: write return <span class="number">1</span> processed: <span class="number">64</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: write return <span class="number">1</span> processed: <span class="number">64</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">10</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">0</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: <span class="built_in">ctrl</span>(<span class="number">2</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: ctrl return <span class="number">1</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: <span class="built_in">ctrl</span>(<span class="number">11</span>) - cipher</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: <span class="built_in">ctrl</span>(<span class="number">11</span>) - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: ctrl return <span class="number">1</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: ctrl return <span class="number">1</span></span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5d0600]: Free - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5cf7f0]: Free - FILE pointer</span><br><span class="line">BIO[<span class="number">0</span>x1e9bc5e02a0]: Free - cipher</span><br></pre></td></tr></table></figure>
+
+<p>这其实是OpenSSL API给出的一些日志信息，其中涉及到C语言的操作，希望了解底层实现或者需要功能调试的可能会用到这个选项。</p>
+<hr>
+<h3 id="bufsize"><a href="#bufsize" class="headerlink" title="-bufsize"></a>-bufsize</h3><p>手动调整OpenSSL缓冲区的大小，这个值默认情况下是8192B，个人认为大多数情况下没必要修改。</p>
+<p>更大的缓冲区在处理大文件时能减少IO次数，提升性能，但会引起更大的内存开销；更小的缓冲区处理小文件时能节省内存，但是处理大文件时IO次数会提高，性能会受到影响。</p>
+<p>一个示例，把缓冲区修改为1024B：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -bufsize 1024 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="K"><a href="#K" class="headerlink" title="-K"></a>-K</h3><p>手动指定初始密钥（Raw Key），绕过KDF。输入形式为16进制。必须与<code>-iv</code>一同使用。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将Raw Key手动覆盖为<code>dc76d65a6ccf7f33fd8ecb7fe640e272</code>，将IV手动覆盖为<code>12caf7e7136907d82c6a01a0e3b7fc16</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -K dc76d65a6ccf7f33fd8ecb7fe640e272 -iv 12caf7e7136907d82c6a01a0e3b7fc16 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="iv"><a href="#iv" class="headerlink" title="-iv"></a>-iv</h3><p>手动指定初始化向量（Initialization Vector, IV），绕过自带的IV发生器。输入形式为16进制。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将Raw Key手动覆盖为<code>dc76d65a6ccf7f33fd8ecb7fe640e272</code>，将IV手动覆盖为<code>12caf7e7136907d82c6a01a0e3b7fc16</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -K dc76d65a6ccf7f33fd8ecb7fe640e272 -iv 12caf7e7136907d82c6a01a0e3b7fc16 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="S"><a href="#S" class="headerlink" title="-S"></a>-S</h3><p>手动指定KDF的盐值（Salt），绕过自带的Salt发生器。输入形式为16进制。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将盐值手动覆盖为<code>4351431709882387</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -S 4351431709882387 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="md"><a href="#md" class="headerlink" title="-md"></a>-md</h3><p>手动指定KDF使用的散列算法，绕过默认的散列算法。一般而言，没必要。</p>
+<p>（PS：个人观点，<strong>除非你十分清楚你在做什么，否则不建议这么做</strong>）</p>
+<p>例如，将散列算法手动修改为<code>SM3</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -md SM3 -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="iter"><a href="#iter" class="headerlink" title="-iter"></a>-iter</h3><p>手动指定KDF的迭代次数，覆盖默认的迭代次数（10000）。</p>
+<p>例如，将KDF的迭代次数手动修改为<code>80000</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="pbkdf2"><a href="#pbkdf2" class="headerlink" title="-pbkdf2"></a>-pbkdf2</h3><p>使用PBKDF2来生成初始密钥，这是一种良好的安全实践：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="none"><a href="#none" class="headerlink" title="-none"></a>-none</h3><p>不进行加密，通常是调试时使用的。</p>
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>将选定的文件加载到随机数生成器当中，提供额外的安全性。最好使用可靠的随机源，例如在Linux系统上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt -rand /dev/urandom</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="writerand"></a>writerand</h3><p>向选定的文件输出生成的随机数据。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl enc -e -AES-128-CTR -pass pass:your_awesome_password -pbkdf2 -iter 80000 -salt -<span class="keyword">in</span> plaintext.txt -out ciphertext.txt -writerand random.txt</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\06\OpenSSL-CLI-散列函数-个人使用经验\" rel="bookmark">OpenSSL CLI 散列函数 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\15\OpenSSL-CLI-密钥对生成工具-个人使用经验\" rel="bookmark">OpenSSL CLI 密钥对生成工具 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\OpenSSL-CLI-随机数生成器-个人使用经验\" rel="bookmark">OpenSSL CLI 随机数生成器 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\在Qt-Creator中使用OpenSSL\" rel="bookmark">在Qt Creator中使用OpenSSL</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\01\简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建\" rel="bookmark">简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>鹭音大人是我的主人喵~关注鹭音大人谢谢喵~所有收益都会上贡的喵~.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/OpenSSL/" rel="tag"><i class="fa fa-tag"></i> OpenSSL</a>
+              <a href="/tags/Crypto/" rel="tag"><i class="fa fa-tag"></i> Crypto</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" rel="prev" title="OpenSSL CLI 散列函数 个人使用经验">
+      <i class="fa fa-chevron-left"></i> OpenSSL CLI 散列函数 个人使用经验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" rel="next" title="简单的Cloudflare Warp使用方法">
+      简单的Cloudflare Warp使用方法 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%B8%AE%E5%8A%A9"><span class="nav-number">2.</span> <span class="nav-text">获取帮助</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E5%87%BA%E6%94%AF%E6%8C%81%E7%9A%84%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">列出支持的加密算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%91%BD%E5%90%8D%E8%A7%84%E5%88%99%E7%9A%84%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.1.</span> <span class="nav-text">对称加密算法命名规则的简单介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E5%8F%98%E5%AF%86%E9%92%A5%E9%95%BF%E5%BA%A6-%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">3.1.1.</span> <span class="nav-text">可变密钥长度 分组加密算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BA%E5%AE%9A%E5%AF%86%E9%92%A5%E9%95%BF%E5%BA%A6-%E5%88%86%E7%BB%84%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">3.1.2.</span> <span class="nav-text">固定密钥长度 分组加密算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B5%81%E5%AF%86%E7%A0%81"><span class="nav-number">3.1.3.</span> <span class="nav-text">流密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4ECB%E6%A8%A1%E5%BC%8F"><span class="nav-number">3.1.4.</span> <span class="nav-text">默认ECB模式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D"><span class="nav-number">3.2.</span> <span class="nav-text">对称加密算法 简单介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AES"><span class="nav-number">3.2.1.</span> <span class="nav-text">AES</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ARIA"><span class="nav-number">3.2.2.</span> <span class="nav-text">ARIA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BF%EF%BC%88Blowfish%EF%BC%89"><span class="nav-number">3.2.3.</span> <span class="nav-text">BF（Blowfish）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Camellia"><span class="nav-number">3.2.4.</span> <span class="nav-text">Camellia</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CAST-CAST5-CAST-128"><span class="nav-number">3.2.5.</span> <span class="nav-text">CAST &#x2F; CAST5 &#x2F; CAST-128</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Chacha20"><span class="nav-number">3.2.6.</span> <span class="nav-text">Chacha20</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DES"><span class="nav-number">3.2.7.</span> <span class="nav-text">DES</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DES-EDE-DES3-%EF%BC%883DES%EF%BC%89"><span class="nav-number">3.2.8.</span> <span class="nav-text">DES-EDE &#x2F; DES3 （3DES）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DESX"><span class="nav-number">3.2.9.</span> <span class="nav-text">DESX</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#IDEA"><span class="nav-number">3.2.10.</span> <span class="nav-text">IDEA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC2-ARC2"><span class="nav-number">3.2.11.</span> <span class="nav-text">RC2 &#x2F; ARC2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#RC4-ARC4-ARCFOUR"><span class="nav-number">3.2.12.</span> <span class="nav-text">RC4 &#x2F; ARC4 &#x2F; ARCFOUR</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SEED"><span class="nav-number">3.2.13.</span> <span class="nav-text">SEED</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SM4-SMS4"><span class="nav-number">3.2.14.</span> <span class="nav-text">SM4 &#x2F; SMS4</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%8A%A0%E8%A7%A3%E5%AF%86%E6%8C%87%E4%BB%A4"><span class="nav-number">4.</span> <span class="nav-text">基本加解密指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E5%8A%A0%E5%AF%86%E6%8C%87%E4%BB%A4"><span class="nav-number">4.1.</span> <span class="nav-text">简单的加密指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E8%A7%A3%E5%AF%86%E6%8C%87%E4%BB%A4"><span class="nav-number">4.2.</span> <span class="nav-text">简单的解密指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PBKDF2%E3%80%81%E8%BF%AD%E4%BB%A3%E6%AC%A1%E6%95%B0%E4%B8%8E%E7%9B%90"><span class="nav-number">4.3.</span> <span class="nav-text">PBKDF2、迭代次数与盐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E4%BD%BF%E7%94%A8PBKDF2%E4%B8%8E%E7%9B%90%E8%BF%9B%E8%A1%8C%E5%8A%A0%E8%A7%A3%E5%AF%86"><span class="nav-number">4.4.</span> <span class="nav-text">示例：使用PBKDF2与盐进行加解密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E9%80%89%E6%8B%A9%E5%8F%82%E6%95%B0"><span class="nav-number">5.</span> <span class="nav-text">总体选择参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#help"><span class="nav-number">5.1.</span> <span class="nav-text">-help</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list-%E6%88%96-ciphers"><span class="nav-number">5.2.</span> <span class="nav-text">-list 或 -ciphers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#e"><span class="nav-number">5.3.</span> <span class="nav-text">-e</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#d"><span class="nav-number">5.4.</span> <span class="nav-text">-d</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#p-%E6%88%96-P"><span class="nav-number">5.5.</span> <span class="nav-text">-p 或 -P</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#engine"><span class="nav-number">5.6.</span> <span class="nav-text">-engine</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E5%8F%82%E6%95%B0"><span class="nav-number">6.</span> <span class="nav-text">输入参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#in"><span class="nav-number">6.1.</span> <span class="nav-text">-in</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#k"><span class="nav-number">6.2.</span> <span class="nav-text">-k</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kfile"><span class="nav-number">6.3.</span> <span class="nav-text">-kfile</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E5%8F%82%E6%95%B0"><span class="nav-number">7.</span> <span class="nav-text">输出参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#out"><span class="nav-number">7.1.</span> <span class="nav-text">-out</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pass"><span class="nav-number">7.2.</span> <span class="nav-text">pass</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%AD%E6%8F%90%E4%BE%9B%E5%AF%86%E7%A0%81"><span class="nav-number">7.2.1.</span> <span class="nav-text">直接在命令行中提供密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E6%96%87%E4%BB%B6%E4%B8%AD%E8%AF%BB%E5%8F%96%E5%AF%86%E7%A0%81"><span class="nav-number">7.2.2.</span> <span class="nav-text">从文件中读取密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%8F%90%E4%BE%9B%E5%AF%86%E7%A0%81"><span class="nav-number">7.2.3.</span> <span class="nav-text">使用环境变量提供密码</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#v"><span class="nav-number">7.3.</span> <span class="nav-text">-v</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#a-%E6%88%96-base64"><span class="nav-number">7.4.</span> <span class="nav-text">-a 或 -base64</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A"><span class="nav-number">7.5.</span> <span class="nav-text">-A</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E9%80%89%E9%A1%B9"><span class="nav-number">8.</span> <span class="nav-text">加密选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nopad"><span class="nav-number">8.1.</span> <span class="nav-text">-nopad</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#salt"><span class="nav-number">8.2.</span> <span class="nav-text">-salt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nosalt"><span class="nav-number">8.3.</span> <span class="nav-text">-nosalt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#debug"><span class="nav-number">8.4.</span> <span class="nav-text">-debug</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bufsize"><span class="nav-number">8.5.</span> <span class="nav-text">-bufsize</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#K"><span class="nav-number">8.6.</span> <span class="nav-text">-K</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iv"><span class="nav-number">8.7.</span> <span class="nav-text">-iv</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#S"><span class="nav-number">8.8.</span> <span class="nav-text">-S</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#md"><span class="nav-number">8.9.</span> <span class="nav-text">-md</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#iter"><span class="nav-number">8.10.</span> <span class="nav-text">-iter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pbkdf2"><span class="nav-number">8.11.</span> <span class="nav-text">-pbkdf2</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#none"><span class="nav-number">8.12.</span> <span class="nav-text">-none</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9A%8F%E6%9C%BA%E7%8A%B6%E6%80%81%E9%80%89%E9%A1%B9"><span class="nav-number">9.</span> <span class="nav-text">随机状态选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rand"><span class="nav-number">9.1.</span> <span class="nav-text">-rand</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#writerand"><span class="nav-number">9.2.</span> <span class="nav-text">writerand</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BlueMap1e"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">BlueMap1e</p>
+  <div class="site-description" itemprop="description">一个关于前端、日常、折腾和搞黄色的，不正经的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BlueMap1e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BlueMap1e" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/C_E_104" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;C_E_104" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.pixiv.net/users/65253737" title="Pixiv → https:&#x2F;&#x2F;www.pixiv.net&#x2F;users&#x2F;65253737" rel="noopener" target="_blank"><i class="fa fa-link fa-fw"></i>Pixiv</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BlueMap1e</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">26k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:12</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://BlueMap1e.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/";
+    this.page.identifier = "2023/11/08/OpenSSL-CLI-对称加密算法-个人使用经验/";
+    this.page.title = "OpenSSL CLI 对称加密算法 个人使用经验";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://BlueMap1e.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

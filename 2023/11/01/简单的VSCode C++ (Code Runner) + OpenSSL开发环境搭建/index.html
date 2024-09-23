@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="yiAqKf4X9lW3cPfeZKNMVcRsbvQdKqs5MlVHPx_boRY">
+  <meta name="msvalidate.01" content="E84F90825F4DA1490ABE1253333BB892">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。 本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建">
+<meta property="og:url" content="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="BlueMap1e&#39;s Blog">
+<meta property="og:description" content="前言OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。 本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-01T09:28:21.000Z">
+<meta property="article:modified_time" content="2024-09-23T06:53:48.284Z">
+<meta property="article:author" content="BlueMap1e">
+<meta property="article:tag" content="OpenSSL">
+<meta property="article:tag" content="Crypto">
+<meta property="article:tag" content="C++">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建 | BlueMap1e's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5VBM6R3END');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="BlueMap1e's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BlueMap1e's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">——By BlueMap1e</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>Friends</a>
+
+  </li>
+        <li class="menu-item menu-item-support">
+
+    <a href="/support/" rel="section"><i class="fa fa-heart fa-fw"></i>Support</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-01 17:28:21" itemprop="dateCreated datePublished" datetime="2023-11-01T17:28:21+08:00">2023-11-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-09-23 14:53:48" itemprop="dateModified" datetime="2024-09-23T14:53:48+08:00">2024-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/01/简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>543</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
+<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
+<span id="more"></span>
+
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a target="_blank" rel="noopener" href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
+<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
+<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
+<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
+
+<p>如果安装成功，就会返回一个版本信息，例如：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果正常运行，这个程序输出如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\在Qt-Creator中使用OpenSSL\" rel="bookmark">在Qt Creator中使用OpenSSL</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\08\OpenSSL-CLI-对称加密算法-个人使用经验\" rel="bookmark">OpenSSL CLI 对称加密算法 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\06\OpenSSL-CLI-散列函数-个人使用经验\" rel="bookmark">OpenSSL CLI 散列函数 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\15\OpenSSL-CLI-密钥对生成工具-个人使用经验\" rel="bookmark">OpenSSL CLI 密钥对生成工具 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\OpenSSL-CLI-随机数生成器-个人使用经验\" rel="bookmark">OpenSSL CLI 随机数生成器 个人使用经验</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>鹭音大人是我的主人喵~关注鹭音大人谢谢喵~所有收益都会上贡的喵~.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/OpenSSL/" rel="tag"><i class="fa fa-tag"></i> OpenSSL</a>
+              <a href="/tags/Crypto/" rel="tag"><i class="fa fa-tag"></i> Crypto</a>
+              <a href="/tags/C/" rel="tag"><i class="fa fa-tag"></i> C++</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="在Debian 12上搭建简单的MineCraft Forge服务器">
+      <i class="fa fa-chevron-left"></i> 在Debian 12上搭建简单的MineCraft Forge服务器
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" rel="next" title="OpenSSL CLI 散列函数 个人使用经验">
+      OpenSSL CLI 散列函数 个人使用经验 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8E%AF%E5%A2%83"><span class="nav-number">2.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%90%AD%E5%BB%BA%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">搭建过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85OpenSSL"><span class="nav-number">3.1.</span> <span class="nav-text">安装OpenSSL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0Path%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">3.2.</span> <span class="nav-text">添加Path环境变量</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AEVSCode"><span class="nav-number">4.</span> <span class="nav-text">配置VSCode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%90%E8%A1%8C"><span class="nav-number">5.</span> <span class="nav-text">测试运行</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BlueMap1e"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">BlueMap1e</p>
+  <div class="site-description" itemprop="description">一个关于前端、日常、折腾和搞黄色的，不正经的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BlueMap1e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BlueMap1e" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/C_E_104" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;C_E_104" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.pixiv.net/users/65253737" title="Pixiv → https:&#x2F;&#x2F;www.pixiv.net&#x2F;users&#x2F;65253737" rel="noopener" target="_blank"><i class="fa fa-link fa-fw"></i>Pixiv</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BlueMap1e</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">26k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:12</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://BlueMap1e.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/";
+    this.page.identifier = "2023/11/01/简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建/";
+    this.page.title = "简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://BlueMap1e.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>

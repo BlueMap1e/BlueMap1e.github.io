@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <meta name="google-site-verification" content="yiAqKf4X9lW3cPfeZKNMVcRsbvQdKqs5MlVHPx_boRY">
+  <meta name="msvalidate.01" content="E84F90825F4DA1490ABE1253333BB892">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="前言一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenSSL CLI 密钥对生成工具 个人使用经验">
+<meta property="og:url" content="https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/index.html">
+<meta property="og:site_name" content="BlueMap1e&#39;s Blog">
+<meta property="og:description" content="前言一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-11-15T12:00:04.000Z">
+<meta property="article:modified_time" content="2024-09-23T07:02:04.763Z">
+<meta property="article:author" content="BlueMap1e">
+<meta property="article:tag" content="OpenSSL">
+<meta property="article:tag" content="Crypto">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>OpenSSL CLI 密钥对生成工具 个人使用经验 | BlueMap1e's Blog</title>
+  
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
+    <script>
+      if (CONFIG.hostname === location.hostname) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-5VBM6R3END');
+      }
+    </script>
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="BlueMap1e's Blog" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">BlueMap1e's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">——By BlueMap1e</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-friends">
+
+    <a href="/friends/" rel="section"><i class="fa fa-link fa-fw"></i>Friends</a>
+
+  </li>
+        <li class="menu-item menu-item-support">
+
+    <a href="/support/" rel="section"><i class="fa fa-heart fa-fw"></i>Support</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>Sitemap</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          OpenSSL CLI 密钥对生成工具 个人使用经验
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2023-11-15 20:00:04" itemprop="dateCreated datePublished" datetime="2023-11-15T20:00:04+08:00">2023-11-15</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2024-09-23 15:02:04" itemprop="dateModified" datetime="2024-09-23T15:02:04+08:00">2024-09-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/15/OpenSSL-CLI-密钥对生成工具-个人使用经验/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>11 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">Usage: genpkey [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"> -paramfile infile   Parameters file</span><br><span class="line"> -algorithm val      The public key algorithm</span><br><span class="line"> -quiet              Do not output status <span class="keyword">while</span> generating keys</span><br><span class="line"> -pkeyopt val        Set the public key algorithm option as opt:value</span><br><span class="line"> -config infile      Load a configuration file (this may load modules)</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -outform PEM|DER    output format (DER or PEM)</span><br><span class="line"> -pass val           Output file pass phrase <span class="built_in">source</span></span><br><span class="line"> -genparam           Generate parameters, not key</span><br><span class="line"> -text               Print the <span class="keyword">in</span> text</span><br><span class="line"> -*                  Cipher to use to encrypt the key</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line">Order of options may be important!  See the documentation.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="简单的生成密钥对指令"><a href="#简单的生成密钥对指令" class="headerlink" title="简单的生成密钥对指令"></a>简单的生成密钥对指令</h2><hr>
+<h3 id="私钥生成"><a href="#私钥生成" class="headerlink" title="私钥生成"></a>私钥生成</h3><p>为了生成一个密钥对，至少需要指定一个算法，指定输出文件的名称。</p>
+<p>例如以下命令，它将会生成一个Ed25519私钥文件，文件名是<code>private-key-Ed25519.pem</code>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm Ed25519 -out private-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="公钥提取"><a href="#公钥提取" class="headerlink" title="公钥提取"></a>公钥提取</h3><p>可以从私钥文件中提取公钥。</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>私钥文件中提取对应的Ed25519公钥文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -pubout -out public-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="查看公钥与私钥内容"><a href="#查看公钥与私钥内容" class="headerlink" title="查看公钥与私钥内容"></a>查看公钥与私钥内容</h3><p>可以用<code>pkey</code>指令访问OpenSSL的私钥文件，可以输出私钥、公钥的算法与内容：</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>文件中读取算法、私钥内容、公钥内容，并显示在屏幕上：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ED25519 Private-Key:</span><br><span class="line">priv:</span><br><span class="line">    ea:f7:<span class="number">04</span>:a2:<span class="number">20</span>:b6:e8:<span class="number">65</span>:<span class="number">40</span>:<span class="number">65</span>:ad:<span class="number">44</span>:df:b4:<span class="number">9</span>f:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">9</span>b:<span class="number">6</span>c:b6:<span class="number">8</span>d:<span class="number">92</span>:<span class="number">66</span>:a9:<span class="number">73</span>:<span class="number">96</span>:cb:ae:aa:bd:<span class="number">52</span>:</span><br><span class="line">    <span class="number">28</span>:<span class="number">69</span></span><br><span class="line">pub:</span><br><span class="line">    <span class="number">42</span>:a3:<span class="number">68</span>:<span class="number">18</span>:<span class="number">8</span>e:df:<span class="number">3</span>e:<span class="number">0</span>c:c0:<span class="number">49</span>:<span class="number">29</span>:ef:e3:<span class="number">27</span>:c7:</span><br><span class="line">    <span class="number">31</span>:<span class="number">75</span>:b1:<span class="number">39</span>:<span class="number">43</span>:f4:<span class="number">26</span>:<span class="number">2</span>c:<span class="number">38</span>:<span class="number">07</span>:d4:d9:<span class="number">43</span>:e1:a1:</span><br><span class="line">    <span class="number">70</span>:<span class="number">45</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定引擎，通常没必要（实则我也不会）</p>
+<hr>
+<h3 id="paramfile"><a href="#paramfile" class="headerlink" title="-paramfile"></a>-paramfile</h3><p>输入参数文件</p>
+<hr>
+<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="-algorithm"></a>-algorithm</h3><p>指定算法，目前支持的算法有<code>RSA</code>, <code>RSA-PSS</code>, <code>EC</code>, <code>X25519</code>, <code>X448</code>, <code>Ed25519</code>, <code>Ed448</code>。（版本<code>3.1.3</code>）</p>
+<p>举个例子，生成RSA-2048私钥（这里不用指定参数是因为RSA默认2048位）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="quiet"><a href="#quiet" class="headerlink" title="-quiet"></a>-quiet</h3><p>生成密钥时不输出信息，例如熵池等等。</p>
+<hr>
+<h3 id="pkeyopt"><a href="#pkeyopt" class="headerlink" title="-pkeyopt"></a>-pkeyopt</h3><p>修改算法的安全参数，这里很难一一列举，具体可以去看OpenSSL的文档：<a target="_blank" rel="noopener" href="https://www.openssl.org/docs/manmaster/man1/openssl-genpkey.html#KEY-GENERATION-OPTIONS">&#x2F;docs&#x2F;manmaster&#x2F;man1&#x2F;openssl-genpkey.html</a></p>
+<p>安全参数是否可用需要根据选择的算法来判断。</p>
+<p>例如，这一串命令可以生成一个RSA-4096私钥：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out RSA-4096-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="config"><a href="#config" class="headerlink" title="-config"></a>-config</h3><p>外部导入配置文件，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-4096-Private-Key.pem -config my-config.cnf</span><br></pre></td></tr></table></figure>
+
+<p>Config文件，我个人还没弄清楚怎么写，这就不做误导性示范了。</p>
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文件名，例如输出为<code>RSA-2048-Private-Key.pem</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="outform"><a href="#outform" class="headerlink" title="-outform"></a>-outform</h3><p>指定输出文件格式，支持两种格式——<code>PEM</code>和<code>DER</code></p>
+<p>**PEM(Privacy Enhanced Mail)**：可读的文本格式，包括边界标记、数据类型，编码为Base64。</p>
+<p>**DER(Distinguished Encoding Rules)**：不可读的二进制格式，格式紧凑，无边界标记。</p>
+<p>通常而言，为了提高兼容性和可读性，PEM是常见的选择，也是默认选项。</p>
+<p>如果要以DER格式输出文件，一个例子如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -outform DER -out RSA-2048-Private-Key.der</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="pass"><a href="#pass" class="headerlink" title="-pass"></a>-pass</h3><p>类似于对称加密的密钥，可以通过各种方式指定输出密钥文件的密码短语（Pass Phrase），例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm X25519 -out X25519-Private-Key.pem -pass pass:your_password</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="genparam"><a href="#genparam" class="headerlink" title="-genparam"></a>-genparam</h3><p>只生成参数而不生成密钥，此时<code>genpkey</code>指令可以兼容更多的算法，其中额外的有<code>DH</code>，<code>DSA</code>：</p>
+<p>例如，生成DSA参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm DSA -genparam</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">..+.....+..+.......+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">...........................+.....+.+....+...................+.............+........+.......+........................+.+...........+.+.....+......+..............+.....................+...........+....+...+.+........+.....+...+..+..........+..+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">---<span class="attr">--BEGIN</span> DSA PARAMETERS-----</span><br><span class="line">MIICKAKCAQEAruL2N9/nisKseg6CFjB/mXNC0FFRTcnecvbF+<span class="number">9</span>eD6UepnH7mv0K1</span><br><span class="line">+RFL8ECrHGxlYgAkLA9MN+ZiQQ7BSE6qQt0CEGMkgIW6GFUPt6opupB5Ql+qmEBo</span><br><span class="line">uivQr44/VJKjC0vzli85I+UD2f24xrroqssAf4n9B4t22Bg6dxV2AGAfDLdzsNwQ</span><br><span class="line">GITaruJmEj6Xkgyx3rx3KTvQfLtiHdMUJ9rBs5JonomNrEuX5kjf55chFub9IYDF</span><br><span class="line">Vpjsp57hvEJmDU6kQKihkax69V+NmF4T8cs3kAukYfLn/VubbF+FOEZuzQQsAO5n</span><br><span class="line">tGCedKsKmXCtxCgCqZu+FLIxil+A0w36OQIdAI4/RI2+Im2ZhBKGdtJ2Y8a9ndsU</span><br><span class="line">w5bAokSt+tECggEAEct/e8totsdL3RkD+qMq31Gk58yZoda876Uej6YJYYgt7RwB</span><br><span class="line">CCzOEYP/Hf/ditPSpJ4kFc8/qFp0nHAq4pctZKtywVE3T2XVwdzgBF0uLwIb505G</span><br><span class="line">o92Gcb/eEir8mBxSOvVT6X1hmZsnwHehWyasYYcNrjdorH9UvQ9VwAE5nnkK/HLH</span><br><span class="line">KxQ9P7MAdc6dGYxjFjW36ljlRCUvvNeeVPc+J5a0/JJxfm19YLatWaCnpfp1nHes</span><br><span class="line">YsQ3QdB6LKWd7OFwP6lw+OEKWRc3XhczfUBzOBPqj/QBUfHCQX6PgUJyLgiZTD/N</span><br><span class="line">YGOQzq0L9umxt/lrDQbrIKIuDLyWxe8gVyQ41g==</span><br><span class="line">---<span class="attr">--END</span> DSA PARAMETERS-----</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="text"><a href="#text" class="headerlink" title="-text"></a>-text</h3><p>把整个算法的过程结果直接全部输出到stdout，也就是打印到屏幕上，其中包括各种中间参数和密钥例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -text</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line">..+...+..........+..+.........+....+...+++++++++++++++++++++++++++++++++++++++*.+.+............+...+......+.....+++++++++++++++++++++++++++++++++++++++*....+...........+...+.........+.......+...........+.........+...+.+..+...............+...+....+.....+.+.....+....+...........+......+.+.....+...+............+.........+....+..+...+......+....+..+....+.....+...+...+.......+......+......+...+......+...........+....+.........+..+......+.........+.............+..+.+...+......+.....+...+......+.+......+..+...+...+.......+..+.+......+......+........+.+......+............+......+.........+......+..............+...+.......+......+..........................++++++</span><br><span class="line">..........+++++++++++++++++++++++++++++++++++++++*...+.............................+...+...+....+......+.....+.............+.....+..........+..+...+.+...+...+.....+.......+++++++++++++++++++++++++++++++++++++++*...............+....+........................+.....+.+.....+.......+..+.............+.....+....+......+........+.......+...............+.....+.........+...+.+..++++++</span><br><span class="line">---<span class="attr">--BEGIN</span> PRIVATE KEY-----</span><br><span class="line">MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7n8puayHyAh0</span><br><span class="line">lU6/QfL9XrnyXcMKs4onmdPntVP2UO17jHvYXStNKhLKJkZKEta0yEKihdZdOzmN</span><br><span class="line">AJd2Er5uVWOixQAwphFurajknfEerfe6dOKiTXObWNjgwcHw/xUOT7FKNop8h5DG</span><br><span class="line">X56OwHzWQMma9fWarqxEYR36b8pIno/D7+rKZxrZaJObWoexu/KQT0JCusW1qgTM</span><br><span class="line">i3XFXw4/Lzv/joP/knoxmAIzGb5+YNRAL9TIZioA3AwgiRJrgQNdB9HQTijZplbJ</span><br><span class="line"><span class="number">705</span>eEwVoUSM1AddlS+wV2uhVSSThM/i87MQtSbsvfkUZauYLioJSfxaGWW4Y3Ybe</span><br><span class="line"><span class="number">7</span>ej4ELufAgMBAAECggEAG44bi/DPZa6JQosAN05Ilm+XISOOJva2OFNtL0Ryl6EH</span><br><span class="line">u7lkkhxQbdvJCNRJbte30fFAfUYbe0Wn04ofKpFQIqsm/<span class="number">2</span>vm5giQm18UR4ZDyF9U</span><br><span class="line">I0Phm9vKWbKaXb79JZRWGOmC37oZyMpMIS+Dq4FWW5RhzjcEguCvFNBKlYkak9GV</span><br><span class="line">eKYWdNLA0au4AXRqVmaI7YmGxakHSpVHPIGULk33dlll3/iLNQS3YH9vqvoe3GK8</span><br><span class="line"><span class="number">87</span>ekSAAWTsOZUiJ0MAWMhfkfEDjG3zFq632rg2S+m4e2J1pGVcXPTuHjTSdacWCM</span><br><span class="line">DNekPsKEBByMi00aZtcogxO6zHm121EoHPulcK26oQKBgQDYRq9JQFOCk6ZpeCeb</span><br><span class="line">U6slj+QcAnc95XaXtdg1Kh17IISTLJD1p3tSnbziBWmmugpL9P8tJC63ZcdadYqn</span><br><span class="line">cMzYctNSgMuOgNWKBtXPH4qxWJ8JL8I4Ft8NOiajfVonSjGz+emNzWnNUdDYx5PP</span><br><span class="line">w2WkD82mbAOOUu81Uj4h5WWi+QKBgQDH9avwENMi60WARd1vb+jfS78yuSf3zTe9</span><br><span class="line">s5XgSr2hAHjX0xODAOAEiX253Ube83n9oEkhHMKTcQfzrIgoJ3G5UZ6Pd43tiqrp</span><br><span class="line">ejygyxlOpH+grSiwHc7i3WZWx31kjBCmoFgCQUBfH4UUYzwOqvZgoC3G4lVvYug/</span><br><span class="line"><span class="number">33S</span>RqXZhVwKBgHI8I6nVSEbYJjXfOUxZzTRx5FLHGqSe5x0K98BdFmVKr7vs9kRK</span><br><span class="line">ymDA4Fuh8EQYUAf+yCnXyrUkFUA6hZobgpdxTx1s2hfTBPd61MQqLN+vp5D6oONv</span><br><span class="line">cTFTXcVNGKlYDxi5EBvOO+wvItjd0b0TwEP/<span class="number">9</span>OfKdbZfJ+pKHndY625BAoGAIlif</span><br><span class="line">fO/W5GOXH45gl7iYPmqrX9IP/<span class="selector-tag">G</span>+CiJIlR05vPg1vtFqsOk9XK1BWiStp9ffKV3dF</span><br><span class="line">uGtRPLQokoFrLcKAtT1AyBHYDhpIeywk59Wa9jgpN/cmSwIDvFIdNwCzGCc64PQf</span><br><span class="line">ydtdbDlkyXi2IyrYgQZidov/<span class="number">8s</span>8BZ59BTZfXHqcCgYEAtciV66BhhLSJ0P2hn453</span><br><span class="line">Q2/XvHXU68CKhl/<span class="number">8s</span>G8CyrPxO6Wk3oCIeZPhV0k8HAoU00r1L+j4uwY43/WDJtR5</span><br><span class="line">ljEn5xndTNmd0WWfaV1BruM7ql0I/URwpE6D6rsFq4SFHnKkVsB1Hb6d7YxRt+ct</span><br><span class="line">kjGDW1ZkJzDWKlf7Lf9oKqc=</span><br><span class="line">---<span class="attr">--END</span> PRIVATE KEY-----</span><br><span class="line">Private-Key: (<span class="number">2048</span> bit, <span class="number">2</span> primes)</span><br><span class="line">modulus:</span><br><span class="line">    <span class="number">00</span>:a8:ee:<span class="number">7</span>f:<span class="number">29</span>:b9:ac:<span class="number">87</span>:c8:<span class="number">08</span>:<span class="number">74</span>:<span class="number">95</span>:<span class="number">4</span>e:bf:<span class="number">41</span>:</span><br><span class="line">    f2:fd:<span class="number">5</span>e:b9:f2:<span class="number">5</span>d:c3:<span class="number">0</span>a:b3:<span class="number">8</span>a:<span class="number">27</span>:<span class="number">99</span>:d3:e7:b5:</span><br><span class="line">    <span class="number">53</span>:f6:<span class="number">50</span>:ed:<span class="number">7</span>b:<span class="number">8</span>c:<span class="number">7</span>b:d8:<span class="number">5</span>d:<span class="number">2</span>b:<span class="number">4</span>d:<span class="number">2</span>a:<span class="number">12</span>:ca:<span class="number">26</span>:</span><br><span class="line">    <span class="number">46</span>:<span class="number">4</span>a:<span class="number">12</span>:d6:b4:c8:<span class="number">42</span>:a2:<span class="number">85</span>:d6:<span class="number">5</span>d:<span class="number">3</span>b:<span class="number">39</span>:<span class="number">8</span>d:<span class="number">00</span>:</span><br><span class="line">    <span class="number">97</span>:<span class="number">76</span>:<span class="number">12</span>:be:<span class="number">6</span>e:<span class="number">55</span>:<span class="number">63</span>:a2:c5:<span class="number">00</span>:<span class="number">30</span>:a6:<span class="number">11</span>:<span class="number">6</span>e:ad:</span><br><span class="line">    a8:e4:<span class="number">9</span>d:f1:<span class="number">1</span>e:ad:f7:ba:<span class="number">74</span>:e2:a2:<span class="number">4</span>d:<span class="number">73</span>:<span class="number">9</span>b:<span class="number">58</span>:</span><br><span class="line">    d8:e0:c1:c1:f0:ff:<span class="number">15</span>:<span class="number">0</span>e:<span class="number">4</span>f:b1:<span class="number">4</span>a:<span class="number">36</span>:<span class="number">8</span>a:<span class="number">7</span>c:<span class="number">87</span>:</span><br><span class="line">    <span class="number">90</span>:c6:<span class="number">5</span>f:<span class="number">9</span>e:<span class="number">8</span>e:c0:<span class="number">7</span>c:d6:<span class="number">40</span>:c9:<span class="number">9</span>a:f5:f5:<span class="number">9</span>a:ae:</span><br><span class="line">    ac:<span class="number">44</span>:<span class="number">61</span>:<span class="number">1</span>d:fa:<span class="number">6</span>f:ca:<span class="number">48</span>:<span class="number">9</span>e:<span class="number">8</span>f:c3:ef:ea:ca:<span class="number">67</span>:</span><br><span class="line">    <span class="number">1</span>a:d9:<span class="number">68</span>:<span class="number">93</span>:<span class="number">9</span>b:<span class="number">5</span>a:<span class="number">87</span>:b1:bb:f2:<span class="number">90</span>:<span class="number">4</span>f:<span class="number">42</span>:<span class="number">42</span>:ba:</span><br><span class="line">    c5:b5:aa:<span class="number">04</span>:cc:<span class="number">8</span>b:<span class="number">75</span>:c5:<span class="number">5</span>f:<span class="number">0</span>e:<span class="number">3</span>f:<span class="number">2</span>f:<span class="number">3</span>b:ff:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">83</span>:ff:<span class="number">92</span>:<span class="number">7</span>a:<span class="number">31</span>:<span class="number">98</span>:<span class="number">02</span>:<span class="number">33</span>:<span class="number">19</span>:be:<span class="number">7</span>e:<span class="number">60</span>:d4:<span class="number">40</span>:<span class="number">2</span>f:</span><br><span class="line">    d4:c8:<span class="number">66</span>:<span class="number">2</span>a:<span class="number">00</span>:dc:<span class="number">0</span>c:<span class="number">20</span>:<span class="number">89</span>:<span class="number">12</span>:<span class="number">6</span>b:<span class="number">81</span>:<span class="number">03</span>:<span class="number">5</span>d:<span class="number">07</span>:</span><br><span class="line">    d1:d0:<span class="number">4</span>e:<span class="number">28</span>:d9:a6:<span class="number">56</span>:c9:ef:<span class="number">4</span>e:<span class="number">5</span>e:<span class="number">13</span>:<span class="number">05</span>:<span class="number">68</span>:<span class="number">51</span>:</span><br><span class="line">    <span class="number">23</span>:<span class="number">35</span>:<span class="number">01</span>:d7:<span class="number">65</span>:<span class="number">4</span>b:ec:<span class="number">15</span>:da:e8:<span class="number">55</span>:<span class="number">49</span>:<span class="number">24</span>:e1:<span class="number">33</span>:</span><br><span class="line">    f8:bc:ec:c4:<span class="number">2</span>d:<span class="number">49</span>:bb:<span class="number">2</span>f:<span class="number">7</span>e:<span class="number">45</span>:<span class="number">19</span>:<span class="number">6</span>a:e6:<span class="number">0</span>b:<span class="number">8</span>a:</span><br><span class="line">    <span class="number">82</span>:<span class="number">52</span>:<span class="number">7</span>f:<span class="number">16</span>:<span class="number">86</span>:<span class="number">59</span>:<span class="number">6</span>e:<span class="number">18</span>:dd:<span class="number">86</span>:de:ed:e8:f8:<span class="number">10</span>:</span><br><span class="line">    bb:<span class="number">9</span>f</span><br><span class="line">publicExponent: <span class="number">65537</span> (<span class="number">0</span>x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    <span class="number">1</span>b:<span class="number">8</span>e:<span class="number">1</span>b:<span class="number">8</span>b:f0:cf:<span class="number">65</span>:ae:<span class="number">89</span>:<span class="number">42</span>:<span class="number">8</span>b:<span class="number">00</span>:<span class="number">37</span>:<span class="number">4</span>e:<span class="number">48</span>:</span><br><span class="line">    <span class="number">96</span>:<span class="number">6</span>f:<span class="number">97</span>:<span class="number">21</span>:<span class="number">23</span>:<span class="number">8</span>e:<span class="number">26</span>:f6:b6:<span class="number">38</span>:<span class="number">53</span>:<span class="number">6</span>d:<span class="number">2</span>f:<span class="number">44</span>:<span class="number">72</span>:</span><br><span class="line">    <span class="number">97</span>:a1:<span class="number">07</span>:bb:b9:<span class="number">64</span>:<span class="number">92</span>:<span class="number">1</span>c:<span class="number">50</span>:<span class="number">6</span>d:db:c9:<span class="number">08</span>:d4:<span class="number">49</span>:</span><br><span class="line">    <span class="number">6</span>e:d7:b7:d1:f1:<span class="number">40</span>:<span class="number">7</span>d:<span class="number">46</span>:<span class="number">1</span>b:<span class="number">7</span>b:<span class="number">45</span>:a7:d3:<span class="number">8</span>a:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">2</span>a:<span class="number">91</span>:<span class="number">50</span>:<span class="number">22</span>:ab:<span class="number">26</span>:ff:<span class="number">6</span>b:e6:e6:<span class="number">08</span>:<span class="number">90</span>:<span class="number">9</span>b:<span class="number">5</span>f:<span class="number">14</span>:</span><br><span class="line">    <span class="number">47</span>:<span class="number">86</span>:<span class="number">43</span>:c8:<span class="number">5</span>f:<span class="number">54</span>:<span class="number">23</span>:<span class="number">43</span>:e1:<span class="number">9</span>b:db:ca:<span class="number">59</span>:b2:<span class="number">9</span>a:</span><br><span class="line">    <span class="number">5</span>d:be:fd:<span class="number">25</span>:<span class="number">94</span>:<span class="number">56</span>:<span class="number">18</span>:e9:<span class="number">82</span>:df:ba:<span class="number">19</span>:c8:ca:<span class="number">4</span>c:</span><br><span class="line">    <span class="number">21</span>:<span class="number">2</span>f:<span class="number">83</span>:ab:<span class="number">81</span>:<span class="number">56</span>:<span class="number">5</span>b:<span class="number">94</span>:<span class="number">61</span>:ce:<span class="number">37</span>:<span class="number">04</span>:<span class="number">82</span>:e0:af:</span><br><span class="line">    <span class="number">14</span>:d0:<span class="number">4</span>a:<span class="number">95</span>:<span class="number">89</span>:<span class="number">1</span>a:<span class="number">93</span>:d1:<span class="number">95</span>:<span class="number">78</span>:a6:<span class="number">16</span>:<span class="number">74</span>:d2:c0:</span><br><span class="line">    d1:ab:b8:<span class="number">01</span>:<span class="number">74</span>:<span class="number">6</span>a:<span class="number">56</span>:<span class="number">66</span>:<span class="number">88</span>:ed:<span class="number">89</span>:<span class="number">86</span>:c5:a9:<span class="number">07</span>:</span><br><span class="line">    <span class="number">4</span>a:<span class="number">95</span>:<span class="number">47</span>:<span class="number">3</span>c:<span class="number">81</span>:<span class="number">94</span>:<span class="number">2</span>e:<span class="number">4</span>d:f7:<span class="number">76</span>:<span class="number">59</span>:<span class="number">65</span>:df:f8:<span class="number">8</span>b:</span><br><span class="line">    <span class="number">35</span>:<span class="number">04</span>:b7:<span class="number">60</span>:<span class="number">7</span>f:<span class="number">6</span>f:aa:fa:<span class="number">1</span>e:dc:<span class="number">62</span>:bc:f3:b7:a4:</span><br><span class="line">    <span class="number">48</span>:<span class="number">00</span>:<span class="number">16</span>:<span class="number">4</span>e:c3:<span class="number">99</span>:<span class="number">52</span>:<span class="number">22</span>:<span class="number">74</span>:<span class="number">30</span>:<span class="number">05</span>:<span class="number">8</span>c:<span class="number">85</span>:f9:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">10</span>:<span class="number">38</span>:c6:df:<span class="number">31</span>:<span class="number">6</span>a:eb:<span class="number">7</span>d:ab:<span class="number">83</span>:<span class="number">64</span>:be:<span class="number">9</span>b:<span class="number">87</span>:b6:</span><br><span class="line">    <span class="number">27</span>:<span class="number">5</span>a:<span class="number">46</span>:<span class="number">55</span>:c5:cf:<span class="number">4</span>e:e1:e3:<span class="number">4</span>d:<span class="number">27</span>:<span class="number">5</span>a:<span class="number">71</span>:<span class="number">60</span>:<span class="number">8</span>c:</span><br><span class="line">    <span class="number">0</span>c:d7:a4:<span class="number">3</span>e:c2:<span class="number">84</span>:<span class="number">04</span>:<span class="number">1</span>c:<span class="number">8</span>c:<span class="number">8</span>b:<span class="number">4</span>d:<span class="number">1</span>a:<span class="number">66</span>:d7:<span class="number">28</span>:</span><br><span class="line">    <span class="number">83</span>:<span class="number">13</span>:ba:cc:<span class="number">79</span>:b5:db:<span class="number">51</span>:<span class="number">28</span>:<span class="number">1</span>c:fb:a5:<span class="number">70</span>:ad:ba:</span><br><span class="line">    a1</span><br><span class="line">prime1:</span><br><span class="line">    <span class="number">00</span>:d8:<span class="number">46</span>:af:<span class="number">49</span>:<span class="number">40</span>:<span class="number">53</span>:<span class="number">82</span>:<span class="number">93</span>:a6:<span class="number">69</span>:<span class="number">78</span>:<span class="number">27</span>:<span class="number">9</span>b:<span class="number">53</span>:</span><br><span class="line">    ab:<span class="number">25</span>:<span class="number">8</span>f:e4:<span class="number">1</span>c:<span class="number">02</span>:<span class="number">77</span>:<span class="number">3</span>d:e5:<span class="number">76</span>:<span class="number">97</span>:b5:d8:<span class="number">35</span>:<span class="number">2</span>a:</span><br><span class="line">    <span class="number">1</span>d:<span class="number">7</span>b:<span class="number">20</span>:<span class="number">84</span>:<span class="number">93</span>:<span class="number">2</span>c:<span class="number">90</span>:f5:a7:<span class="number">7</span>b:<span class="number">52</span>:<span class="number">9</span>d:bc:e2:<span class="number">05</span>:</span><br><span class="line">    <span class="number">69</span>:a6:ba:<span class="number">0</span>a:<span class="number">4</span>b:f4:ff:<span class="number">2</span>d:<span class="number">24</span>:<span class="number">2</span>e:b7:<span class="number">65</span>:c7:<span class="number">5</span>a:<span class="number">75</span>:</span><br><span class="line">    <span class="number">8</span>a:a7:<span class="number">70</span>:cc:d8:<span class="number">72</span>:d3:<span class="number">52</span>:<span class="number">80</span>:cb:<span class="number">8</span>e:<span class="number">80</span>:d5:<span class="number">8</span>a:<span class="number">06</span>:</span><br><span class="line">    d5:cf:<span class="number">1</span>f:<span class="number">8</span>a:b1:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">09</span>:<span class="number">2</span>f:c2:<span class="number">38</span>:<span class="number">16</span>:df:<span class="number">0</span>d:<span class="number">3</span>a:</span><br><span class="line">    <span class="number">26</span>:a3:<span class="number">7</span>d:<span class="number">5</span>a:<span class="number">27</span>:<span class="number">4</span>a:<span class="number">31</span>:b3:f9:e9:<span class="number">8</span>d:cd:<span class="number">69</span>:cd:<span class="number">51</span>:</span><br><span class="line">    d0:d8:c7:<span class="number">93</span>:cf:c3:<span class="number">65</span>:a4:<span class="number">0</span>f:cd:a6:<span class="number">6</span>c:<span class="number">03</span>:<span class="number">8</span>e:<span class="number">52</span>:</span><br><span class="line">    ef:<span class="number">35</span>:<span class="number">52</span>:<span class="number">3</span>e:<span class="number">21</span>:e5:<span class="number">65</span>:a2:f9</span><br><span class="line">prime2:</span><br><span class="line">    <span class="number">00</span>:c7:f5:ab:f0:<span class="number">10</span>:d3:<span class="number">22</span>:eb:<span class="number">45</span>:<span class="number">80</span>:<span class="number">45</span>:dd:<span class="number">6</span>f:<span class="number">6</span>f:</span><br><span class="line">    e8:df:<span class="number">4</span>b:bf:<span class="number">32</span>:b9:<span class="number">27</span>:f7:cd:<span class="number">37</span>:bd:b3:<span class="number">95</span>:e0:<span class="number">4</span>a:</span><br><span class="line">    bd:a1:<span class="number">00</span>:<span class="number">78</span>:d7:d3:<span class="number">13</span>:<span class="number">83</span>:<span class="number">00</span>:e0:<span class="number">04</span>:<span class="number">89</span>:<span class="number">7</span>d:b9:dd:</span><br><span class="line">    <span class="number">46</span>:de:f3:<span class="number">79</span>:fd:a0:<span class="number">49</span>:<span class="number">21</span>:<span class="number">1</span>c:c2:<span class="number">93</span>:<span class="number">71</span>:<span class="number">07</span>:f3:ac:</span><br><span class="line">    <span class="number">88</span>:<span class="number">28</span>:<span class="number">27</span>:<span class="number">71</span>:b9:<span class="number">51</span>:<span class="number">9</span>e:<span class="number">8</span>f:<span class="number">77</span>:<span class="number">8</span>d:ed:<span class="number">8</span>a:aa:e9:<span class="number">7</span>a:</span><br><span class="line">    <span class="number">3</span>c:a0:cb:<span class="number">19</span>:<span class="number">4</span>e:a4:<span class="number">7</span>f:a0:ad:<span class="number">28</span>:b0:<span class="number">1</span>d:ce:e2:dd:</span><br><span class="line">    <span class="number">66</span>:<span class="number">56</span>:c7:<span class="number">7</span>d:<span class="number">64</span>:<span class="number">8</span>c:<span class="number">10</span>:a6:a0:<span class="number">58</span>:<span class="number">02</span>:<span class="number">41</span>:<span class="number">40</span>:<span class="number">5</span>f:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">85</span>:<span class="number">14</span>:<span class="number">63</span>:<span class="number">3</span>c:<span class="number">0</span>e:aa:f6:<span class="number">60</span>:a0:<span class="number">2</span>d:c6:e2:<span class="number">55</span>:<span class="number">6</span>f:<span class="number">62</span>:</span><br><span class="line">    e8:<span class="number">3</span>f:df:<span class="number">74</span>:<span class="number">91</span>:a9:<span class="number">76</span>:<span class="number">61</span>:<span class="number">57</span></span><br><span class="line">exponent1:</span><br><span class="line">    <span class="number">72</span>:<span class="number">3</span>c:<span class="number">23</span>:a9:d5:<span class="number">48</span>:<span class="number">46</span>:d8:<span class="number">26</span>:<span class="number">35</span>:df:<span class="number">39</span>:<span class="number">4</span>c:<span class="number">59</span>:cd:</span><br><span class="line">    <span class="number">34</span>:<span class="number">71</span>:e4:<span class="number">52</span>:c7:<span class="number">1</span>a:a4:<span class="number">9</span>e:e7:<span class="number">1</span>d:<span class="number">0</span>a:f7:c0:<span class="number">5</span>d:<span class="number">16</span>:</span><br><span class="line">    <span class="number">65</span>:<span class="number">4</span>a:af:bb:ec:f6:<span class="number">44</span>:<span class="number">4</span>a:ca:<span class="number">60</span>:c0:e0:<span class="number">5</span>b:a1:f0:</span><br><span class="line">    <span class="number">44</span>:<span class="number">18</span>:<span class="number">50</span>:<span class="number">07</span>:fe:c8:<span class="number">29</span>:d7:ca:b5:<span class="number">24</span>:<span class="number">15</span>:<span class="number">40</span>:<span class="number">3</span>a:<span class="number">85</span>:</span><br><span class="line">    <span class="number">9</span>a:<span class="number">1</span>b:<span class="number">82</span>:<span class="number">97</span>:<span class="number">71</span>:<span class="number">4</span>f:<span class="number">1</span>d:<span class="number">6</span>c:da:<span class="number">17</span>:d3:<span class="number">04</span>:f7:<span class="number">7</span>a:d4:</span><br><span class="line">    c4:<span class="number">2</span>a:<span class="number">2</span>c:df:af:a7:<span class="number">90</span>:fa:a0:e3:<span class="number">6</span>f:<span class="number">71</span>:<span class="number">31</span>:<span class="number">53</span>:<span class="number">5</span>d:</span><br><span class="line">    c5:<span class="number">4</span>d:<span class="number">18</span>:a9:<span class="number">58</span>:<span class="number">0</span>f:<span class="number">18</span>:b9:<span class="number">10</span>:<span class="number">1</span>b:ce:<span class="number">3</span>b:ec:<span class="number">2</span>f:<span class="number">22</span>:</span><br><span class="line">    d8:dd:d1:bd:<span class="number">13</span>:c0:<span class="number">43</span>:ff:f4:e7:ca:<span class="number">75</span>:b6:<span class="number">5</span>f:<span class="number">27</span>:</span><br><span class="line">    ea:<span class="number">4</span>a:<span class="number">1</span>e:<span class="number">77</span>:<span class="number">58</span>:eb:<span class="number">6</span>e:<span class="number">41</span></span><br><span class="line">exponent2:</span><br><span class="line">    <span class="number">22</span>:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">7</span>c:ef:d6:e4:<span class="number">63</span>:<span class="number">97</span>:<span class="number">1</span>f:<span class="number">8</span>e:<span class="number">60</span>:<span class="number">97</span>:b8:<span class="number">98</span>:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">6</span>a:ab:<span class="number">5</span>f:d2:<span class="number">0</span>f:fc:<span class="number">6</span>f:<span class="number">82</span>:<span class="number">88</span>:<span class="number">92</span>:<span class="number">25</span>:<span class="number">47</span>:<span class="number">4</span>e:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">0</span>d:<span class="number">6</span>f:b4:<span class="number">5</span>a:ac:<span class="number">3</span>a:<span class="number">4</span>f:<span class="number">57</span>:<span class="number">2</span>b:<span class="number">50</span>:<span class="number">56</span>:<span class="number">89</span>:<span class="number">2</span>b:<span class="number">69</span>:</span><br><span class="line">    f5:f7:ca:<span class="number">57</span>:<span class="number">77</span>:<span class="number">45</span>:b8:<span class="number">6</span>b:<span class="number">51</span>:<span class="number">3</span>c:b4:<span class="number">28</span>:<span class="number">92</span>:<span class="number">81</span>:<span class="number">6</span>b:</span><br><span class="line">    <span class="number">2</span>d:c2:<span class="number">80</span>:b5:<span class="number">3</span>d:<span class="number">40</span>:c8:<span class="number">11</span>:d8:<span class="number">0</span>e:<span class="number">1</span>a:<span class="number">48</span>:<span class="number">7</span>b:<span class="number">2</span>c:<span class="number">24</span>:</span><br><span class="line">    e7:d5:<span class="number">9</span>a:f6:<span class="number">38</span>:<span class="number">29</span>:<span class="number">37</span>:f7:<span class="number">26</span>:<span class="number">4</span>b:<span class="number">02</span>:<span class="number">03</span>:bc:<span class="number">52</span>:<span class="number">1</span>d:</span><br><span class="line">    <span class="number">37</span>:<span class="number">00</span>:b3:<span class="number">18</span>:<span class="number">27</span>:<span class="number">3</span>a:e0:f4:<span class="number">1</span>f:c9:db:<span class="number">5</span>d:<span class="number">6</span>c:<span class="number">39</span>:<span class="number">64</span>:</span><br><span class="line">    c9:<span class="number">78</span>:b6:<span class="number">23</span>:<span class="number">2</span>a:d8:<span class="number">81</span>:<span class="number">06</span>:<span class="number">62</span>:<span class="number">76</span>:<span class="number">8</span>b:ff:f2:cf:<span class="number">01</span>:</span><br><span class="line">    <span class="number">67</span>:<span class="number">9</span>f:<span class="number">41</span>:<span class="number">4</span>d:<span class="number">97</span>:d7:<span class="number">1</span>e:a7</span><br><span class="line">coefficient:</span><br><span class="line">    <span class="number">00</span>:b5:c8:<span class="number">95</span>:eb:a0:<span class="number">61</span>:<span class="number">84</span>:b4:<span class="number">89</span>:d0:fd:a1:<span class="number">9</span>f:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">77</span>:<span class="number">43</span>:<span class="number">6</span>f:d7:bc:<span class="number">75</span>:d4:eb:c0:<span class="number">8</span>a:<span class="number">86</span>:<span class="number">5</span>f:fc:b0:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">02</span>:ca:b3:f1:<span class="number">3</span>b:a5:a4:de:<span class="number">80</span>:<span class="number">88</span>:<span class="number">79</span>:<span class="number">93</span>:e1:<span class="number">57</span>:<span class="number">49</span>:</span><br><span class="line">    <span class="number">3</span>c:<span class="number">1</span>c:<span class="number">0</span>a:<span class="number">14</span>:d3:<span class="number">4</span>a:f5:<span class="number">2</span>f:e8:f8:bb:<span class="number">06</span>:<span class="number">38</span>:df:f5:</span><br><span class="line">    <span class="number">83</span>:<span class="number">26</span>:d4:<span class="number">79</span>:<span class="number">96</span>:<span class="number">31</span>:<span class="number">27</span>:e7:<span class="number">19</span>:dd:<span class="number">4</span>c:d9:<span class="number">9</span>d:d1:<span class="number">65</span>:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">69</span>:<span class="number">5</span>d:<span class="number">41</span>:ae:e3:<span class="number">3</span>b:aa:<span class="number">5</span>d:<span class="number">08</span>:fd:<span class="number">44</span>:<span class="number">70</span>:a4:<span class="number">4</span>e:</span><br><span class="line">    <span class="number">83</span>:ea:bb:<span class="number">05</span>:ab:<span class="number">84</span>:<span class="number">85</span>:<span class="number">1</span>e:<span class="number">72</span>:a4:<span class="number">56</span>:c0:<span class="number">75</span>:<span class="number">1</span>d:be:</span><br><span class="line">    <span class="number">9</span>d:ed:<span class="number">8</span>c:<span class="number">51</span>:b7:e7:<span class="number">2</span>d:<span class="number">92</span>:<span class="number">31</span>:<span class="number">83</span>:<span class="number">5</span>b:<span class="number">56</span>:<span class="number">64</span>:<span class="number">27</span>:<span class="number">30</span>:</span><br><span class="line">    d6:<span class="number">2</span>a:<span class="number">57</span>:fb:<span class="number">2</span>d:ff:<span class="number">68</span>:<span class="number">2</span>a:a7</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id=""><a href="#" class="headerlink" title="-*"></a>-*</h3><p>这个指令的意思是可以自己指定用于保护密钥文件的对称加密算法，当然前提是当前版本的OpenSSL支持。</p>
+<p>例如，使用<code>AES-128-CTR</code>对这个密钥文件进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -AES-128-CTR -out RSA-2048-Encrypted-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+
+    </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\08\OpenSSL-CLI-对称加密算法-个人使用经验\" rel="bookmark">OpenSSL CLI 对称加密算法 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\06\OpenSSL-CLI-散列函数-个人使用经验\" rel="bookmark">OpenSSL CLI 散列函数 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\OpenSSL-CLI-随机数生成器-个人使用经验\" rel="bookmark">OpenSSL CLI 随机数生成器 个人使用经验</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\14\在Qt-Creator中使用OpenSSL\" rel="bookmark">在Qt Creator中使用OpenSSL</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\01\简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建\" rel="bookmark">简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>鹭音大人是我的主人喵~关注鹭音大人谢谢喵~所有收益都会上贡的喵~.</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/OpenSSL/" rel="tag"><i class="fa fa-tag"></i> OpenSSL</a>
+              <a href="/tags/Crypto/" rel="tag"><i class="fa fa-tag"></i> Crypto</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" rel="prev" title="OpenSSL CLI 随机数生成器 个人使用经验">
+      <i class="fa fa-chevron-left"></i> OpenSSL CLI 随机数生成器 个人使用经验
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/" rel="next" title="从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI">
+      从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96%E5%B8%AE%E5%8A%A9"><span class="nav-number">2.</span> <span class="nav-text">获取帮助</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5%E5%AF%B9%E6%8C%87%E4%BB%A4"><span class="nav-number">3.</span> <span class="nav-text">简单的生成密钥对指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A7%81%E9%92%A5%E7%94%9F%E6%88%90"><span class="nav-number">3.1.</span> <span class="nav-text">私钥生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E9%92%A5%E6%8F%90%E5%8F%96"><span class="nav-number">3.2.</span> <span class="nav-text">公钥提取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%85%AC%E9%92%A5%E4%B8%8E%E7%A7%81%E9%92%A5%E5%86%85%E5%AE%B9"><span class="nav-number">3.3.</span> <span class="nav-text">查看公钥与私钥内容</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E9%80%89%E9%A1%B9"><span class="nav-number">4.</span> <span class="nav-text">总体选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#engine"><span class="nav-number">4.1.</span> <span class="nav-text">-engine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#paramfile"><span class="nav-number">4.2.</span> <span class="nav-text">-paramfile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#algorithm"><span class="nav-number">4.3.</span> <span class="nav-text">-algorithm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quiet"><span class="nav-number">4.4.</span> <span class="nav-text">-quiet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pkeyopt"><span class="nav-number">4.5.</span> <span class="nav-text">-pkeyopt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#config"><span class="nav-number">4.6.</span> <span class="nav-text">-config</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E9%80%89%E9%A1%B9"><span class="nav-number">5.</span> <span class="nav-text">输出选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#out"><span class="nav-number">5.1.</span> <span class="nav-text">-out</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outform"><span class="nav-number">5.2.</span> <span class="nav-text">-outform</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pass"><span class="nav-number">5.3.</span> <span class="nav-text">-pass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#genparam"><span class="nav-number">5.4.</span> <span class="nav-text">-genparam</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#text"><span class="nav-number">5.5.</span> <span class="nav-text">-text</span></a></li><li class="nav-item nav-level-3"><a class="nav-link"><span class="nav-number">5.6.</span> <span class="nav-text">-*</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="BlueMap1e"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">BlueMap1e</p>
+  <div class="site-description" itemprop="description">一个关于前端、日常、折腾和搞黄色的，不正经的博客</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">15</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/BlueMap1e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BlueMap1e" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/C_E_104" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;C_E_104" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.pixiv.net/users/65253737" title="Pixiv → https:&#x2F;&#x2F;www.pixiv.net&#x2F;users&#x2F;65253737" rel="noopener" target="_blank"><i class="fa fa-link fa-fw"></i>Pixiv</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">BlueMap1e</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+      <span class="post-meta-item-text">Symbols count total: </span>
+    <span title="Symbols count total">26k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span class="post-meta-item-text">Reading time total &asymp;</span>
+    <span title="Reading time total">2:12</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+<script>
+  function loadCount() {
+    var d = document, s = d.createElement('script');
+    s.src = 'https://BlueMap1e.disqus.com/count.js';
+    s.id = 'dsq-count-scr';
+    (d.head || d.body).appendChild(s);
+  }
+  // defer loading until the whole page loading is completed
+  window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/";
+    this.page.identifier = "2023/11/15/OpenSSL-CLI-密钥对生成工具-个人使用经验/";
+    this.page.title = "OpenSSL CLI 密钥对生成工具 个人使用经验";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://BlueMap1e.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
+</script>
+
+</body>
+</html>
