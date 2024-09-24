@@ -133,7 +133,7 @@
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/audioIdentifierExm1.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/audioIdentifierExm2.png">
 <meta property="article:published_time" content="2024-09-19T13:16:22.000Z">
-<meta property="article:modified_time" content="2024-09-22T10:45:20.557Z">
+<meta property="article:modified_time" content="2024-09-24T02:12:49.011Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="R-18">
@@ -356,7 +356,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-22 18:45:20" itemprop="dateModified" datetime="2024-09-22T18:45:20+08:00">2024-09-22</time>
+                <time title="Modified: 2024-09-24 10:12:49" itemprop="dateModified" datetime="2024-09-24T10:12:49+08:00">2024-09-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -546,7 +546,7 @@
 <p>异步行为通过<strong>非阻塞（Non-Blocking）</strong>机制执行。</p>
 <h4 id="生活中的例子-1"><a href="#生活中的例子-1" class="headerlink" title="生活中的例子"></a>生活中的例子</h4><p>举个简单的例子来说明这个概念：</p>
 <p>假如你今天要做一顿晚饭——青椒炒肉片+米饭。</p>
-<p>当你淘米，把饭煮下去之后，你并不用等待饭煮完才能去做另一件事情。当饭煮下去之后，你可以去做一件别的事情，例如洗菜、切	菜、炒菜。当饭煮好后，电饭煲会提示。此时你就知道，饭煮好了，可以去盛饭。</p>
+<p>当你淘米，把饭煮下去之后，你并不用等待饭煮完才能去做另一件事情。当饭煮下去之后，你可以去做一件别的事情，例如洗菜、切菜、炒菜。当饭煮好后，电饭煲会提示。此时你就知道，饭煮好了，可以去盛饭。</p>
 <p>这是<strong>异步——开始做一件事之后，可以不用等待，立即去做别的事情，完成后再回来处理</strong>。</p>
 <p>而煮饭这件事本身是<strong>非阻塞</strong>的，时间<strong>没有被浪费</strong>——<strong>你不用站在电饭煲旁边干等着，可以去做点别的，反正它会自己完成</strong>。</p>
 <h4 id="EOS中的例子-1"><a href="#EOS中的例子-1" class="headerlink" title="EOS中的例子"></a>EOS中的例子</h4><p>在EOS中举个简单的例子来说明这个概念：</p>
@@ -1288,6 +1288,31 @@
 
 
   
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
 
 
 
@@ -1298,13 +1323,58 @@
 
 
 
+  <script>
+    (function(d, w, c) {
+      w.ChatraID = '';
+      var s = d.createElement('script');
+      w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+      };
+      s.async = true;
+      s.src = 'https://call.chatra.io/chatra.js';
+      if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+  </script>
 
 
 
 
 
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
 
 
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'dark',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
 
 
   

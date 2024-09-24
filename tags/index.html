@@ -244,7 +244,7 @@
               17 tags in total
             </div>
             <div class="tag-cloud-tags">
-              <a href="/tags/BitTorrent/" style="font-size: 12px; color: #0ff">BitTorrent</a> <a href="/tags/C/" style="font-size: 15.6px; color: #23f7fa">C++</a> <a href="/tags/Circumvention/" style="font-size: 26.4px; color: #8ae0eb">Circumvention</a> <a href="/tags/Cloud/" style="font-size: 12px; color: #0ff">Cloud</a> <a href="/tags/Crypto/" style="font-size: 30px; color: #add8e6">Crypto</a> <a href="/tags/Hexo/" style="font-size: 12px; color: #0ff">Hexo</a> <a href="/tags/JavaScript/" style="font-size: 19.2px; color: #45eff5">JavaScript</a> <a href="/tags/Linux/" style="font-size: 26.4px; color: #8ae0eb">Linux</a> <a href="/tags/MineCraft/" style="font-size: 12px; color: #0ff">MineCraft</a> <a href="/tags/Network/" style="font-size: 30px; color: #add8e6">Network</a> <a href="/tags/OpenSSL/" style="font-size: 30px; color: #add8e6">OpenSSL</a> <a href="/tags/P2P/" style="font-size: 12px; color: #0ff">P2P</a> <a href="/tags/Qt/" style="font-size: 12px; color: #0ff">Qt</a> <a href="/tags/R-18/" style="font-size: 19.2px; color: #45eff5">R-18</a> <a href="/tags/VPS/" style="font-size: 22.8px; color: #68e8f0">VPS</a> <a href="/tags/Web-Front-End/" style="font-size: 12px; color: #0ff">Web Front-End</a> <a href="/tags/Webtease/" style="font-size: 19.2px; color: #45eff5">Webtease</a>
+              <a href="/tags/BitTorrent/" style="font-size: 12px; color: #09f">BitTorrent</a> <a href="/tags/C/" style="font-size: 15.6px; color: #00adff">C++</a> <a href="/tags/Circumvention/" style="font-size: 26.4px; color: #00ebff">Circumvention</a> <a href="/tags/Cloud/" style="font-size: 12px; color: #09f">Cloud</a> <a href="/tags/Crypto/" style="font-size: 30px; color: #0ff">Crypto</a> <a href="/tags/Hexo/" style="font-size: 12px; color: #09f">Hexo</a> <a href="/tags/JavaScript/" style="font-size: 19.2px; color: #00c2ff">JavaScript</a> <a href="/tags/Linux/" style="font-size: 26.4px; color: #00ebff">Linux</a> <a href="/tags/MineCraft/" style="font-size: 12px; color: #09f">MineCraft</a> <a href="/tags/Network/" style="font-size: 30px; color: #0ff">Network</a> <a href="/tags/OpenSSL/" style="font-size: 30px; color: #0ff">OpenSSL</a> <a href="/tags/P2P/" style="font-size: 12px; color: #09f">P2P</a> <a href="/tags/Qt/" style="font-size: 12px; color: #09f">Qt</a> <a href="/tags/R-18/" style="font-size: 19.2px; color: #00c2ff">R-18</a> <a href="/tags/VPS/" style="font-size: 22.8px; color: #00d6ff">VPS</a> <a href="/tags/Web-Front-End/" style="font-size: 12px; color: #09f">Web Front-End</a> <a href="/tags/Webtease/" style="font-size: 19.2px; color: #00c2ff">Webtease</a>
             </div>
           </div>
         
@@ -531,6 +531,31 @@
 
 
   
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
 
 
 
@@ -541,13 +566,58 @@
 
 
 
+  <script>
+    (function(d, w, c) {
+      w.ChatraID = '';
+      var s = d.createElement('script');
+      w[c] = w[c] || function() {
+        (w[c].q = w[c].q || []).push(arguments);
+      };
+      s.async = true;
+      s.src = 'https://call.chatra.io/chatra.js';
+      if (d.head) d.head.appendChild(s);
+    })(document, window, 'Chatra');
+  </script>
 
 
 
 
 
+<script>
+document.querySelectorAll('.pdfobject-container').forEach(element => {
+  let url = element.dataset.target;
+  let pdfOpenParams = {
+    navpanes : 0,
+    toolbar  : 0,
+    statusbar: 0,
+    pagemode : 'thumbs',
+    view     : 'FitH'
+  };
+  let pdfOpenFragment = '#' + Object.entries(pdfOpenParams).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join('&');
+  let fullURL = `/lib/pdf/web/viewer.html?file=${encodeURIComponent(url)}${pdfOpenFragment}`;
+
+  if (NexT.utils.supportsPDFs()) {
+    element.innerHTML = `<embed class="pdfobject" src="${url + pdfOpenFragment}" type="application/pdf" style="height: ${element.dataset.height};">`;
+  } else {
+    element.innerHTML = `<iframe src="${fullURL}" style="height: ${element.dataset.height};" frameborder="0"></iframe>`;
+  }
+});
+</script>
 
 
+<script>
+if (document.querySelectorAll('pre.mermaid').length) {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mermaid@8/dist/mermaid.min.js', () => {
+    mermaid.initialize({
+      theme    : 'dark',
+      logLevel : 3,
+      flowchart: { curve     : 'linear' },
+      gantt    : { axisFormat: '%m/%d/%Y' },
+      sequence : { actorMargin: 50 }
+    });
+  }, window.mermaid);
+}
+</script>
 
 
   
