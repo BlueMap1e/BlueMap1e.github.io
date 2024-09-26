@@ -1867,43 +1867,6 @@
       </tags>
   </entry>
   <entry>
-    <title>简单的Cloudflare Warp使用方法</title>
-    <url>/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。</p>
-<p>本文字教程主要介绍在个人设备上使用Cloudflare Warp连接到互联网，并通过Cloudflare Zero Trust登录客户端，解除Warp自身的流量限制。</p>
-<span id="more"></span>
-
-<h2 id="安装与连接"><a href="#安装与连接" class="headerlink" title="安装与连接"></a>安装与连接</h2><p>安装非常简单，在Cloudflare 1.1.1.1的官方网站下载适合自己设备的客户端即可。</p>
-<p>下载链接：<a href="https://1.1.1.1/">1.1.1.1 — The free app that makes your Internet faster.</a></p>
-<p>打开安装包，按照指示完成安装即可。打开Cloudflare Warp客户端。</p>
-<p>点击连接，即可尝试连接。这一步有一定的可能性会失败。如果成功，已经可以访问国际互联网，而且性能通常不错。但是有一定的流量限制。</p>
-<p>如果是轻度使用者，不在意流量限制，到这一步即可完成。</p>
-<h2 id="注册Zero-Trust"><a href="#注册Zero-Trust" class="headerlink" title="注册Zero Trust"></a>注册Zero Trust</h2><p>登录Cloudflare Dashboard：<a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
-<p>当然，如果没有账号可以先注册一个，很容易。注册过程略。</p>
-<p>在左侧找到Zero Trust，注册一个Zero Trust账号，团队名称可以自由选择。注册过程略。</p>
-<p>注册成功后，找到左侧的<code>My Team</code>一栏，找到<code>Devices</code>选项。选择<code>Connect a Device</code>选项。</p>
-<p>单击<code>Create an Enrollment</code>，输入需要注册的邮箱后缀名，例如<code>@gmail.com</code>，然后点击<code>save</code>。</p>
-<h2 id="Zero-Trust登录与连接"><a href="#Zero-Trust登录与连接" class="headerlink" title="Zero Trust登录与连接"></a>Zero Trust登录与连接</h2><p>打开自己的Cloudflare Warp客户端，在右键菜单中找到<code>偏好设置</code>，找到<code>账户</code>一栏，点击<code>使用Cloudflare Zero Trust登录</code>。</p>
-<p>输入自己之前注册Zero Trust使用的团队名称，点击确认，会跳转到团队的一个Web验证界面。</p>
-<p>输入自己使用的邮箱。</p>
-<p>在自己的邮箱当中找到Cloudflare发送的验证码，填写验证码，确认。</p>
-<p>稍作等待，Cloudflare Warp客户端的Zero Trust将成功登陆。</p>
-<p>打开Cloudflare Warp客户端，现在Warp的标志将被替换为Zero Trust。点击连接按钮，即可尝试连接到Cloudflare Warp服务。</p>
-<p>这一步的成功率很高，通常能够连接成功。并且1G的流量限制已经解除。</p>
-<p>现在可以尝试访问一些网站，例如<a href="https://google.com/">Google</a>。</p>
-<p>也可以尝试进行网络测速。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Cloudflare Warp + Zero Trust的简单使用方法已经介绍完毕。Warp能够通过WireGuard协议保护互联网协议，拥有强大的安全性、高效的协议设计和很高的下行速率（有一个问题是上行速率较低），并通过1.1.1.1 DNS解析来提高DNS解析的效率，避免DNS污染的影响，改善综合上网体验。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Network</tag>
-        <tag>Circumvention</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>在Qt Creator中使用OpenSSL</title>
     <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
@@ -2109,6 +2072,43 @@
       </tags>
   </entry>
   <entry>
+    <title>简单的Cloudflare Warp使用方法</title>
+    <url>/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。</p>
+<p>本文字教程主要介绍在个人设备上使用Cloudflare Warp连接到互联网，并通过Cloudflare Zero Trust登录客户端，解除Warp自身的流量限制。</p>
+<span id="more"></span>
+
+<h2 id="安装与连接"><a href="#安装与连接" class="headerlink" title="安装与连接"></a>安装与连接</h2><p>安装非常简单，在Cloudflare 1.1.1.1的官方网站下载适合自己设备的客户端即可。</p>
+<p>下载链接：<a href="https://1.1.1.1/">1.1.1.1 — The free app that makes your Internet faster.</a></p>
+<p>打开安装包，按照指示完成安装即可。打开Cloudflare Warp客户端。</p>
+<p>点击连接，即可尝试连接。这一步有一定的可能性会失败。如果成功，已经可以访问国际互联网，而且性能通常不错。但是有一定的流量限制。</p>
+<p>如果是轻度使用者，不在意流量限制，到这一步即可完成。</p>
+<h2 id="注册Zero-Trust"><a href="#注册Zero-Trust" class="headerlink" title="注册Zero Trust"></a>注册Zero Trust</h2><p>登录Cloudflare Dashboard：<a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
+<p>当然，如果没有账号可以先注册一个，很容易。注册过程略。</p>
+<p>在左侧找到Zero Trust，注册一个Zero Trust账号，团队名称可以自由选择。注册过程略。</p>
+<p>注册成功后，找到左侧的<code>My Team</code>一栏，找到<code>Devices</code>选项。选择<code>Connect a Device</code>选项。</p>
+<p>单击<code>Create an Enrollment</code>，输入需要注册的邮箱后缀名，例如<code>@gmail.com</code>，然后点击<code>save</code>。</p>
+<h2 id="Zero-Trust登录与连接"><a href="#Zero-Trust登录与连接" class="headerlink" title="Zero Trust登录与连接"></a>Zero Trust登录与连接</h2><p>打开自己的Cloudflare Warp客户端，在右键菜单中找到<code>偏好设置</code>，找到<code>账户</code>一栏，点击<code>使用Cloudflare Zero Trust登录</code>。</p>
+<p>输入自己之前注册Zero Trust使用的团队名称，点击确认，会跳转到团队的一个Web验证界面。</p>
+<p>输入自己使用的邮箱。</p>
+<p>在自己的邮箱当中找到Cloudflare发送的验证码，填写验证码，确认。</p>
+<p>稍作等待，Cloudflare Warp客户端的Zero Trust将成功登陆。</p>
+<p>打开Cloudflare Warp客户端，现在Warp的标志将被替换为Zero Trust。点击连接按钮，即可尝试连接到Cloudflare Warp服务。</p>
+<p>这一步的成功率很高，通常能够连接成功。并且1G的流量限制已经解除。</p>
+<p>现在可以尝试访问一些网站，例如<a href="https://google.com/">Google</a>。</p>
+<p>也可以尝试进行网络测速。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Cloudflare Warp + Zero Trust的简单使用方法已经介绍完毕。Warp能够通过WireGuard协议保护互联网协议，拥有强大的安全性、高效的协议设计和很高的下行速率（有一个问题是上行速率较低），并通过1.1.1.1 DNS解析来提高DNS解析的效率，避免DNS污染的影响，改善综合上网体验。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Network</tag>
+        <tag>Circumvention</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
     <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
@@ -2183,7 +2183,7 @@
 <h4 id="谨慎分享摄影作品"><a href="#谨慎分享摄影作品" class="headerlink" title="谨慎分享摄影作品"></a>谨慎分享摄影作品</h4><p>不要以为图片定位很困难，不是这样的。</p>
 <h4 id="减少检索机会"><a href="#减少检索机会" class="headerlink" title="减少检索机会"></a>减少检索机会</h4><p>关闭<strong>微信的QQ号搜索，微信的手机号搜索，支付宝的手机号搜索，QQ的手机号搜索，Telegram的手机号展示</strong>，以及各种平台的<strong>通讯录功能</strong>。</p>
 <p>这会稍微增加一点调查难度。</p>
-<h4 id="使用强加密邮箱"><a href="#使用强加密邮箱" class="headerlink" title="使用强加密邮箱"></a>使用强加密邮箱</h4><p>强加密邮箱通常采用端到端加密技术，相对而言是更加可控，，它的安全性是不可妥协的。</p>
+<h4 id="使用强加密邮箱"><a href="#使用强加密邮箱" class="headerlink" title="使用强加密邮箱"></a>使用强加密邮箱</h4><p>强加密邮箱通常采用端到端加密技术，相对而言是更加可控，它的安全性通常是不可妥协的。</p>
 <p>但也有不方便的一点——主密钥丢失以后，通常还挺难恢复的，可能直接炸了。注意一下。</p>
 <p>推荐两个：</p>
 <p><a href="https://protonmail.com/">ProtonMail (protonmail.com)</a></p>
