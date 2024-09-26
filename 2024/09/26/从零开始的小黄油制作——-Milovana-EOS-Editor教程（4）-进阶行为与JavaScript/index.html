@@ -22,15 +22,15 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+  <meta name="description" content="前言（这篇教程还在施工中，随时可能发生较大的改动） Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript">
 <meta property="og:url" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+<meta property="og:description" content="前言（这篇教程还在施工中，随时可能发生较大的改动） Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-26T10:06:03.000Z">
-<meta property="article:modified_time" content="2024-09-26T10:29:53.020Z">
+<meta property="article:modified_time" content="2024-09-26T11:00:46.186Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="R-18">
@@ -251,7 +251,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2024-09-26 18:06:03 / Modified: 18:29:53" itemprop="dateCreated datePublished" datetime="2024-09-26T18:06:03+08:00">2024-09-26</time>
+              <time title="Created: 2024-09-26 18:06:03 / Modified: 19:00:46" itemprop="dateCreated datePublished" datetime="2024-09-26T18:06:03+08:00">2024-09-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -294,7 +294,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>0</span>
+              <span>232</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -313,7 +313,16 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>（这篇教程还在施工中，随时可能发生较大的改动）</p>
+<p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
+<p>本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。</p>
+<span id="more"></span>
+
+<p>由于Milovana EOS Editor基本只支持ES5，这严重影响了我的个人代码习惯（好吧，其实我也很菜），所以这个教程可能会写得很烂（搞得好像前面几篇不烂一样）。</p>
+<hr>
+<h2 id="进阶行为"><a href="#进阶行为" class="headerlink" title="进阶行为"></a>进阶行为</h2><p>之前是怕劝退一些初学者（好吧，1和2两篇教程的介绍语言风格其实已经十分劝退），所以没有介绍一些比较复杂的行为，那么在这篇教程中，介绍一些之前遗漏的行为。</p>
+<h3 id="Enable（启用）"><a href="#Enable（启用）" class="headerlink" title="Enable（启用）"></a>Enable（启用）</h3><p><strong>Enable（启用）</strong>，即字面意思，启用某个界面。</p>
+
     </div>
 
     
@@ -326,10 +335,10 @@
       <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
     </li>
   </ul>
 
@@ -343,6 +352,10 @@
       <div style="display: inline-block;">
         <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
         <p>WeChat Pay</p>
+      </div>
+      <div style="display: inline-block;">
+        <img src="/images/TronLink.png" alt="BlueMap1e TronLink">
+        <p>TronLink</p>
       </div>
 
   </div>
@@ -432,6 +445,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.</span> <span class="nav-text">进阶行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Enable%EF%BC%88%E5%90%AF%E7%94%A8%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">Enable（启用）</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -470,6 +484,9 @@
         <a href="https://github.com/BlueMap1e" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;BlueMap1e" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
       </span>
       <span class="links-of-author-item">
+        <a href="mailto:BlueMap1e@protonmail.com" title="E-Mail → mailto:BlueMap1e@protonmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
         <a href="https://twitter.com/C_E_104" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;C_E_104" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
       </span>
       <span class="links-of-author-item">
@@ -478,6 +495,16 @@
   </div>
 
 
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://bluemap1e.duckdns.org/" title="https:&#x2F;&#x2F;bluemap1e.duckdns.org" rel="noopener" target="_blank">BlueMaple's NetDisk</a>
+        </li>
+    </ul>
+  </div>
 
       </div>
         <div class="back-to-top motion-element">
@@ -518,7 +545,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:43</span>
+    <span title="Reading time total">2:44</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
