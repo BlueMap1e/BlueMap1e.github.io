@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-09-25T03:26:42.660Z</updated>
+  <updated>2024-09-26T10:29:53.020Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</title>
+    <link href="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/"/>
+    <id>https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</id>
+    <published>2024-09-26T10:06:03.000Z</published>
+    <updated>2024-09-26T10:29:53.020Z</updated>
+    
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="JavaScript" scheme="https://bluemap1e.github.io/categories/Tech/JavaScript/"/>
+    
+    
+    <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
+    
+    <category term="R-18" scheme="https://bluemap1e.github.io/tags/R-18/"/>
+    
+    <category term="Webtease" scheme="https://bluemap1e.github.io/tags/Webtease/"/>
+    
+  </entry>
   
   <entry>
     <title>轻微程度的隐私保护技巧</title>
@@ -287,9 +310,9 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
@@ -502,9 +525,9 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
@@ -533,35 +556,9 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
-  </entry>
-  
-  <entry>
-    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
-    <link href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
-    <id>https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</id>
-    <published>2023-10-18T09:15:13.000Z</published>
-    <updated>2024-09-23T07:02:20.181Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p><p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p><span id="more"></span><h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure><p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p><p>一般而言npm也是会一并安装的</p><p>装好了以后确认一下有没有成功安装：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure><p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p><h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure><p>安装完成后，确认一下Hexo的版本信息：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure><p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p><h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure><p>使用Hexo初始化博客文件夹：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure><p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure><p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p><p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span><span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure><p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p><p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure><p>可以重复生成时使用的命令：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure><h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p><p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p><p>直接拉到底，进行修改：</p><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure><p>修改完成后保存，可以退出</p><p>使用npm安装Hexo的Git部署工具：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure><p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p><h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p><p>创建新博文：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure><p>更新本地博客：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure><p>尝试查看本地博客：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure><p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>]]></content>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下&lt;/p&gt;
-&lt;p&gt;个人使用的搭建本地环境就是Windows 10，macOS据说差不多。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Web Front-End" scheme="https://bluemap1e.github.io/categories/Tech/Web-Front-End/"/>
-    
-    
-    <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
-    
-    <category term="Hexo" scheme="https://bluemap1e.github.io/tags/Hexo/"/>
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   

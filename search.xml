@@ -517,100 +517,6 @@
       </tags>
   </entry>
   <entry>
-    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
-    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
-<p>一个输出示例是这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
-<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<p>或：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
-
-<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
-<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
-
-<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
-
-<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
-<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
-<hr>
-<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出为：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>示例输出为：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
-<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>示例输出为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
-<hr>
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
-
-<p>这代表生成32字节（256位）的随机数。</p>
-<hr>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>一个极简的BitTorrent使用教程</title>
     <url>/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文是一篇完全面向技术小白的新手教程。</p>
@@ -899,185 +805,97 @@
       </tags>
   </entry>
   <entry>
-    <title>免费领取一台IBM LinuxOne服务器</title>
-    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
-<span id="more"></span>
-
-<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
-<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
-
-<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
-<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
-<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
-<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
-<p><strong>CPU</strong>: 2v CPU</p>
-<p><strong>RAM</strong>: 4GB</p>
-<p><strong>SSD</strong>: 50GB</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>VPS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
-<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
-<span id="more"></span>
-
-<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
-<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
-<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
-<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
-<hr>
-<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
-<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
-<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
-<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
-<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
-
-<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
-<hr>
-<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
-
-<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
-<hr>
-<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
-<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
-
-<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
-<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
-
-<hr>
-<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
-<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
-<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
-<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
-<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
-
-<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
-<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
-<hr>
-<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
-
-<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
-
-<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
-<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
-<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
-<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
-<p>就类似于这样。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
-
-<hr>
-<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
-<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
-<hr>
-<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
-<p>举个例子，就像这样：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
-
-<hr>
-<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
-<p>类似于这种：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
-
-<hr>
-<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
-
-<p>一个Audio，播放音频，不阻塞。</p>
-<p>一个Timer，计时，阻塞。</p>
-<p>一个Eval，通过一行JS代码停止播放音频。</p>
-<hr>
-<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
-<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
-<p>是否允许用户跳过看你自己。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
-
-<hr>
-<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
-<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
-<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
-
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
-<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>R-18</tag>
-        <tag>Webtease</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
-    <url>/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>VMess是V2Ray设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。</p>
-<p>本文主要简单介绍如何在Debian 12上搭建VMess + TCP这种最基本的VMess服务器。</p>
+    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
+    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
 <span id="more"></span>
 
 <hr>
-<h2 id="安装V2Ray"><a href="#安装V2Ray" class="headerlink" title="安装V2Ray"></a>安装V2Ray</h2><p>SSH连接VPS的过程略。</p>
-<p>建议通过官方安装脚本安装V2Ray：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
 
-<p>安装最新的geoip.dat和geosite.dat：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)</span><br></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="配置V2Ray"><a href="#配置V2Ray" class="headerlink" title="配置V2Ray"></a>配置V2Ray</h2><hr>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开V2Ray的配置文件，这里以最简单的文本编辑器nano为例。当然，如果会用vim自然是更好的：</p>
-<p>（不同云服务器供应商的文件结构可能不同，请注意找一下自己的V2Ray配置文件位置，并根据自己的情况修改目录）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
 
-<p>一个非常简单的示例配置文件如下：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;inbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">8443</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;clients&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;766ff83e-c497-4ea9-8ad8-434be59c6bb9&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;outbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;freedom&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
+<p>一个输出示例是这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
 
-<p>Ctrl+X退出，Y保存，回车，完成编辑。</p>
 <hr>
-<h3 id="配置文件简单说明："><a href="#配置文件简单说明：" class="headerlink" title="配置文件简单说明："></a>配置文件简单说明：</h3><p><code>inbounds</code>：入站配置</p>
-<p><code>port</code>：服务器监听端口，可以自己修改</p>
-<p><code>protocol</code>：入站协议，此处使用VMess</p>
-<p><code>settings</code>：VMess的设置</p>
-<p><code>clients</code>：客户端</p>
-<p><code>id</code>：一个UUID，用于加密通信和身份验证，可以用UUID生成器生成：<a href="https://www.uuidgenerator.net/version4">Online UUID Generator Tool</a></p>
-<p><code>outbounds</code>：出站设置</p>
-<p><code>protocol</code>：出站协议，此处使用freedom，即无限制</p>
-<hr>
-<h2 id="启动并连接到V2Ray服务器"><a href="#启动并连接到V2Ray服务器" class="headerlink" title="启动并连接到V2Ray服务器"></a>启动并连接到V2Ray服务器</h2><p>使用<code>v2ray run</code>命令来启动v2ray服务端，<code>-c</code>参数可用于指定配置文件路径，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">v2ray run -c /usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
-<p>在客户端配置指定服务器的IP地址、端口、UUID即可连接，传输层协议默认TCP，加密方式可以选择Auto，VMess的服务端能自适应解密。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台简单的VMess + TCP的代理服务器搭建完成，可以用于代理上网。</p>
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
+<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
+
+<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
+
+<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
+
+<p>这代表生成32字节（256位）的随机数。</p>
+<hr>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Network</category>
+        <category>Crypto</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
-        <tag>Network</tag>
-        <tag>VPS</tag>
-        <tag>Circumvention</tag>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
       </tags>
   </entry>
   <entry>
@@ -1629,6 +1447,389 @@
       </tags>
   </entry>
   <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
+<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
+<span id="more"></span>
+
+<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
+<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
+<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
+<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
+<hr>
+<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
+<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
+<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
+<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
+<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
+
+<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
+<hr>
+<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
+
+<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
+<hr>
+<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
+<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
+
+<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
+<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+
+<hr>
+<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
+<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
+<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
+<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
+<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
+
+<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
+<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
+<hr>
+<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+
+<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+
+<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
+<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
+<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
+<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
+<p>就类似于这样。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+
+<hr>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
+<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<hr>
+<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
+<p>举个例子，就像这样：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+
+<hr>
+<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
+<p>类似于这种：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+
+<hr>
+<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+
+<p>一个Audio，播放音频，不阻塞。</p>
+<p>一个Timer，计时，阻塞。</p>
+<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<hr>
+<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
+<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
+<p>是否允许用户跳过看你自己。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+
+<hr>
+<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
+<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
+<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
+<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>R-18</tag>
+        <tag>Webtease</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</title>
+    <url>/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>R-18</tag>
+        <tag>Webtease</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
+    <url>/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>常规VPS在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装BBR来有效提升带宽。</p>
+<span id="more"></span>
+
+<h3 id="安装BBR一键脚本"><a href="#安装BBR一键脚本" class="headerlink" title="安装BBR一键脚本"></a>安装BBR一键脚本</h3><p>通过这行命令可以安装tcp.sh一键脚本</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -N --no-check-certificate <span class="string">&quot;https://gist.github.com/zeruns/a0ec603f20d1b86de6a774a8ba27588f/raw/4f9957ae23f5efb2bb7c57a198ae2cffebfb1c56/tcp.sh&quot;</span> &amp;&amp; <span class="built_in">chmod</span> +x tcp.sh &amp;&amp; ./tcp.sh</span><br></pre></td></tr></table></figure>
+
+<p>启动脚本之后，你可以先更新脚本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0</span><br></pre></td></tr></table></figure>
+
+<p>然后再次启动脚本：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/root/tcp.sh</span><br></pre></td></tr></table></figure>
+
+<p>之后根据界面自己选择需要的BBR进行加速即可，根据脚本的指示操作即可完成安装。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Network</tag>
+        <tag>Circumvention</tag>
+        <tag>Cloud</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>免费领取一台IBM LinuxOne服务器</title>
+    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
+<span id="more"></span>
+
+<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
+<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
+
+<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
+<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
+<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
+<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
+<p><strong>CPU</strong>: 2v CPU</p>
+<p><strong>RAM</strong>: 4GB</p>
+<p><strong>SSD</strong>: 50GB</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
+    <url>/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>VMess是V2Ray设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。</p>
+<p>本文主要简单介绍如何在Debian 12上搭建VMess + TCP这种最基本的VMess服务器。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="安装V2Ray"><a href="#安装V2Ray" class="headerlink" title="安装V2Ray"></a>安装V2Ray</h2><p>SSH连接VPS的过程略。</p>
+<p>建议通过官方安装脚本安装V2Ray：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
+
+<p>安装最新的geoip.dat和geosite.dat：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="配置V2Ray"><a href="#配置V2Ray" class="headerlink" title="配置V2Ray"></a>配置V2Ray</h2><hr>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开V2Ray的配置文件，这里以最简单的文本编辑器nano为例。当然，如果会用vim自然是更好的：</p>
+<p>（不同云服务器供应商的文件结构可能不同，请注意找一下自己的V2Ray配置文件位置，并根据自己的情况修改目录）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>一个非常简单的示例配置文件如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;inbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">8443</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;clients&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;766ff83e-c497-4ea9-8ad8-434be59c6bb9&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;outbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;freedom&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Ctrl+X退出，Y保存，回车，完成编辑。</p>
+<hr>
+<h3 id="配置文件简单说明："><a href="#配置文件简单说明：" class="headerlink" title="配置文件简单说明："></a>配置文件简单说明：</h3><p><code>inbounds</code>：入站配置</p>
+<p><code>port</code>：服务器监听端口，可以自己修改</p>
+<p><code>protocol</code>：入站协议，此处使用VMess</p>
+<p><code>settings</code>：VMess的设置</p>
+<p><code>clients</code>：客户端</p>
+<p><code>id</code>：一个UUID，用于加密通信和身份验证，可以用UUID生成器生成：<a href="https://www.uuidgenerator.net/version4">Online UUID Generator Tool</a></p>
+<p><code>outbounds</code>：出站设置</p>
+<p><code>protocol</code>：出站协议，此处使用freedom，即无限制</p>
+<hr>
+<h2 id="启动并连接到V2Ray服务器"><a href="#启动并连接到V2Ray服务器" class="headerlink" title="启动并连接到V2Ray服务器"></a>启动并连接到V2Ray服务器</h2><p>使用<code>v2ray run</code>命令来启动v2ray服务端，<code>-c</code>参数可用于指定配置文件路径，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">v2ray run -c /usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>在客户端配置指定服务器的IP地址、端口、UUID即可连接，传输层协议默认TCP，加密方式可以选择Auto，VMess的服务端能自适应解密。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台简单的VMess + TCP的代理服务器搭建完成，可以用于代理上网。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Network</tag>
+        <tag>Circumvention</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
+    <url>/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>昨天看到了阿里云的经济型e服务器，感觉性价比挺不错的，因此尝试用来搭一台MineCraft服务器玩玩，这样用Curtain之类的模组挂机很方便。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="VPS基本配置信息"><a href="#VPS基本配置信息" class="headerlink" title="VPS基本配置信息"></a>VPS基本配置信息</h2><p>阿里云经济型e服务器购买地址：<a href="https://www.aliyun.com/daily-act/ecs/ecs/detail/e">云服务器ECS e实例-阿里云 (aliyun.com)</a></p>
+<p><strong>CPU</strong>: 2vCPU</p>
+<p><strong>RAM</strong>: 8GB</p>
+<p><strong>SSD</strong>: 20GB</p>
+<p><strong>Bandwidth</strong>: 5Mbps</p>
+<p><strong>OS</strong>: Debian 12.2 x64</p>
+<hr>
+<h2 id="MineCraft配置信息"><a href="#MineCraft配置信息" class="headerlink" title="MineCraft配置信息"></a>MineCraft配置信息</h2><p><strong>Version</strong>: 1.18.2 Java Edition</p>
+<p><strong>Mod API</strong>: Forge 40.2.10</p>
+<p><strong>JDK</strong>：OpenJDK 17</p>
+<hr>
+<h2 id="搭建使用工具"><a href="#搭建使用工具" class="headerlink" title="搭建使用工具"></a>搭建使用工具</h2><p>XShell Community + XFTP Community	免费下载地址：<a href="https://www.netsarang.com/en/xshell/">XSHELL - The Industry’s Most Powerful SSH Client (netsarang.com)</a></p>
+<p>当然其他工具包应该也是完全可以的，MobaXterm之类的，不过如果只用PuTTY之类的简单工具可能在模组传输过程中有点麻烦，这方面个人没研究过。</p>
+<p>或许可以试试FTP之类的工具，实在不行就用curl或者wget慢慢下（？）</p>
+<hr>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenJDK"><a href="#安装OpenJDK" class="headerlink" title="安装OpenJDK"></a>安装OpenJDK</h3><p>首先通过密钥对或用户名+密码的方式，使用XShell登录远程服务器。</p>
+<p>首先是例行更新一下</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update -y</span><br><span class="line">apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+
+<p>这里以我决定搭建的MineCraft 1.18.2 JE为例，它需要Java 16+，那么我安装Java 17。</p>
+<p>（PS：Java版本通常而言越高越好，但这并非绝对，例如1.12.2及以下的一些版本就只能通过Java 8运行，这里需要根据自己的需求来修改）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install openjdk-17-jdk</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Forge服务端部署"><a href="#Forge服务端部署" class="headerlink" title="Forge服务端部署"></a>Forge服务端部署</h3><h4 id="获取Forge下载链接"><a href="#获取Forge下载链接" class="headerlink" title="获取Forge下载链接"></a>获取Forge下载链接</h4><p>打开Forge的官方网站 <a href="https://files.minecraftforge.net/net/minecraftforge/forge/">Downloads for Minecraft Forge</a>，找到自己对应游戏版本的Forge。</p>
+<p>这里以1.18.2 Forge 40.2.10为例：</p>
+<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Forge-Web-Download.png" class="" title="Forge-Web-Download">
+
+<p>右键Installer，点击复制链接，复制到剪贴板，此时你会得到这样的一条链接：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">https://adfoc.us/serve/sitelinks/?id=<span class="number">271228</span>&amp;url=https://maven.minecraftforge.net/net/minecraftforge/forge/<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>/forge-<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>-installer.jar</span><br></pre></td></tr></table></figure>
+
+<p>此时，你需要把第二个”https:&#x2F;&#x2F;“之前的部分去掉，得到这样的一条链接：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">https://maven.minecraftforge.net/net/minecraftforge/forge/<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>/forge-<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>-installer.jar</span><br></pre></td></tr></table></figure>
+
+<p>这就是需要用到的链接</p>
+<h4 id="安装Forge服务端"><a href="#安装Forge服务端" class="headerlink" title="安装Forge服务端"></a>安装Forge服务端</h4><p>此时需要写一条下载Forge的命令，注意，这条命令根据自己刚才得到的链接来修改：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -O installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.2.10/forge-1.18.2-40.2.10-installer.jar</span><br></pre></td></tr></table></figure>
+
+<p>在服务端根目录下创建一个MineCraft Forge自己的文件夹吧，这样方便管理，不容易混淆。</p>
+<p>当然，你完全可以自己修改到一个想要安装的位置：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line"><span class="built_in">mkdir</span> Forge</span><br><span class="line"><span class="built_in">cd</span> /Forge</span><br></pre></td></tr></table></figure>
+
+<p>下载完成之后，就可以用Java运行Forge安装包来安装MineCraft Forge服务端了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar installer.jar --installServer</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="安装模组"><a href="#安装模组" class="headerlink" title="安装模组"></a>安装模组</h4><p>新建一个mods文件夹，用来存放模组：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> mods</span><br></pre></td></tr></table></figure>
+
+<p>此时，如果有XFTP这样的文件传输工具，你可以直接连接到VPS，然后直接用GUI操作，把本地已经准备好的模组文件都复制到服务端的&#x2F;Forge&#x2F;mods文件夹当中就可以了。</p>
+<p>（注意：最好查一下 <a href="https://www.mcmod.cn/">MC百科</a> 或 <a href="https://www.curseforge.com/minecraft">CurseForge</a> 来确认一部分模组是否有必要在服务端安装。一些“服务端可选”的模组安装了也问题不大，但是一些“服务端无效”的模组请尽量删除（例如：Rubidium，Oculus等），否则可能会造成服务器启动失败。）</p>
+<h4 id="首次启动"><a href="#首次启动" class="headerlink" title="首次启动"></a>首次启动</h4><h5 id="尝试运行服务端"><a href="#尝试运行服务端" class="headerlink" title="尝试运行服务端"></a>尝试运行服务端</h5><p>Forge 1.17+自带了这样的一个一键脚本，可以运行MineCraft服务端，你只需要启用一键脚本就可以了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
+
+<p>Forge 之前版本需要Java设置一些参数来启动，这里以MineCraft 1.12.2 JE Forge 23.5.2859为例，之后的启动方法同理：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar -Xmx4096M -Xms2048M forge-1.12.2-14.23.5.2859.jar nogui</span><br></pre></td></tr></table></figure>
+
+<p>（PS：如果你有Xmanager，那么可以去掉”nogui”，因为XShell会自动调用Xmanager处理GUI的交互部分）</p>
+<h5 id="同意用户协议"><a href="#同意用户协议" class="headerlink" title="同意用户协议"></a>同意用户协议</h5><p>首次启动会失败，然后创建一个eula.txt文件，这是用户协议，我们必须同意协议才能进行游戏。</p>
+<p>我们可以用各种文本编辑器来修改它，nano、vim都可以。这里以最简单的nano为例：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano eula.txt</span><br></pre></td></tr></table></figure>
+
+<p>此时就进入了eula.txt的编辑界面：</p>
+<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/eula-txt.png" class="" title="eula.txt">
+
+<p>通过上下左右键可以操作光标，只要把false改成true就可以了，代表同意用户协议。</p>
+<p>然后Ctrl+X退出，Y保存修改，回车，这样就保存了更改。</p>
+<h4 id="第二次启动"><a href="#第二次启动" class="headerlink" title="第二次启动"></a>第二次启动</h4><h5 id="尝试运行服务端-1"><a href="#尝试运行服务端-1" class="headerlink" title="尝试运行服务端"></a>尝试运行服务端</h5><p>现在可以第二次运行MineCraft服务器了，这会生成一个世界，加载模组资源，并初始化所有配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
+
+<p>如果启动失败，那么基本上有两种原因。如果显示killed，那么是服务器资源不足，如果显示大量的报错信息，那么基本可以确定是模组冲突。</p>
+<h5 id="资源不足"><a href="#资源不足" class="headerlink" title="资源不足"></a>资源不足</h5><h6 id="1-17"><a href="#1-17" class="headerlink" title="1.17+"></a>1.17+</h6><p>可以尝试调整user_jvm_args.txt文件中的配置，把内存拉低一些，但是通常而言最好不要低于1G。</p>
+<h6 id="1-17-1"><a href="#1-17-1" class="headerlink" title="1.17-"></a>1.17-</h6><p>可以尝试调整运行参数，把运行参数降下来。因为一般而言killed都是内存不足导致的。</p>
+<h5 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h5><p>阅读红色的报错日志，看看究竟是什么模组出问题了，是什么模组之间发生冲突了。</p>
+<p>然后进入mods文件夹，通过rm指令删除对应的模组即可，有XFTP的可以通过图形化界面来操作，更容易。</p>
+<h5 id="退出-修改服务端配置文件"><a href="#退出-修改服务端配置文件" class="headerlink" title="退出 修改服务端配置文件"></a>退出 修改服务端配置文件</h5><p>世界生成完毕后，个人的建议是先退出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/stop</span><br></pre></td></tr></table></figure>
+
+<p>此时你可以检查一下目前的&#x2F;Forge文件夹，发现创建了很多文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p>可以尝试修改一下服务端配置文件，定制化你的游戏体验，这一部分不详细赘述：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano server.properties</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="正式启动"><a href="#正式启动" class="headerlink" title="正式启动"></a>正式启动</h4><h5 id="使用Screen分屏功能-在后台运行MineCraft"><a href="#使用Screen分屏功能-在后台运行MineCraft" class="headerlink" title="使用Screen分屏功能 在后台运行MineCraft"></a>使用Screen分屏功能 在后台运行MineCraft</h5><p>个人推荐使用screen分屏功能来简单地管理MineCraft服务器，这样只需要后台挂一个窗口就行，期间服务器可以做别的事情。</p>
+<p>安装screen：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install screen</span><br></pre></td></tr></table></figure>
+
+<p>使用screen进行分屏操作（示例，分屏名称完全可以自选）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -S Forge</span><br></pre></td></tr></table></figure>
+
+<p>运行MineCraft服务端：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
+
+<p>退出分屏：</p>
+<p>Ctrl + A + D</p>
+<h5 id="管理之前的分屏"><a href="#管理之前的分屏" class="headerlink" title="管理之前的分屏"></a>管理之前的分屏</h5><p>查看现有分屏：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -<span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
+
+<p>恢复上一次的分屏会话：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -r</span><br></pre></td></tr></table></figure>
+
+<p>恢复特定的分屏会话（示例，选择你自己想要进入的那个分屏）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -r Forge</span><br></pre></td></tr></table></figure>
+
+<p>至此，MineCraft Forge服务端搭建过程已经完成。</p>
+<h2 id="配置防火墙规则"><a href="#配置防火墙规则" class="headerlink" title="配置防火墙规则"></a>配置防火墙规则</h2><h3 id="云服务供应商控制台"><a href="#云服务供应商控制台" class="headerlink" title="云服务供应商控制台"></a>云服务供应商控制台</h3><p>个人使用的服务器为阿里云，这类云服务厂商提供单独的安全组&#x2F;防火墙策略。需要在控制面板上找到安全组，手动添加一条TCP规则。</p>
+<p>端口默认是25565，如果你修改过server.properties文件，那么请根据你自己设置的端口号开放端口访问权限。</p>
+<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Security-Group.png" class="" title="Security-Group-Example">
+
+<h3 id="UFW等内置防火墙"><a href="#UFW等内置防火墙" class="headerlink" title="UFW等内置防火墙"></a>UFW等内置防火墙</h3><p>如果你的服务器没有控制台的防火墙规则，你又不希望把所有端口全部开放，那么可以尝试使用ufw这样的简单防火墙工具。</p>
+<p>首先检查一下ufw是否安装好了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install ufw</span><br></pre></td></tr></table></figure>
+
+<p>然后开放ufw的几个关键端口：</p>
+<p>（PS：请一定要确认SSH端口是不是默认的22，有些云服务供应商不是的，别一个防火墙把自己的SSH连接给掐断了）</p>
+<p>（PS：这里的25565端口也是MineCraft默认的服务器端口，如果改过server.properties文件，还是要根据自己的设置来调整）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw allow ssh</span><br><span class="line">ufw allow 25565</span><br></pre></td></tr></table></figure>
+
+<p>启用ufw防火墙：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+
+<p>简单检查一下防火墙的运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw status</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="客户端连接MineCraft服务器进行游玩"><a href="#客户端连接MineCraft服务器进行游玩" class="headerlink" title="客户端连接MineCraft服务器进行游玩"></a>客户端连接MineCraft服务器进行游玩</h2><h3 id="关于模组兼容"><a href="#关于模组兼容" class="headerlink" title="关于模组兼容"></a>关于模组兼容</h3><p>根据个人经验，客户端模组和服务端模组是这样的关系：</p>
+<p>如果某个模组要求客户端需装，服务端需装，那么客户端和服务端必须同时安装这个模组。（此类模组多为内容模组，例如世界生成、科技、魔法、农业等）</p>
+<p>如果某个模组要求客户端需装，服务端可选，那么通常而言，客户端安装这个模组即可。（此类模组多为辅助模组，例如操作、面板、管理、地图、优化等）</p>
+<p>如果某个模组要求客户端需装，服务端无效，那么最好不要在服务端安装这个模组。（此类模组多为深度优化模组，例如Rubidium, Sodium, Oculus, Iris）</p>
+<h3 id="客户端连接方式"><a href="#客户端连接方式" class="headerlink" title="客户端连接方式"></a>客户端连接方式</h3><p>打开游戏，多人游戏，添加服务器。</p>
+<p>输入备注，服务器IP地址、端口即可。不填端口的话就会尝试连接默认的25565端口。</p>
+<p>提示模组不兼容很正常，这通常是因为客户端和服务端优化模组等差异造成的。此时不要直接放弃，一定要尝试连接一下。如果有一些模组不匹配，通常会收到一些信息，那么你可以在服务器后台或者客户端安装一些模组来补全。大多数情况下，就算模组列表不匹配，还是可以游玩的。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台可运行的MineCraft Forge服务器已经搭建完成并上线运行。</p>
+<p>个人水平有限，应该还有很多没有讲到的地方，之后如果发现了也会尝试补充完善。</p>
+<p>本教程比较依赖XShell &#x2F; XFTP工具包，因此操作中出现很多“偷懒”的地方。</p>
+<p>希望这篇文章能对想要自建MineCraft Forge服务器的用户有所帮助。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>VPS</tag>
+        <tag>MineCraft</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
     <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
@@ -1906,35 +2107,8 @@
       <tags>
         <tag>Linux</tag>
         <tag>Network</tag>
+        <tag>Circumvention</tag>
         <tag>VPS</tag>
-        <tag>Circumvention</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
-    <url>/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>常规VPS在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装BBR来有效提升带宽。</p>
-<span id="more"></span>
-
-<h3 id="安装BBR一键脚本"><a href="#安装BBR一键脚本" class="headerlink" title="安装BBR一键脚本"></a>安装BBR一键脚本</h3><p>通过这行命令可以安装tcp.sh一键脚本</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -N --no-check-certificate <span class="string">&quot;https://gist.github.com/zeruns/a0ec603f20d1b86de6a774a8ba27588f/raw/4f9957ae23f5efb2bb7c57a198ae2cffebfb1c56/tcp.sh&quot;</span> &amp;&amp; <span class="built_in">chmod</span> +x tcp.sh &amp;&amp; ./tcp.sh</span><br></pre></td></tr></table></figure>
-
-<p>启动脚本之后，你可以先更新脚本：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">0</span><br></pre></td></tr></table></figure>
-
-<p>然后再次启动脚本：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/root/tcp.sh</span><br></pre></td></tr></table></figure>
-
-<p>之后根据界面自己选择需要的BBR进行加速即可，根据脚本的指示操作即可完成安装。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Network</tag>
-        <tag>Circumvention</tag>
-        <tag>Cloud</tag>
       </tags>
   </entry>
   <entry>
@@ -2067,163 +2241,42 @@
       </tags>
   </entry>
   <entry>
-    <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
-    <url>/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>昨天看到了阿里云的经济型e服务器，感觉性价比挺不错的，因此尝试用来搭一台MineCraft服务器玩玩，这样用Curtain之类的模组挂机很方便。</p>
+    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
+    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
+<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
 <span id="more"></span>
 
-<hr>
-<h2 id="VPS基本配置信息"><a href="#VPS基本配置信息" class="headerlink" title="VPS基本配置信息"></a>VPS基本配置信息</h2><p>阿里云经济型e服务器购买地址：<a href="https://www.aliyun.com/daily-act/ecs/ecs/detail/e">云服务器ECS e实例-阿里云 (aliyun.com)</a></p>
-<p><strong>CPU</strong>: 2vCPU</p>
-<p><strong>RAM</strong>: 8GB</p>
-<p><strong>SSD</strong>: 20GB</p>
-<p><strong>Bandwidth</strong>: 5Mbps</p>
-<p><strong>OS</strong>: Debian 12.2 x64</p>
-<hr>
-<h2 id="MineCraft配置信息"><a href="#MineCraft配置信息" class="headerlink" title="MineCraft配置信息"></a>MineCraft配置信息</h2><p><strong>Version</strong>: 1.18.2 Java Edition</p>
-<p><strong>Mod API</strong>: Forge 40.2.10</p>
-<p><strong>JDK</strong>：OpenJDK 17</p>
-<hr>
-<h2 id="搭建使用工具"><a href="#搭建使用工具" class="headerlink" title="搭建使用工具"></a>搭建使用工具</h2><p>XShell Community + XFTP Community	免费下载地址：<a href="https://www.netsarang.com/en/xshell/">XSHELL - The Industry’s Most Powerful SSH Client (netsarang.com)</a></p>
-<p>当然其他工具包应该也是完全可以的，MobaXterm之类的，不过如果只用PuTTY之类的简单工具可能在模组传输过程中有点麻烦，这方面个人没研究过。</p>
-<p>或许可以试试FTP之类的工具，实在不行就用curl或者wget慢慢下（？）</p>
-<hr>
-<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenJDK"><a href="#安装OpenJDK" class="headerlink" title="安装OpenJDK"></a>安装OpenJDK</h3><p>首先通过密钥对或用户名+密码的方式，使用XShell登录远程服务器。</p>
-<p>首先是例行更新一下</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt-get update -y</span><br><span class="line">apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
+<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
+<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
+<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
 
-<p>这里以我决定搭建的MineCraft 1.18.2 JE为例，它需要Java 16+，那么我安装Java 17。</p>
-<p>（PS：Java版本通常而言越高越好，但这并非绝对，例如1.12.2及以下的一些版本就只能通过Java 8运行，这里需要根据自己的需求来修改）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install openjdk-17-jdk</span><br></pre></td></tr></table></figure>
+<p>如果安装成功，就会返回一个版本信息，例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
 
+<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
 
+<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="Forge服务端部署"><a href="#Forge服务端部署" class="headerlink" title="Forge服务端部署"></a>Forge服务端部署</h3><h4 id="获取Forge下载链接"><a href="#获取Forge下载链接" class="headerlink" title="获取Forge下载链接"></a>获取Forge下载链接</h4><p>打开Forge的官方网站 <a href="https://files.minecraftforge.net/net/minecraftforge/forge/">Downloads for Minecraft Forge</a>，找到自己对应游戏版本的Forge。</p>
-<p>这里以1.18.2 Forge 40.2.10为例：</p>
-<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Forge-Web-Download.png" class="" title="Forge-Web-Download">
+<p>如果正常运行，这个程序输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
 
-<p>右键Installer，点击复制链接，复制到剪贴板，此时你会得到这样的一条链接：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">https://adfoc.us/serve/sitelinks/?id=<span class="number">271228</span>&amp;url=https://maven.minecraftforge.net/net/minecraftforge/forge/<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>/forge-<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>-installer.jar</span><br></pre></td></tr></table></figure>
-
-<p>此时，你需要把第二个”https:&#x2F;&#x2F;“之前的部分去掉，得到这样的一条链接：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">https://maven.minecraftforge.net/net/minecraftforge/forge/<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>/forge-<span class="number">1.18</span>.<span class="number">2</span>-<span class="number">40.2</span>.<span class="number">10</span>-installer.jar</span><br></pre></td></tr></table></figure>
-
-<p>这就是需要用到的链接</p>
-<h4 id="安装Forge服务端"><a href="#安装Forge服务端" class="headerlink" title="安装Forge服务端"></a>安装Forge服务端</h4><p>此时需要写一条下载Forge的命令，注意，这条命令根据自己刚才得到的链接来修改：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget -O installer.jar https://maven.minecraftforge.net/net/minecraftforge/forge/1.18.2-40.2.10/forge-1.18.2-40.2.10-installer.jar</span><br></pre></td></tr></table></figure>
-
-<p>在服务端根目录下创建一个MineCraft Forge自己的文件夹吧，这样方便管理，不容易混淆。</p>
-<p>当然，你完全可以自己修改到一个想要安装的位置：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /</span><br><span class="line"><span class="built_in">mkdir</span> Forge</span><br><span class="line"><span class="built_in">cd</span> /Forge</span><br></pre></td></tr></table></figure>
-
-<p>下载完成之后，就可以用Java运行Forge安装包来安装MineCraft Forge服务端了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar installer.jar --installServer</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="安装模组"><a href="#安装模组" class="headerlink" title="安装模组"></a>安装模组</h4><p>新建一个mods文件夹，用来存放模组：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> mods</span><br></pre></td></tr></table></figure>
-
-<p>此时，如果有XFTP这样的文件传输工具，你可以直接连接到VPS，然后直接用GUI操作，把本地已经准备好的模组文件都复制到服务端的&#x2F;Forge&#x2F;mods文件夹当中就可以了。</p>
-<p>（注意：最好查一下 <a href="https://www.mcmod.cn/">MC百科</a> 或 <a href="https://www.curseforge.com/minecraft">CurseForge</a> 来确认一部分模组是否有必要在服务端安装。一些“服务端可选”的模组安装了也问题不大，但是一些“服务端无效”的模组请尽量删除（例如：Rubidium，Oculus等），否则可能会造成服务器启动失败。）</p>
-<h4 id="首次启动"><a href="#首次启动" class="headerlink" title="首次启动"></a>首次启动</h4><h5 id="尝试运行服务端"><a href="#尝试运行服务端" class="headerlink" title="尝试运行服务端"></a>尝试运行服务端</h5><p>Forge 1.17+自带了这样的一个一键脚本，可以运行MineCraft服务端，你只需要启用一键脚本就可以了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
-
-<p>Forge 之前版本需要Java设置一些参数来启动，这里以MineCraft 1.12.2 JE Forge 23.5.2859为例，之后的启动方法同理：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">java -jar -Xmx4096M -Xms2048M forge-1.12.2-14.23.5.2859.jar nogui</span><br></pre></td></tr></table></figure>
-
-<p>（PS：如果你有Xmanager，那么可以去掉”nogui”，因为XShell会自动调用Xmanager处理GUI的交互部分）</p>
-<h5 id="同意用户协议"><a href="#同意用户协议" class="headerlink" title="同意用户协议"></a>同意用户协议</h5><p>首次启动会失败，然后创建一个eula.txt文件，这是用户协议，我们必须同意协议才能进行游戏。</p>
-<p>我们可以用各种文本编辑器来修改它，nano、vim都可以。这里以最简单的nano为例：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano eula.txt</span><br></pre></td></tr></table></figure>
-
-<p>此时就进入了eula.txt的编辑界面：</p>
-<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/eula-txt.png" class="" title="eula.txt">
-
-<p>通过上下左右键可以操作光标，只要把false改成true就可以了，代表同意用户协议。</p>
-<p>然后Ctrl+X退出，Y保存修改，回车，这样就保存了更改。</p>
-<h4 id="第二次启动"><a href="#第二次启动" class="headerlink" title="第二次启动"></a>第二次启动</h4><h5 id="尝试运行服务端-1"><a href="#尝试运行服务端-1" class="headerlink" title="尝试运行服务端"></a>尝试运行服务端</h5><p>现在可以第二次运行MineCraft服务器了，这会生成一个世界，加载模组资源，并初始化所有配置文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
-
-<p>如果启动失败，那么基本上有两种原因。如果显示killed，那么是服务器资源不足，如果显示大量的报错信息，那么基本可以确定是模组冲突。</p>
-<h5 id="资源不足"><a href="#资源不足" class="headerlink" title="资源不足"></a>资源不足</h5><h6 id="1-17"><a href="#1-17" class="headerlink" title="1.17+"></a>1.17+</h6><p>可以尝试调整user_jvm_args.txt文件中的配置，把内存拉低一些，但是通常而言最好不要低于1G。</p>
-<h6 id="1-17-1"><a href="#1-17-1" class="headerlink" title="1.17-"></a>1.17-</h6><p>可以尝试调整运行参数，把运行参数降下来。因为一般而言killed都是内存不足导致的。</p>
-<h5 id="报错信息"><a href="#报错信息" class="headerlink" title="报错信息"></a>报错信息</h5><p>阅读红色的报错日志，看看究竟是什么模组出问题了，是什么模组之间发生冲突了。</p>
-<p>然后进入mods文件夹，通过rm指令删除对应的模组即可，有XFTP的可以通过图形化界面来操作，更容易。</p>
-<h5 id="退出-修改服务端配置文件"><a href="#退出-修改服务端配置文件" class="headerlink" title="退出 修改服务端配置文件"></a>退出 修改服务端配置文件</h5><p>世界生成完毕后，个人的建议是先退出：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/stop</span><br></pre></td></tr></table></figure>
-
-<p>此时你可以检查一下目前的&#x2F;Forge文件夹，发现创建了很多文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
-
-<p>可以尝试修改一下服务端配置文件，定制化你的游戏体验，这一部分不详细赘述：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nano server.properties</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="正式启动"><a href="#正式启动" class="headerlink" title="正式启动"></a>正式启动</h4><h5 id="使用Screen分屏功能-在后台运行MineCraft"><a href="#使用Screen分屏功能-在后台运行MineCraft" class="headerlink" title="使用Screen分屏功能 在后台运行MineCraft"></a>使用Screen分屏功能 在后台运行MineCraft</h5><p>个人推荐使用screen分屏功能来简单地管理MineCraft服务器，这样只需要后台挂一个窗口就行，期间服务器可以做别的事情。</p>
-<p>安装screen：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install screen</span><br></pre></td></tr></table></figure>
-
-<p>使用screen进行分屏操作（示例，分屏名称完全可以自选）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -S Forge</span><br></pre></td></tr></table></figure>
-
-<p>运行MineCraft服务端：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/Forge/run.sh nogui</span><br></pre></td></tr></table></figure>
-
-<p>退出分屏：</p>
-<p>Ctrl + A + D</p>
-<h5 id="管理之前的分屏"><a href="#管理之前的分屏" class="headerlink" title="管理之前的分屏"></a>管理之前的分屏</h5><p>查看现有分屏：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -<span class="built_in">ls</span></span><br></pre></td></tr></table></figure>
-
-<p>恢复上一次的分屏会话：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -r</span><br></pre></td></tr></table></figure>
-
-<p>恢复特定的分屏会话（示例，选择你自己想要进入的那个分屏）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">screen -r Forge</span><br></pre></td></tr></table></figure>
-
-<p>至此，MineCraft Forge服务端搭建过程已经完成。</p>
-<h2 id="配置防火墙规则"><a href="#配置防火墙规则" class="headerlink" title="配置防火墙规则"></a>配置防火墙规则</h2><h3 id="云服务供应商控制台"><a href="#云服务供应商控制台" class="headerlink" title="云服务供应商控制台"></a>云服务供应商控制台</h3><p>个人使用的服务器为阿里云，这类云服务厂商提供单独的安全组&#x2F;防火墙策略。需要在控制面板上找到安全组，手动添加一条TCP规则。</p>
-<p>端口默认是25565，如果你修改过server.properties文件，那么请根据你自己设置的端口号开放端口访问权限。</p>
-<img src="/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/Security-Group.png" class="" title="Security-Group-Example">
-
-<h3 id="UFW等内置防火墙"><a href="#UFW等内置防火墙" class="headerlink" title="UFW等内置防火墙"></a>UFW等内置防火墙</h3><p>如果你的服务器没有控制台的防火墙规则，你又不希望把所有端口全部开放，那么可以尝试使用ufw这样的简单防火墙工具。</p>
-<p>首先检查一下ufw是否安装好了：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">apt install ufw</span><br></pre></td></tr></table></figure>
-
-<p>然后开放ufw的几个关键端口：</p>
-<p>（PS：请一定要确认SSH端口是不是默认的22，有些云服务供应商不是的，别一个防火墙把自己的SSH连接给掐断了）</p>
-<p>（PS：这里的25565端口也是MineCraft默认的服务器端口，如果改过server.properties文件，还是要根据自己的设置来调整）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw allow ssh</span><br><span class="line">ufw allow 25565</span><br></pre></td></tr></table></figure>
-
-<p>启用ufw防火墙：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
-
-<p>简单检查一下防火墙的运行状态：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ufw status</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="客户端连接MineCraft服务器进行游玩"><a href="#客户端连接MineCraft服务器进行游玩" class="headerlink" title="客户端连接MineCraft服务器进行游玩"></a>客户端连接MineCraft服务器进行游玩</h2><h3 id="关于模组兼容"><a href="#关于模组兼容" class="headerlink" title="关于模组兼容"></a>关于模组兼容</h3><p>根据个人经验，客户端模组和服务端模组是这样的关系：</p>
-<p>如果某个模组要求客户端需装，服务端需装，那么客户端和服务端必须同时安装这个模组。（此类模组多为内容模组，例如世界生成、科技、魔法、农业等）</p>
-<p>如果某个模组要求客户端需装，服务端可选，那么通常而言，客户端安装这个模组即可。（此类模组多为辅助模组，例如操作、面板、管理、地图、优化等）</p>
-<p>如果某个模组要求客户端需装，服务端无效，那么最好不要在服务端安装这个模组。（此类模组多为深度优化模组，例如Rubidium, Sodium, Oculus, Iris）</p>
-<h3 id="客户端连接方式"><a href="#客户端连接方式" class="headerlink" title="客户端连接方式"></a>客户端连接方式</h3><p>打开游戏，多人游戏，添加服务器。</p>
-<p>输入备注，服务器IP地址、端口即可。不填端口的话就会尝试连接默认的25565端口。</p>
-<p>提示模组不兼容很正常，这通常是因为客户端和服务端优化模组等差异造成的。此时不要直接放弃，一定要尝试连接一下。如果有一些模组不匹配，通常会收到一些信息，那么你可以在服务器后台或者客户端安装一些模组来补全。大多数情况下，就算模组列表不匹配，还是可以游玩的。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台可运行的MineCraft Forge服务器已经搭建完成并上线运行。</p>
-<p>个人水平有限，应该还有很多没有讲到的地方，之后如果发现了也会尝试补充完善。</p>
-<p>本教程比较依赖XShell &#x2F; XFTP工具包，因此操作中出现很多“偷懒”的地方。</p>
-<p>希望这篇文章能对想要自建MineCraft Forge服务器的用户有所帮助。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Linux</category>
+        <category>Crypto</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
-        <tag>VPS</tag>
-        <tag>MineCraft</tag>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -2375,45 +2428,6 @@
       </tags>
   </entry>
   <entry>
-    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
-    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
-<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
-<span id="more"></span>
-
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
-<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
-<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
-<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
-<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
-<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
-
-<p>如果安装成功，就会返回一个版本信息，例如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果正常运行，这个程序输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
-
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
     <url>/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ChatGPT之前封锁了很多大机房的IP段，这导致Vultr、Digital Ocean等常用的VPS供应商机房访问OpenAI的服务会被屏蔽。</p>
@@ -2433,8 +2447,8 @@
       </categories>
       <tags>
         <tag>Network</tag>
-        <tag>VPS</tag>
         <tag>Circumvention</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
 </search>
