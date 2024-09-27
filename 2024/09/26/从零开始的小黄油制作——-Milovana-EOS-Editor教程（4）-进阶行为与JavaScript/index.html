@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
+  <meta name="description" content="前言（这篇教程还在施工中，随时可能出现较大的改动） Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript">
 <meta property="og:url" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
+<meta property="og:description" content="前言（这篇教程还在施工中，随时可能出现较大的改动） Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableStartPage.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableTestPage1.png">
@@ -55,7 +55,7 @@
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/enableTeaseStorage.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/playCount.png">
 <meta property="article:published_time" content="2024-09-26T10:06:03.000Z">
-<meta property="article:modified_time" content="2024-09-27T05:32:34.979Z">
+<meta property="article:modified_time" content="2024-09-27T06:32:36.088Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="R-18">
@@ -283,7 +283,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-27 13:32:34" itemprop="dateModified" datetime="2024-09-27T13:32:34+08:00">2024-09-27</time>
+                <time title="Modified: 2024-09-27 14:32:36" itemprop="dateModified" datetime="2024-09-27T14:32:36+08:00">2024-09-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -345,7 +345,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>（这篇教程还在施工中，随时可能出现较大的改动）</p>
+<p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
 <p>本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。</p>
 <span id="more"></span>
 
@@ -524,10 +525,10 @@
   <div class="popular-posts-header">Related Posts</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
@@ -737,7 +738,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:55</span>
+    <span title="Reading time total">2:56</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
