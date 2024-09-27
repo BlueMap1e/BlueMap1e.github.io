@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言（这篇教程还在施工中，随时可能发生较大的改动） Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
+  <meta name="description" content="前言Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript">
 <meta property="og:url" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言（这篇教程还在施工中，随时可能发生较大的改动） Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
+<meta property="og:description" content="前言Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。 本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableStartPage.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableTestPage1.png">
@@ -40,8 +40,22 @@
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTest.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTestTrue.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTestFalse.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1Result.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2Result.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalEdit.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1Result.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2Result.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEval.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEvalResult.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/initScript.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/enableTeaseStorage.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/playCount.png">
 <meta property="article:published_time" content="2024-09-26T10:06:03.000Z">
-<meta property="article:modified_time" content="2024-09-27T03:41:32.315Z">
+<meta property="article:modified_time" content="2024-09-27T05:32:34.979Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="R-18">
@@ -269,7 +283,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-27 11:41:32" itemprop="dateModified" datetime="2024-09-27T11:41:32+08:00">2024-09-27</time>
+                <time title="Modified: 2024-09-27 13:32:34" itemprop="dateModified" datetime="2024-09-27T13:32:34+08:00">2024-09-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -312,14 +326,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.2k</span>
+              <span>2.5k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>6 mins.</span>
+              <span>13 mins.</span>
             </span>
 
         </div>
@@ -331,8 +345,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>（这篇教程还在施工中，随时可能发生较大的改动）</p>
-<p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
 <p>本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。</p>
 <span id="more"></span>
 
@@ -342,7 +355,7 @@
 <hr>
 <h2 id="进阶行为"><a href="#进阶行为" class="headerlink" title="进阶行为"></a>进阶行为</h2><p>之前是怕劝退一些初学者（好吧，1和2两篇教程的介绍语言风格其实已经十分劝退），所以没有介绍一些比较复杂的行为，那么在这篇教程中，介绍一些之前遗漏的行为。</p>
 <hr>
-<h3 id="Disable（禁用）"><a href="#Disable（禁用）" class="headerlink" title="Disable（禁用）"></a>Disable（禁用）</h3><p><strong>Disable（禁用）</strong>某个页面，意味着它无法被随机跳转的Goto Action定位。也就是说，被Disable的页面将<strong>无法</strong>通过<strong>随机跳转</strong>的方式进入。</p>
+<h3 id="Disable"><a href="#Disable" class="headerlink" title="Disable"></a>Disable</h3><p><strong>Disable（禁用）</strong>某个页面，意味着它无法被随机跳转的Goto Action定位。也就是说，被Disable的页面将<strong>无法</strong>通过<strong>随机跳转</strong>的方式进入。</p>
 <p>举个例子来说明一下。</p>
 <p>这个案例包括三个Page，一个start，一个testPage1，一个testPage2。</p>
 <img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableStartPage.png" class="" title="disableStartPage">
@@ -355,9 +368,9 @@
 <img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableResult.png" class="" title="disableResult">
 
 <p>这个功能可以用来做一些隐藏结局，冒险解谜之类的东西。</p>
-<p>当然，这个页面名同样是可以指定范围——<code>testPage*</code>这样。</p>
+<p>当然，这个页面名同样是可以指定范围——<code>testPage*</code>这样。那这样就是把testPage*这一组页面全部禁用了。</p>
 <hr>
-<h3 id="Enable（启用）"><a href="#Enable（启用）" class="headerlink" title="Enable（启用）"></a>Enable（启用）</h3><p><strong>Enable（启用）</strong>就是反过来，把一些已经被禁用的页面重新启用，这样就可以随机跳转过去了。</p>
+<h3 id="Enable"><a href="#Enable" class="headerlink" title="Enable"></a>Enable</h3><p><strong>Enable（启用）</strong>就是反过来，把一些已经被禁用的页面重新启用，这样就可以随机跳转过去了。</p>
 <p>页面本身默认就是Enabled状态，不用刻意去开启一遍。</p>
 <hr>
 <h3 id="Prompt"><a href="#Prompt" class="headerlink" title="Prompt"></a>Prompt</h3><p><strong>Prompt</strong>是一个交互动作，其实它很简单，弹出一个交互，让用户输入一个值，然后存储在一个变量当中。</p>
@@ -401,6 +414,106 @@
 
 <p>希望这个示例足够清楚，可以把这个概念说明白。</p>
 <hr>
+<h2 id="基础行为与Eval"><a href="#基础行为与Eval" class="headerlink" title="基础行为与Eval"></a>基础行为与Eval</h2><p>有几个基础行为有Eval界面，之前是怕太复杂，跳过去了没讲，今天讲讲。</p>
+<h3 id="Say"><a href="#Say" class="headerlink" title="Say"></a>Say</h3><p>Say是可以在中间插入<strong>Eval Tag</strong>，可以理解为变量名，或者是一些数值之类的东西。</p>
+<p>还是举两个例子来讲吧。</p>
+<p>第一个例子，输入用户名：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1.png" class="" title="sayEvalTag1">
+
+<p>一上来，一个Say提示用户输入用户名，然后一个Prompt，把用户输入的字符串存在usrName这个变量里面。</p>
+<p>最后这个Say，类似于一个字符串拼接：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;Hello, &quot;</span> + usrName</span><br></pre></td></tr></table></figure>
+
+<p>它把用户刚才输入的用户名拼接到这个字符串里面打印出来。</p>
+<p>看看效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1Result.png" class="" title="sayEvalTag1Result">
+
+
+
+<p>第二个例子，显示时间：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2.png" class="" title="sayEvalTag2">
+
+<p>看一下输出结果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2Result.png" class="" title="sayEvalTag2Result">
+
+<p>也可以用<code>getFullYear()</code>, <code>getMonth()</code>, <code>getDate()</code>这种方法来调取一些具体的时间。</p>
+<p>总之，这个功能可以把一些参数展示出来。包括显示好感度等等，看设计者怎么用了。</p>
+<hr>
+<h3 id="Goto"><a href="#Goto" class="headerlink" title="Goto"></a>Goto</h3><p>Goto可以内置一些JavaScript语句，这其中可以写一些复杂的逻辑，最终决定跳转到哪个页面。</p>
+<p>跳转的语句就很简单，一个字符串就行了。比如说你要跳转到<code>testPage1</code>，那就写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;testPage1&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>举个例子来说明一下这种写法：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalEdit.png" class="" title="gotoEvalEdit">
+
+<p>在这个例子中，Say提示询问用户想要去哪个页面。</p>
+<p>如果用户回答”1”，那么Goto就跳转到testPage1，否则跳转到testPage2。</p>
+<p>测试一下运行效果，是符合预期的：</p>
+<p>输入”1”，跳转到testPage1。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1.png" class="" title="gotoEvalPage1">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1Result.png" class="" title="gotoEvalPage1Result">
+
+<p>输入”2”或者什么别的，跳转到testPage2。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2.png" class="" title="gotoEvalPage2">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2Result.png" class="" title="gotoEvalPage2Result">
+
+
+
+<p>这个用法能用来做什么呢？有人说和之前If不是一样吗？确实。但是也不一定局限于If。你可以在里面写Switch Case，写随机数，写数学计算……总之很多，看你自己。</p>
+<hr>
+<h3 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h3><p>Timer同样是可以内置一些JavaScript语句，这可以产生一些随机性，或者是按照一些具体情况来计算出计时器时长。</p>
+<p>在Eval当中，Timer接受的时间单位是<strong>毫秒（ms）</strong>。</p>
+<p>比如说，你想要让一个计时器的时长设定为5秒，那就这么写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">5000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>还是一样，举个具体的例子来说明这个用法。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEval.png" class="" title="timerEval">
+
+<p>在这个示例中，先是弹出一个Say，提示用户输入计时器的时长，单位是秒。然后是一个Prompt，读取时长。</p>
+<p>最后是一个简单的数学计算，从用户输入（这是一个字符串）提取出整数部分，乘以1000，换算成毫秒，作为计时器的时长。</p>
+<p>来看看运行效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEvalResult.png" class="" title="timerEvalResult">
+
+<p>可以看到，用户输入60，随后产生了一个1分钟的计时器。这个行为是符合预期的。</p>
+<p>那，这个例子也就是说明一下用法而已，至于你要怎么得到计时器的时长，那完全是自己决定的。随机数？根据之前的互动参数来算？设置If-Else或者Switch-Case的几个分级？都可以。</p>
+<hr>
+<h2 id="Init-Script"><a href="#Init-Script" class="headerlink" title="Init Script"></a>Init Script</h2><p><strong>Init Script</strong>里面可以写点JavaScript代码，Webtease加载的时候就执行这部分代码。</p>
+<p>在UI的Options-Init Script这里。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/initScript.png" class="" title="initScript">
+
+<p>这块地方可以写点变量定义，函数定义什么的，可以节省后面的工作量。</p>
+<p>如果打不开，就说明用了不支持的JavaScript特性。还是老问题——这EOS Editor只支持到ES5。实在不行就在本地写点东西然后用Webpack、ESBuild这种工具打包成ES5代码复制粘贴上去吧。</p>
+<p>Init Script里面的东西，后面写的时候也还是没有IntelliSense的。注意一下，可能会出现拼写错误什么的。</p>
+<hr>
+<h2 id="teaseStorage"><a href="#teaseStorage" class="headerlink" title="teaseStorage"></a>teaseStorage</h2><p><strong>teaseStorage</strong>是一个可选功能，类似于JavaScript的localStorage。</p>
+<p>要用这个功能的话，在Options-Storage这个界面打开。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/enableTeaseStorage.png" class="" title="enableTeaseStorage">
+
+<p>在teaseStorage中，数据以键值对的形式存在。主要的操作有设置、读取。</p>
+<p>设置数值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">setItem</span>(<span class="string">&quot;playCount&quot;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>读取数值，不存在则返回null：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> playCount = teaseStorage.<span class="title function_">getItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>这么说可能稍微有点抽象吧，举个具体的例子来说。</p>
+<p>就比如说，要启用一个功能，统计玩家到底玩了几次这个Webtease：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> playCount = teaseStorage.<span class="title function_">getItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (playCount == <span class="literal">null</span>) &#123;</span><br><span class="line">    playCount = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">playCount++;</span><br><span class="line"></span><br><span class="line">teaseStorage.<span class="title function_">setItem</span>(<span class="string">&quot;playCount&quot;</span>, playCount);</span><br></pre></td></tr></table></figure>
+
+<p>会报错的，你别管EOS那个报错，它乱来。能跑就是能跑。</p>
+<p>这个例子中，先创建一个变量用来存储玩家的游玩次数。从teaseStorage中尝试读取。</p>
+<p>读不出来的话赋0+1，读出来的话就正常+1。最后写回。</p>
+<p>（代码习惯稀烂）</p>
+<p>测试运行效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/playCount.png" class="" title="playCount">
+
+<p>可以用来存储一些长期保存的键值对，比如说游玩次数，关卡进度，好感度什么的。这样在start里面再做个分支跳转，可以对一个较长的webtease保存游玩进度什么的（不过真的有人会分好几次玩吗？）</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文差不多简单介绍了一下之前第二篇行为和机制没有涉及到的一些东西，主要都是JavaScript相关的东西。</p>
+<p>这些内容能够帮助制作出来的文游更具交互性。</p>
+<p>当然，作者本人的水平很次，代码习惯也很烂。有问题还请指出。</p>
 
     </div>
 
@@ -414,10 +527,10 @@
       <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
     </li>
   </ul>
 
@@ -524,7 +637,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.</span> <span class="nav-text">进阶行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Disable%EF%BC%88%E7%A6%81%E7%94%A8%EF%BC%89"><span class="nav-number">2.1.</span> <span class="nav-text">Disable（禁用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enable%EF%BC%88%E5%90%AF%E7%94%A8%EF%BC%89"><span class="nav-number">2.2.</span> <span class="nav-text">Enable（启用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prompt"><span class="nav-number">2.3.</span> <span class="nav-text">Prompt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#If"><span class="nav-number">2.4.</span> <span class="nav-text">If</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA"><span class="nav-number">2.</span> <span class="nav-text">进阶行为</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Disable"><span class="nav-number">2.1.</span> <span class="nav-text">Disable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Enable"><span class="nav-number">2.2.</span> <span class="nav-text">Enable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prompt"><span class="nav-number">2.3.</span> <span class="nav-text">Prompt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#If"><span class="nav-number">2.4.</span> <span class="nav-text">If</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8EEval"><span class="nav-number">3.</span> <span class="nav-text">基础行为与Eval</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Say"><span class="nav-number">3.1.</span> <span class="nav-text">Say</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Goto"><span class="nav-number">3.2.</span> <span class="nav-text">Goto</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Timer"><span class="nav-number">3.3.</span> <span class="nav-text">Timer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Init-Script"><span class="nav-number">4.</span> <span class="nav-text">Init Script</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#teaseStorage"><span class="nav-number">5.</span> <span class="nav-text">teaseStorage</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -618,13 +731,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">34k</span>
+    <span title="Symbols count total">35k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:49</span>
+    <span title="Reading time total">2:55</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>

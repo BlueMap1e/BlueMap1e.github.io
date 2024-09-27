@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-09-27T03:41:32.315Z</updated>
+  <updated>2024-09-27T05:32:34.979Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,11 +21,10 @@
     <link href="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/"/>
     <id>https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</id>
     <published>2024-09-26T10:06:03.000Z</published>
-    <updated>2024-09-27T03:41:32.315Z</updated>
+    <updated>2024-09-27T05:32:34.979Z</updated>
     
     
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;（这篇教程还在施工中，随时可能发生较大的改动）&lt;/p&gt;
-&lt;p&gt;Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。&lt;/p&gt;
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。&lt;/p&gt;
 &lt;p&gt;本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。&lt;/p&gt;</summary>
     
     
