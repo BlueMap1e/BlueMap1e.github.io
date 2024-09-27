@@ -345,20 +345,6 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/Web-Front-End/</loc>
-    <lastmod>2024-09-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://bluemap1e.github.io/tags/Hexo/</loc>
-    <lastmod>2024-09-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://bluemap1e.github.io/tags/C/</loc>
     <lastmod>2024-09-27</lastmod>
     <changefreq>weekly</changefreq>
@@ -367,6 +353,20 @@
   
   <url>
     <loc>https://bluemap1e.github.io/tags/Qt/</loc>
+    <lastmod>2024-09-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/Web-Front-End/</loc>
+    <lastmod>2024-09-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/Hexo/</loc>
     <lastmod>2024-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -403,14 +403,14 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Crypto/</loc>
+    <loc>https://bluemap1e.github.io/categories/Tech/Network/</loc>
     <lastmod>2024-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Network/</loc>
+    <loc>https://bluemap1e.github.io/categories/Tech/Crypto/</loc>
     <lastmod>2024-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
