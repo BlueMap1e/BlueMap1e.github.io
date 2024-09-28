@@ -335,6 +335,13 @@
   </url>
   
   <url>
+    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
+    <lastmod>2024-09-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://bluemap1e.github.io/tags/Circumvention/</loc>
     <lastmod>2024-09-28</lastmod>
     <changefreq>weekly</changefreq>
@@ -349,7 +356,7 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
+    <loc>https://bluemap1e.github.io/tags/MineCraft/</loc>
     <lastmod>2024-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -364,13 +371,6 @@
   
   <url>
     <loc>https://bluemap1e.github.io/tags/Hexo/</loc>
-    <lastmod>2024-09-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://bluemap1e.github.io/tags/MineCraft/</loc>
     <lastmod>2024-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
