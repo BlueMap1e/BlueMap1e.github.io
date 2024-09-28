@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-09-28T06:32:09.478Z</updated>
+  <updated>2024-09-28T10:37:26.096Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
     <published>2024-09-28T05:29:09.000Z</published>
-    <updated>2024-09-28T06:32:09.478Z</updated>
+    <updated>2024-09-28T10:37:26.096Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。&lt;/p&gt;
@@ -49,7 +49,7 @@
     <link href="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/"/>
     <id>https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</id>
     <published>2024-09-26T10:06:03.000Z</published>
-    <updated>2024-09-28T01:15:53.924Z</updated>
+    <updated>2024-09-28T10:39:31.800Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。&lt;/p&gt;
@@ -321,9 +321,9 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
@@ -520,9 +520,9 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
