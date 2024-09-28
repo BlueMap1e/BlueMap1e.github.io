@@ -222,6 +222,121 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="post-title-link" itemprop="url">基于Twine + SugarCube的互动文游制作（1） 简介与环境搭建</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2024-09-28 13:29:09 / Modified: 14:15:20" itemprop="dateCreated datePublished" datetime="2024-09-28T13:29:09+08:00">2024-09-28</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Web-Front-End/" itemprop="url" rel="index"><span itemprop="name">Web Front-End</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="post-meta-item leancloud_visitors" data-flag-title="基于Twine + SugarCube的互动文游制作（1） 简介与环境搭建" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2024/09/28/基于Twine-SugarCube的互动文游制作（1）简介与环境搭建/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>820</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>4 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。</p>
+<p>随后发现，主要还是Twine 2 + SugarCube 2这种形式，最终部署在Vercel上。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1304,127 +1419,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="BlueMap1e">
-      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="BlueMap1e's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="post-title-link" itemprop="url">在Visual Studio 2022中配置Crypto++开发环境</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-11-11 21:51:48" itemprop="dateCreated datePublished" datetime="2023-11-11T21:51:48+08:00">2023-11-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-26 11:21:27" itemprop="dateModified" datetime="2024-09-26T11:21:27+08:00">2024-09-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
-                </span>
-                  , 
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tech/Crypto/" itemprop="url" rel="index"><span itemprop="name">Crypto</span></a>
-                </span>
-            </span>
-
-          
-            <span id="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" class="post-meta-item leancloud_visitors" data-flag-title="在Visual Studio 2022中配置Crypto++开发环境" title="Views">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-eye"></i>
-              </span>
-              <span class="post-meta-item-text">Views: </span>
-              <span class="leancloud-visitors-count"></span>
-            </span>
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Disqus: </span>
-    
-    <a title="disqus" href="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/11/11/在Visual-Studio-2022中配置Crypto-开发环境/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  <br>
-            <span class="post-meta-item" title="Symbols count in article">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.1k</span>
-            </span>
-            <span class="post-meta-item" title="Reading time">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>5 mins.</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Crypto++</code>是一个轻量、开源、受欢迎的<code>C++</code>密码学库，采用了OOP的程序设计思想，总体比较契合<code>C++</code>的程序设计风格。</p>
-<p>本文主要介绍如何在Visual Studio 2022中配置<code>Crypto++</code>的开发环境。本文作者是个菜逼，失败了很多次，因此可能存在很多纰漏。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1496,7 +1490,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -1509,7 +1503,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1580,7 +1574,7 @@
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">2:58</span>
+    <span title="Reading time total">3:02</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
