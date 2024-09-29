@@ -22,23 +22,32 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言一个简单的Shadowsocks-Libev服务器搭建过程，系统为Ubuntu，因为自带了Snap应用商店等多种工具包，很方便。 当然你得提前准备一台VPS，建议用Vultr，Digital Ocean之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。 如果你追求稳定，那么建议最好还是不要用Shadowsocks协议。">
+  <meta name="description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器">
-<meta property="og:url" content="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:title" content="基于Twine-SugarCube的互动文游制作（3）Twine基础">
+<meta property="og:url" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言一个简单的Shadowsocks-Libev服务器搭建过程，系统为Ubuntu，因为自带了Snap应用商店等多种工具包，很方便。 当然你得提前准备一台VPS，建议用Vultr，Digital Ocean之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。 如果你追求稳定，那么建议最好还是不要用Shadowsocks协议。">
+<meta property="og:description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-10-18T11:22:39.000Z">
-<meta property="article:modified_time" content="2024-09-23T06:54:13.600Z">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkAddText.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkPathLeft.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/sepLinkSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/sepLinkTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkTest.png">
+<meta property="article:published_time" content="2024-09-29T05:59:12.000Z">
+<meta property="article:modified_time" content="2024-09-29T07:42:02.119Z">
 <meta property="article:author" content="BlueMap1e">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="Network">
-<meta property="article:tag" content="VPS">
-<meta property="article:tag" content="Circumvention">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Web Front-End">
+<meta property="article:tag" content="HTML">
+<meta property="article:tag" content="CSS">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkSample.png">
 
-<link rel="canonical" href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+<link rel="canonical" href="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/">
 
 
 <script id="page-configurations">
@@ -51,7 +60,7 @@
   };
 </script>
 
-  <title>在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器 | BlueMap1e's Blog</title>
+  <title>基于Twine-SugarCube的互动文游制作（3）Twine基础 | BlueMap1e's Blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
     <script>
@@ -228,7 +237,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -241,7 +250,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器
+          基于Twine-SugarCube的互动文游制作（3）Twine基础
         </h1>
 
         <div class="post-meta">
@@ -250,16 +259,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2023-10-18 19:22:39" itemprop="dateCreated datePublished" datetime="2023-10-18T19:22:39+08:00">2023-10-18</time>
+              <time title="Created: 2024-09-29 13:59:12 / Modified: 15:42:02" itemprop="dateCreated datePublished" datetime="2024-09-29T13:59:12+08:00">2024-09-29</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-23 14:54:13" itemprop="dateModified" datetime="2024-09-23T14:54:13+08:00">2024-09-23</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -270,12 +273,12 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tech/Network/" itemprop="url" rel="index"><span itemprop="name">Network</span></a>
+                  <a href="/categories/Tech/Web-Front-End/" itemprop="url" rel="index"><span itemprop="name">Web Front-End</span></a>
                 </span>
             </span>
 
           
-            <span id="/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器" title="Views">
+            <span id="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/" class="post-meta-item leancloud_visitors" data-flag-title="基于Twine-SugarCube的互动文游制作（3）Twine基础" title="Views">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -290,8 +293,8 @@
       </span>
       <span class="post-meta-item-text">Disqus: </span>
     
-    <a title="disqus" href="/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2023/10/18/在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2024/09/29/基于Twine-SugarCube的互动文游制作（3）Twine基础/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -301,14 +304,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>1.4k</span>
+              <span>765</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>7 mins.</span>
+              <span>4 mins.</span>
             </span>
 
         </div>
@@ -320,166 +323,61 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的Shadowsocks-Libev服务器搭建过程，系统为Ubuntu，因为自带了Snap应用商店等多种工具包，很方便。</p>
-<p>当然你得提前准备一台VPS，建议用Vultr，Digital Ocean之类的，性价比高，随用随抛。配置可以丐中丐，流量和带宽一定不能差了。</p>
-<p>如果你追求稳定，那么建议最好还是不要用Shadowsocks协议。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。</p>
+<p>阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。</p>
 <span id="more"></span>
 
+<p>本教程需要读者掌握Twine 2的UI基本使用方法，这些之前讲过，所以本文的节奏会明显加快。</p>
+<p>本教程的其中一部分可能需要读者掌握Twine 2的UI基本使用方法和少量Web前端基础（HTML、CSS、JS）。</p>
+<p>最好在本地安装一个Web前端开发工具，以便编写前端代码，个人推荐的是<a target="_blank" rel="noopener" href="https://code.visualstudio.com/">VSCode</a>。</p>
+<p>VSCode是免费的，只要随便装几个插件就可以高效地编写前端代码了。安装配置过程略去。</p>
 <hr>
-<h2 id="系统更新与软件安装"><a href="#系统更新与软件安装" class="headerlink" title="系统更新与软件安装"></a>系统更新与软件安装</h2><p>首先例行更新：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt-get update -y</span><br><span class="line">apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+<h2 id="链接（Link）"><a href="#链接（Link）" class="headerlink" title="链接（Link）"></a>链接（Link）</h2><p>一个Twine 2的<strong>故事（Story）</strong>是由<strong>片段（Passage）</strong>组成的。</p>
+<p>片段之间通常是靠<strong>链接（Link）</strong>连接起来的，链接是Twine 2的一个基础机制。</p>
+<p>其实，只要掌握了链接，就已经可以创作出多分支的非线性故事。</p>
+<p>在片段编辑中输入链接后，按下Ctrl+S进行保存，编辑器会自动创建页面（如果没有的话）或更改页面指向。</p>
+<h3 id="语法格式"><a href="#语法格式" class="headerlink" title="语法格式"></a>语法格式</h3><p>链接的语法很简单。</p>
+<h4 id="直接指向页面"><a href="#直接指向页面" class="headerlink" title="直接指向页面"></a>直接指向页面</h4><p>这种写法很直接，显示的链接文字和即将跳转到的页面名是一样的：</p>
+<figure class="highlight plaintext"><figcaption><span>2</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[leftPath]]</span><br></pre></td></tr></table></figure>
 
-<p>然后用Snap应用商店安装Core</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap install core</span><br></pre></td></tr></table></figure>
+<p>举个简单的例子说明一下：</p>
+<p>在这个示例中，我在start这个片段中写了两个链接，一个[[leftPath]]，一个[[rightPath]]。</p>
+<p>Ctrl+S保存后，编辑器自动创建leftPath和rightPath两个段落，并连接到start。</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkSample.png" class="" title="simpleLinkSample">
 
-<p>Snap安装Shadowsocks-Libev</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">snap install shadowsocks-libev --edge</span><br></pre></td></tr></table></figure>
+<p>可以稍微写点文字内容，方便验证。</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkAddText.png" class="" title="simpleLinkAddText">
 
+<p>现在选择start片段进行测试：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkTest.png" class="" title="simpleLinkTest">
+
+<p>点击leftPath，就进入leftPath这个片段，显示”这是向左走”。向右走也是类似的。</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkPathLeft.png" class="" title="simpleLinkPathLeft">
+
+<h4 id="单独设置链接文本"><a href="#单独设置链接文本" class="headerlink" title="单独设置链接文本"></a>单独设置链接文本</h4><p>链接文本也不一定就要和跳转到的页面名一样，毕竟这样会显得很脱线。</p>
+<h5 id="分隔符写法"><a href="#分隔符写法" class="headerlink" title="分隔符写法"></a>分隔符写法</h5><p>分隔符左边是链接显示的文本，右边是目标片段的名称。注意别乱加空格，不一样的。</p>
+<figure class="highlight plaintext"><figcaption><span>2</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[[向左走|leftPath]]</span><br></pre></td></tr></table></figure>
+
+<p>就刚才那个例子改一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/sepLinkSample.png" class="" title="sepLinkSample">
+
+<p>看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/sepLinkTest.png" class="" title="sepLinkTest">
+
+<p>至少比把底层命名全部暴露出来要好多了（</p>
+<h5 id="箭头写法"><a href="#箭头写法" class="headerlink" title="箭头写法"></a>箭头写法</h5><p>箭头的起点一侧是链接显示的文本，指向的是目标片段的名称。还是不能乱加空格。</p>
+<p>方向可以向左或者向右，随意，我这里演示一下。但反正自己写的时候，我是喜欢统一向右。</p>
+<figure class="highlight plaintext"><figcaption><span>2</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[[向左走-&gt;leftPath]]</span><br><span class="line">[[rightPath&lt;-向右走]]</span><br></pre></td></tr></table></figure>
+
+<p>还是刚才的例子，小改一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkSample.png" class="" title="arrowLinkSample">
+
+<p>看看效果，符合预期的：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkTest.png" class="" title="arrowLinkTest">
+
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>好了，你已经学会链接了。</p>
+<p>如果没有什么复杂的互动需要，单纯就是多分支故事，已经不用往下看了，你已经会了。</p>
 <hr>
-<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>用nano打开Shadowsocks配置文件路径，当然如果你会vim，那更好</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nano /var/snap/shadowsocks-libev/common/etc/shadowsocks-libev/config.json</span><br></pre></td></tr></table></figure>
-
-<p>以下是一个示例的配置文件：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="punctuation">[</span><span class="string">&quot;::0&quot;</span><span class="punctuation">,</span><span class="string">&quot;0.0.0.0&quot;</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;IRBa9FdVrSL147CL&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span><span class="string">&quot;tcp_and_udp&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>简单介绍一下这个配置文件中可能需要修改的地方：</p>
-<h3 id="服务器端口号"><a href="#服务器端口号" class="headerlink" title="服务器端口号"></a>服务器端口号</h3><p>这是Shadowsocks服务端的监听端口号，你可以随便换一个你喜欢的端口号，但是换成80, 443之类的常用端口也不能提高你的安全性</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="对称加密算法"><a href="#对称加密算法" class="headerlink" title="对称加密算法"></a>对称加密算法</h3><p>Shadowsocks使用多种对称加密算法，这里建议选择AEAD加密算法（性能高、抗重放攻击、兼容性好），Shadowsocks支持的AEAD加密算法包括：</p>
-<ol>
-<li><p>AES-128-GCM</p>
-</li>
-<li><p>AES-192-GCM</p>
-</li>
-<li><p>AES-256-GCM</p>
-</li>
-<li><p>Chacha20-IETF-Poly1305</p>
-</li>
-<li><p>XChacha20-IETF-Poly1305</p>
-</li>
-<li><p>2022-BLAKE3-AES-128-GCM</p>
-</li>
-<li><p>2022-BLAKE3-AES-256-GCM</p>
-</li>
-<li><p>2022-BLAKE3-Chacha20-IETF-Poly1305</p>
-</li>
-</ol>
-<p>这个选择就看你心情了，记得客户端和服务端的加密算法选择必须是一致的，否则无法成功解密</p>
-<p>AES-GCM的话，密钥长度越大理论上安全性就越高（然而实际上128位也非常安全），同时对硬件的压力就越大，不过一般而言压力都不算很大</p>
-<p>Chacha20-IETF-Poly1305是一种AEAD流密码，性能很高，如果你的设备CPU不太好可以选，不过一般而言AES-128-GCM也足够快</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<p>当然，如果你很叛逆，你一定要用老式流密码或者不带认证的块密码，那也是完全可以的。只要你的客户端和服务端同时支持，而且你很自信：</p>
-<ol>
-<li><p>RC4</p>
-</li>
-<li><p>RC4-MD5</p>
-</li>
-<li><p>AES-128-CTR</p>
-</li>
-<li><p>xxxxxxxxxx hexo dbash</p>
-</li>
-<li><p>AES-256-CTR</p>
-</li>
-<li><p>AES-128-CFB</p>
-</li>
-<li><p>AES-192-CFB</p>
-</li>
-<li><p>AES-256-CFB</p>
-</li>
-<li><p>AES-128-CFB8</p>
-</li>
-<li><p>AES-192-CFB8</p>
-</li>
-<li><p>AES-256-CFB8</p>
-</li>
-<li><p>AES-128-OFB</p>
-</li>
-<li><p>AES-192-OFB</p>
-</li>
-<li><p>AES-256-OFB</p>
-</li>
-<li><p>BF-CFB</p>
-</li>
-<li><p>CAST5-CFB</p>
-</li>
-<li><p>DES-CFB</p>
-</li>
-<li><p>IDEA-CFB</p>
-</li>
-<li><p>RC2-CFB</p>
-</li>
-<li><p>SEED-CFB</p>
-</li>
-<li><p>Camellia-128-CFB</p>
-</li>
-<li><p>Camellia-192-CFB</p>
-</li>
-<li><p>Camellia-256-CFB</p>
-</li>
-<li><p>Camellia-128-CFB8</p>
-</li>
-<li><p>Camellia-192-CFB8</p>
-</li>
-<li><p>Camellia-256-CFB8</p>
-</li>
-<li><p>Salsa20</p>
-</li>
-<li><p>Chacha20</p>
-</li>
-<li><p>Chacha20-IETF</p>
-</li>
-<li><p>XChacha20</p>
-<p>那么举个例子，你就可以这样设置，当然很多客户端和服务端已经弃用流密码了，不保证这些加密算法都还能兼容：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;method&quot;</span>:<span class="string">&quot;rc4-md5&quot;</span>,</span><br></pre></td></tr></table></figure>
-
-<p>如果你用这些老加密算法设置失败了，服务端会自动把加密算法设置为Chacha20-IETF-Poly1305。</p>
-</li>
-</ol>
-<h3 id="预共享密钥（PSK）"><a href="#预共享密钥（PSK）" class="headerlink" title="预共享密钥（PSK）"></a>预共享密钥（PSK）</h3><p>客户端与服务端之间共享的一个密钥字符串，Shadowsocks安全性的基石。客户端与服务器的PSK必须是一致的。</p>
-<p>虽然说你输入的这个密钥并不会真的直接被加密算法使用，但是还是建议使用12字节以上的，具有一定随机性的PSK。</p>
-<p>这并不是说AES-GCM或者Chacha20不可靠，而是Shadowsocks长期依赖一个PSK进行通信。以下是一个例子：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;xMZpoL46GhfrJgEP&quot;</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="传输层协议"><a href="#传输层协议" class="headerlink" title="传输层协议"></a>传输层协议</h3><p>使用的传输层协议，看你自己的需求来设置</p>
-<p>TCP + UDP：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span><span class="string">&quot;tcp_and_udp&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<p>TCP：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span><span class="string">&quot;tcp_only&quot;</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="TCP-Fast-Open"><a href="#TCP-Fast-Open" class="headerlink" title="TCP Fast Open"></a>TCP Fast Open</h3><p>打开没问题，因为目前Shadowsocks的密码学安全性似乎没什么问题：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">true</span></span></span><br></pre></td></tr></table></figure>
-
-<p>当然你要是就是不想开，那你就把它关了：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;fast_open&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">false</span></span></span><br></pre></td></tr></table></figure>
-
-<p>至此，Shadowsocks服务端配置文件基本参数设置完毕，nano可以Ctrl+X退出，保存Y，并回车。</p>
-<h2 id="运行Shadowsocks服务与防火墙"><a href="#运行Shadowsocks服务与防火墙" class="headerlink" title="运行Shadowsocks服务与防火墙"></a>运行Shadowsocks服务与防火墙</h2><h3 id="运行Shadowsocks服务"><a href="#运行Shadowsocks服务" class="headerlink" title="运行Shadowsocks服务"></a>运行Shadowsocks服务</h3><p>使用以下命令来开启服务端的Shadowsocks-Libev服务：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start snap.shadowsocks-libev.ss-server-daemon.service</span><br></pre></td></tr></table></figure>
-
-<p>可以使用这个命令来查看你的Shadowsocks-Libev服务器运行状态：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl status snap.shadowsocks-libev.ss-server-daemon.service</span><br></pre></td></tr></table></figure>
-
-<p>如果正常运行，那么你会看到绿色的提示信息。记得观察一下加密算法，如果你的加密算法设置不被兼容或者拼写出错，那么服务器会将其自动修改为Chacha20-IETF-Poly1305，客户端连接的时候别弄错了。</p>
-<p>可以设置一下Shadowsocks的开机自启动，以免一个reboot或者IDC维护了一下就掉线了：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> snap.shadowsocks-libev.ss-server-daemon.service</span><br></pre></td></tr></table></figure>
-
-<h3 id="配置防火墙"><a href="#配置防火墙" class="headerlink" title="配置防火墙"></a>配置防火墙</h3><p>很简单，首先，如果你是通过SSH连接的VPS，给防火墙添加这条规则，以免开了防火墙以后掉线：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ufw allow ssh</span><br></pre></td></tr></table></figure>
-
-<p>然后让防火墙开放Shadowsocks的监听端口，注意，把此处的端口号改成自己的端口号：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ufw allow 16384</span><br></pre></td></tr></table></figure>
-
-<p>最后开启防火墙，并允许开机自启动，SSH用户需要确认一下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>最后，在客户端配置相同的加密算法，预共享密钥，端口号，并填上服务器的IPv4或IPv6地址，即可完成连接，使用Shadowsocks代理服务器。</p>
-<p>这是一个Shadowsocks-Windows的GUI客户端的下载地址：<a target="_blank" rel="noopener" href="https://github.com/shadowsocks/shadowsocks-windows/releases">Shadowsocks-Windows(C#)</a></p>
-<p>当然你也可以使用其它的代理客户端进行连接，如v2rayN，Sing-Box等，这里不一一列举。</p>
 
     </div>
 
@@ -490,19 +388,19 @@
   <div class="popular-posts-header">Related Posts</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2023\11\11\在Debian 12上搭建简单的VMess + TCP服务器\" rel="bookmark">在Debian 12上搭建简单的VMess + TCP服务器</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\28\基于Twine-SugarCube的互动文游制作（1）简介与环境搭建\" rel="bookmark">基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2023\10\18\通过简单的CloudFlare-Warp让VPS解锁ChatGPT\" rel="bookmark">通过简单的CloudFlare Warp让VPS解锁ChatGPT</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\28\基于Twine-SugarCube的互动文游制作（2）Twine初识UI\" rel="bookmark">基于Twine-SugarCube的互动文游制作（2）Twine初识UI</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2023\10\22\免费领取一台IBM LinuxOne服务器\" rel="bookmark">免费领取一台IBM LinuxOne服务器</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2023\10\21\在Debian-12上搭建简单的MineCraft-Forge服务器\" rel="bookmark">在Debian 12上搭建简单的MineCraft Forge服务器</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2023\10\18\使用BBR一键安装脚本快速优化VPS网络性能\" rel="bookmark">使用BBR一键安装脚本快速优化VPS网络性能</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
     </li>
   </ul>
 
@@ -529,10 +427,10 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
-              <a href="/tags/Network/" rel="tag"><i class="fa fa-tag"></i> Network</a>
-              <a href="/tags/VPS/" rel="tag"><i class="fa fa-tag"></i> VPS</a>
-              <a href="/tags/Circumvention/" rel="tag"><i class="fa fa-tag"></i> Circumvention</a>
+              <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
+              <a href="/tags/Web-Front-End/" rel="tag"><i class="fa fa-tag"></i> Web Front-End</a>
+              <a href="/tags/HTML/" rel="tag"><i class="fa fa-tag"></i> HTML</a>
+              <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
           </div>
 
         
@@ -541,13 +439,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" rel="prev" title="在GitHub Pages上使用Hexo搭建简单的个人博客">
-      <i class="fa fa-chevron-left"></i> 在GitHub Pages上使用Hexo搭建简单的个人博客
+    <a href="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/" rel="prev" title="基于Twine-SugarCube的互动文游制作（2）Twine初识UI">
+      <i class="fa fa-chevron-left"></i> 基于Twine-SugarCube的互动文游制作（2）Twine初识UI
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/" rel="next" title="通过简单的CloudFlare Warp让VPS解锁ChatGPT">
-      通过简单的CloudFlare Warp让VPS解锁ChatGPT <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -613,7 +508,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9B%B4%E6%96%B0%E4%B8%8E%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">系统更新与软件安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%8F%A3%E5%8F%B7"><span class="nav-number">3.1.</span> <span class="nav-text">服务器端口号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95"><span class="nav-number">3.2.</span> <span class="nav-text">对称加密算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E5%85%B1%E4%BA%AB%E5%AF%86%E9%92%A5%EF%BC%88PSK%EF%BC%89"><span class="nav-number">3.3.</span> <span class="nav-text">预共享密钥（PSK）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%A0%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE"><span class="nav-number">3.4.</span> <span class="nav-text">传输层协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP-Fast-Open"><span class="nav-number">3.5.</span> <span class="nav-text">TCP Fast Open</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CShadowsocks%E6%9C%8D%E5%8A%A1%E4%B8%8E%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">4.</span> <span class="nav-text">运行Shadowsocks服务与防火墙</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8CShadowsocks%E6%9C%8D%E5%8A%A1"><span class="nav-number">4.1.</span> <span class="nav-text">运行Shadowsocks服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E9%98%B2%E7%81%AB%E5%A2%99"><span class="nav-number">4.2.</span> <span class="nav-text">配置防火墙</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%EF%BC%88Link%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">链接（Link）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">语法格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E5%90%91%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.1.1.</span> <span class="nav-text">直接指向页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E8%AE%BE%E7%BD%AE%E9%93%BE%E6%8E%A5%E6%96%87%E6%9C%AC"><span class="nav-number">2.1.2.</span> <span class="nav-text">单独设置链接文本</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">分隔符写法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">箭头写法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -948,9 +843,9 @@ if (document.querySelectorAll('pre.mermaid').length) {
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu%2023%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E5%99%A8/";
-    this.page.identifier = "2023/10/18/在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器/";
-    this.page.title = "在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器";
+    this.page.url = "https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/";
+    this.page.identifier = "2024/09/29/基于Twine-SugarCube的互动文游制作（3）Twine基础/";
+    this.page.title = "基于Twine-SugarCube的互动文游制作（3）Twine基础";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
