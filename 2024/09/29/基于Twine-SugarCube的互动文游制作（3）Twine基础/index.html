@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
+  <meta name="description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Twine-SugarCube的互动文游制作（3）Twine基础">
 <meta property="og:url" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
+<meta property="og:description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkSample.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkAddText.png">
@@ -37,8 +37,23 @@
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/sepLinkTest.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkSample.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/textEdit.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldText.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldTextTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/italicTextSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/italicTextTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldItalicTextSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldItalicTextTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/underlineTextSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/underlineTextTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/markTextSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/markTextTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontSizeSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontSizeTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontColorSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontColorTest.png">
 <meta property="article:published_time" content="2024-09-29T05:59:12.000Z">
-<meta property="article:modified_time" content="2024-09-29T07:42:02.119Z">
+<meta property="article:modified_time" content="2024-09-29T09:43:34.051Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="Web Front-End">
@@ -261,7 +276,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2024-09-29 13:59:12 / Modified: 15:42:02" itemprop="dateCreated datePublished" datetime="2024-09-29T13:59:12+08:00">2024-09-29</time>
+              <time title="Created: 2024-09-29 13:59:12 / Modified: 17:43:34" itemprop="dateCreated datePublished" datetime="2024-09-29T13:59:12+08:00">2024-09-29</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -304,14 +319,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>765</span>
+              <span>2k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
+              <span>10 mins.</span>
             </span>
 
         </div>
@@ -323,7 +338,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。</p>
 <p>阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。</p>
 <span id="more"></span>
 
@@ -378,6 +393,98 @@
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>好了，你已经学会链接了。</p>
 <p>如果没有什么复杂的互动需要，单纯就是多分支故事，已经不用往下看了，你已经会了。</p>
 <hr>
+<h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><p>（注意：这部分内容可能需要读者具有初级的HTML基础）</p>
+<p>（作者的话：我会尝试尽量讲得浅显一些，通过举例子来讲解。但如果实在是完全看不懂，没办法，学一点前端吧，就HTML部分就行。很快，很轻松，没难度的。<del>学前端绝对会害了你，快跑</del>）</p>
+<p>Twine 2<strong>完全兼容</strong>HTML，不管是哪一种故事格式，都支持在片段的内容中<strong>直接嵌入HTML代码</strong>。</p>
+<p>其实Twine 2生成的故事<strong>本质上就是一段HTML代码</strong>。</p>
+<p>这其实解答了一些读者的疑问，例如——</p>
+<p>为什么没有字体样式设置功能？</p>
+<p>为什么不能直接插入超链接？</p>
+<p>为什么没有添加图片附件按钮？</p>
+<p>等等。</p>
+<p>其实这是属于常见的误解，Passage的这个编辑框<strong>并不等同于传统的文本编辑框</strong>，类似于在Microsoft Word中那样。准确说，编辑Passage的这个过程，本质上还是在<strong>写代码</strong>。</p>
+<p>所以说，这些功能和需求都可以通过<strong>嵌入HTML代码</strong>实现。</p>
+<p>下面，我将通过简单的讲解和示例，来介绍一下如何在Twine 2的Passage中实现这些常见的需求。</p>
+<hr>
+<h3 id="调整文本样式"><a href="#调整文本样式" class="headerlink" title="调整文本样式"></a>调整文本样式</h3><p>调整文本样式是一个非常常见的需求，如果没学过Web前端，看到这个Passage的编辑框可能是让人感到困惑的：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/textEdit.png" class="" title="textEdit">
+
+<p>这里什么选项也没有，没有加粗，没有斜体，没有下划线，没有字体颜色……</p>
+<p>那么，之前那些文游的额字体样式是如何做出来的呢？</p>
+<p>一个最基本和直观的方法（但也不能说是唯一的方法）就是<strong>嵌入HTML元素</strong>。</p>
+<h4 id="粗体"><a href="#粗体" class="headerlink" title="粗体"></a>粗体</h4><p>字体加粗可以通过HTML的<code>&lt;strong&gt;</code>或<code>&lt;b&gt;</code>标签来实现。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是一段普通的文本</span><br><span class="line"><span class="tag">&lt;<span class="name">strong</span>&gt;</span>这是一段加粗的文本<span class="tag">&lt;/<span class="name">strong</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldText.png" class="" title="boldText">
+
+<p>点击测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldTextTest.png" class="" title="boldTextTest">
+
+<p>其实，其它的也是类似，举一反三。读者可以直接去自学HTML，我也不用在这里细讲的。</p>
+<p>但由于这篇教程是给小白看的，那风格就宝宝巴士一些好了，讲吧（虽然语言风格已经是十分劝退）。</p>
+<h4 id="斜体"><a href="#斜体" class="headerlink" title="斜体"></a>斜体</h4><p>斜体文本可以通过HTML的<code>&lt;em&gt;</code>或<code>&lt;i&gt;</code>标签实现。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是一段普通文本</span><br><span class="line"><span class="tag">&lt;<span class="name">em</span>&gt;</span>这是一段斜体文本<span class="tag">&lt;/<span class="name">em</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/italicTextSample.png" class="" title="italicTextSample">
+
+<p>测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/italicTextTest.png" class="" title="italicTextTest">
+
+<h4 id="嵌套示范（加粗-斜体）"><a href="#嵌套示范（加粗-斜体）" class="headerlink" title="嵌套示范（加粗+斜体）"></a>嵌套示范（加粗+斜体）</h4><p>HTML标签是可以<strong>嵌套</strong>的，比如说，如果需要一段加粗+斜体的文字，自然是可以这样写：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是一段普通的文本</span><br><span class="line"><span class="tag">&lt;<span class="name">strong</span>&gt;</span><span class="tag">&lt;<span class="name">em</span>&gt;</span>这是一段加粗+斜体的文本<span class="tag">&lt;/<span class="name">em</span>&gt;</span><span class="tag">&lt;/<span class="name">strong</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldItalicTextSample.png" class="" title="boldItalicTextSample">
+
+<p>测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldItalicTextTest.png" class="" title="boldItalicTextTest">
+
+<h4 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h4><p>下划线文本可以通过HTML的<code>&lt;u&gt;</code>标签实现，但是不建议用。</p>
+<p>第一，它容易和超链接混淆。第二，它是非语义化的（这个听不懂没关系，总之实在想用就用吧）。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是一段普通文本</span><br><span class="line"><span class="tag">&lt;<span class="name">u</span>&gt;</span>这是一段下划线文本<span class="tag">&lt;/<span class="name">u</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/underlineTextSample.png" class="" title="underlineTextSample">
+
+<p>测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/underlineTextTest.png" class="" title="underlineTextTest">
+
+<h4 id="高亮文本"><a href="#高亮文本" class="headerlink" title="高亮文本"></a>高亮文本</h4><p>HTML5的新特性，可以让一段文本高亮显示。但是默认的样式可能会不太好看。（个人观点）</p>
+<p>高亮文本对应的标签是<code>&lt;mark&gt;</code>。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是一段普通文本</span><br><span class="line"><span class="tag">&lt;<span class="name">mark</span>&gt;</span>这是一段高亮文本<span class="tag">&lt;/<span class="name">mark</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/markTextSample.png" class="" title="markTextSample">
+
+<p>测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/markTextTest.png" class="" title="markTextTest">
+
+<h4 id="调整字体大小"><a href="#调整字体大小" class="headerlink" title="调整字体大小"></a>调整字体大小</h4><p>（注意：这需要有HTML和CSS基础）</p>
+<p>其实嵌入HTML标签来调整字体大小的话，是有些繁琐的一个做法，整体是不太推荐的，但确实可以这么做。</p>
+<p>本质上它是通过内联样式表实现的。类似于这样：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这段文本的字体大小是默认的</span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;font-size: 24px;&quot;</span>&gt;</span>这段文本的字体大小被调整为24像素<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontSizeSample.png" class="" title="fontSizeSample">
+
+<p>测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontSizeTest.png" class="" title="fontSizeTest">
+
+<h4 id="调整字体颜色"><a href="#调整字体颜色" class="headerlink" title="调整字体颜色"></a>调整字体颜色</h4><p>（注意：这需要有HTML和CSS基础）</p>
+<p>类似地，直接内联样式调颜色……也行吧，然而代码复用率很低，而且不好覆盖。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">这是一段默认颜色的文本</span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">style</span>=<span class="string">&quot;color: #00FFFF&quot;</span>&gt;</span>这段文本的颜色被设置为亮蓝<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontColorSample.png" class="" title="fontColorSample">
+
+<p>测试运行，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/fontColorTest.png" class="" title="fontColorTest.png">
+
+<h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><p>尝试尽量详细地介绍了一下如何通过嵌入HTML标签的形式，调整一些基本的字体样式。</p>
+<p>文本样式这块是针对纯小白来写的了。一般到这里，常见的简单需求就到此为止了。</p>
+<hr>
 
     </div>
 
@@ -397,10 +504,10 @@
       <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\26\从零开始的小黄油制作——-Milovana-EOS-Editor教程（4）-进阶行为与JavaScript\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
     </li>
   </ul>
 
@@ -508,7 +615,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%EF%BC%88Link%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">链接（Link）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">语法格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E5%90%91%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.1.1.</span> <span class="nav-text">直接指向页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E8%AE%BE%E7%BD%AE%E9%93%BE%E6%8E%A5%E6%96%87%E6%9C%AC"><span class="nav-number">2.1.2.</span> <span class="nav-text">单独设置链接文本</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">分隔符写法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">箭头写法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%EF%BC%88Link%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">链接（Link）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">语法格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E5%90%91%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.1.1.</span> <span class="nav-text">直接指向页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E8%AE%BE%E7%BD%AE%E9%93%BE%E6%8E%A5%E6%96%87%E6%9C%AC"><span class="nav-number">2.1.2.</span> <span class="nav-text">单独设置链接文本</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">分隔符写法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">箭头写法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML"><span class="nav-number">3.</span> <span class="nav-text">HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">调整文本样式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B2%97%E4%BD%93"><span class="nav-number">3.1.1.</span> <span class="nav-text">粗体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%9C%E4%BD%93"><span class="nav-number">3.1.2.</span> <span class="nav-text">斜体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E7%A4%BA%E8%8C%83%EF%BC%88%E5%8A%A0%E7%B2%97-%E6%96%9C%E4%BD%93%EF%BC%89"><span class="nav-number">3.1.3.</span> <span class="nav-text">嵌套示范（加粗+斜体）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="nav-number">3.1.4.</span> <span class="nav-text">下划线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E4%BA%AE%E6%96%87%E6%9C%AC"><span class="nav-number">3.1.5.</span> <span class="nav-text">高亮文本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.6.</span> <span class="nav-text">调整字体大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%AD%97%E4%BD%93%E9%A2%9C%E8%89%B2"><span class="nav-number">3.1.7.</span> <span class="nav-text">调整字体颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">3.1.8.</span> <span class="nav-text">小结</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -602,13 +709,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">40k</span>
+    <span title="Symbols count total">41k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:19</span>
+    <span title="Reading time total">3:25</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>

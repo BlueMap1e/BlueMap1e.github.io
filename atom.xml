@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-09-29T07:42:02.119Z</updated>
+  <updated>2024-09-29T09:43:34.051Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,10 +21,10 @@
     <link href="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/"/>
     <id>https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/</id>
     <published>2024-09-29T05:59:12.000Z</published>
-    <updated>2024-09-29T07:42:02.119Z</updated>
+    <updated>2024-09-29T09:43:34.051Z</updated>
     
     
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、变量、HTML、CSS、JS等。&lt;/p&gt;
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。&lt;/p&gt;
 &lt;p&gt;阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。&lt;/p&gt;</summary>
     
     
@@ -377,9 +377,9 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
