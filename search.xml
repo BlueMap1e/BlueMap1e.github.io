@@ -1,6 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenSSL CLI 密钥对生成工具 个人使用经验</title>
+    <url>/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: genpkey [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"> -paramfile infile   Parameters file</span><br><span class="line"> -algorithm val      The public key algorithm</span><br><span class="line"> -quiet              Do not output status <span class="keyword">while</span> generating keys</span><br><span class="line"> -pkeyopt val        Set the public key algorithm option as opt:value</span><br><span class="line"> -config infile      Load a configuration file (this may load modules)</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -outform PEM|DER    output format (DER or PEM)</span><br><span class="line"> -pass val           Output file pass phrase <span class="built_in">source</span></span><br><span class="line"> -genparam           Generate parameters, not key</span><br><span class="line"> -text               Print the <span class="keyword">in</span> text</span><br><span class="line"> -*                  Cipher to use to encrypt the key</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line">Order of options may be important!  See the documentation.</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="简单的生成密钥对指令"><a href="#简单的生成密钥对指令" class="headerlink" title="简单的生成密钥对指令"></a>简单的生成密钥对指令</h2><hr>
+<h3 id="私钥生成"><a href="#私钥生成" class="headerlink" title="私钥生成"></a>私钥生成</h3><p>为了生成一个密钥对，至少需要指定一个算法，指定输出文件的名称。</p>
+<p>例如以下命令，它将会生成一个Ed25519私钥文件，文件名是<code>private-key-Ed25519.pem</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm Ed25519 -out private-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="公钥提取"><a href="#公钥提取" class="headerlink" title="公钥提取"></a>公钥提取</h3><p>可以从私钥文件中提取公钥。</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>私钥文件中提取对应的Ed25519公钥文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -pubout -out public-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="查看公钥与私钥内容"><a href="#查看公钥与私钥内容" class="headerlink" title="查看公钥与私钥内容"></a>查看公钥与私钥内容</h3><p>可以用<code>pkey</code>指令访问OpenSSL的私钥文件，可以输出私钥、公钥的算法与内容：</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>文件中读取算法、私钥内容、公钥内容，并显示在屏幕上：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">ED25519 Private-Key:</span><br><span class="line">priv:</span><br><span class="line">    ea:f7:<span class="number">04</span>:a2:<span class="number">20</span>:b6:e8:<span class="number">65</span>:<span class="number">40</span>:<span class="number">65</span>:ad:<span class="number">44</span>:df:b4:<span class="number">9</span>f:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">9</span>b:<span class="number">6</span>c:b6:<span class="number">8</span>d:<span class="number">92</span>:<span class="number">66</span>:a9:<span class="number">73</span>:<span class="number">96</span>:cb:ae:aa:bd:<span class="number">52</span>:</span><br><span class="line">    <span class="number">28</span>:<span class="number">69</span></span><br><span class="line">pub:</span><br><span class="line">    <span class="number">42</span>:a3:<span class="number">68</span>:<span class="number">18</span>:<span class="number">8</span>e:df:<span class="number">3</span>e:<span class="number">0</span>c:c0:<span class="number">49</span>:<span class="number">29</span>:ef:e3:<span class="number">27</span>:c7:</span><br><span class="line">    <span class="number">31</span>:<span class="number">75</span>:b1:<span class="number">39</span>:<span class="number">43</span>:f4:<span class="number">26</span>:<span class="number">2</span>c:<span class="number">38</span>:<span class="number">07</span>:d4:d9:<span class="number">43</span>:e1:a1:</span><br><span class="line">    <span class="number">70</span>:<span class="number">45</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定引擎，通常没必要（实则我也不会）</p>
+<hr>
+<h3 id="paramfile"><a href="#paramfile" class="headerlink" title="-paramfile"></a>-paramfile</h3><p>输入参数文件</p>
+<hr>
+<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="-algorithm"></a>-algorithm</h3><p>指定算法，目前支持的算法有<code>RSA</code>, <code>RSA-PSS</code>, <code>EC</code>, <code>X25519</code>, <code>X448</code>, <code>Ed25519</code>, <code>Ed448</code>。（版本<code>3.1.3</code>）</p>
+<p>举个例子，生成RSA-2048私钥（这里不用指定参数是因为RSA默认2048位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="quiet"><a href="#quiet" class="headerlink" title="-quiet"></a>-quiet</h3><p>生成密钥时不输出信息，例如熵池等等。</p>
+<hr>
+<h3 id="pkeyopt"><a href="#pkeyopt" class="headerlink" title="-pkeyopt"></a>-pkeyopt</h3><p>修改算法的安全参数，这里很难一一列举，具体可以去看OpenSSL的文档：<a href="https://www.openssl.org/docs/manmaster/man1/openssl-genpkey.html#KEY-GENERATION-OPTIONS">&#x2F;docs&#x2F;manmaster&#x2F;man1&#x2F;openssl-genpkey.html</a></p>
+<p>安全参数是否可用需要根据选择的算法来判断。</p>
+<p>例如，这一串命令可以生成一个RSA-4096私钥：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out RSA-4096-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="config"><a href="#config" class="headerlink" title="-config"></a>-config</h3><p>外部导入配置文件，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-4096-Private-Key.pem -config my-config.cnf</span><br></pre></td></tr></table></figure>
+
+<p>Config文件，我个人还没弄清楚怎么写，这就不做误导性示范了。</p>
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文件名，例如输出为<code>RSA-2048-Private-Key.pem</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="outform"><a href="#outform" class="headerlink" title="-outform"></a>-outform</h3><p>指定输出文件格式，支持两种格式——<code>PEM</code>和<code>DER</code></p>
+<p>**PEM(Privacy Enhanced Mail)**：可读的文本格式，包括边界标记、数据类型，编码为Base64。</p>
+<p>**DER(Distinguished Encoding Rules)**：不可读的二进制格式，格式紧凑，无边界标记。</p>
+<p>通常而言，为了提高兼容性和可读性，PEM是常见的选择，也是默认选项。</p>
+<p>如果要以DER格式输出文件，一个例子如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -outform DER -out RSA-2048-Private-Key.der</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="pass"><a href="#pass" class="headerlink" title="-pass"></a>-pass</h3><p>类似于对称加密的密钥，可以通过各种方式指定输出密钥文件的密码短语（Pass Phrase），例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm X25519 -out X25519-Private-Key.pem -pass pass:your_password</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="genparam"><a href="#genparam" class="headerlink" title="-genparam"></a>-genparam</h3><p>只生成参数而不生成密钥，此时<code>genpkey</code>指令可以兼容更多的算法，其中额外的有<code>DH</code>，<code>DSA</code>：</p>
+<p>例如，生成DSA参数：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm DSA -genparam</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+.....+..+.......+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">...........................+.....+.+....+...................+.............+........+.......+........................+.+...........+.+.....+......+..............+.....................+...........+....+...+.+........+.....+...+..+..........+..+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">---<span class="attr">--BEGIN</span> DSA PARAMETERS-----</span><br><span class="line">MIICKAKCAQEAruL2N9/nisKseg6CFjB/mXNC0FFRTcnecvbF+<span class="number">9</span>eD6UepnH7mv0K1</span><br><span class="line">+RFL8ECrHGxlYgAkLA9MN+ZiQQ7BSE6qQt0CEGMkgIW6GFUPt6opupB5Ql+qmEBo</span><br><span class="line">uivQr44/VJKjC0vzli85I+UD2f24xrroqssAf4n9B4t22Bg6dxV2AGAfDLdzsNwQ</span><br><span class="line">GITaruJmEj6Xkgyx3rx3KTvQfLtiHdMUJ9rBs5JonomNrEuX5kjf55chFub9IYDF</span><br><span class="line">Vpjsp57hvEJmDU6kQKihkax69V+NmF4T8cs3kAukYfLn/VubbF+FOEZuzQQsAO5n</span><br><span class="line">tGCedKsKmXCtxCgCqZu+FLIxil+A0w36OQIdAI4/RI2+Im2ZhBKGdtJ2Y8a9ndsU</span><br><span class="line">w5bAokSt+tECggEAEct/e8totsdL3RkD+qMq31Gk58yZoda876Uej6YJYYgt7RwB</span><br><span class="line">CCzOEYP/Hf/ditPSpJ4kFc8/qFp0nHAq4pctZKtywVE3T2XVwdzgBF0uLwIb505G</span><br><span class="line">o92Gcb/eEir8mBxSOvVT6X1hmZsnwHehWyasYYcNrjdorH9UvQ9VwAE5nnkK/HLH</span><br><span class="line">KxQ9P7MAdc6dGYxjFjW36ljlRCUvvNeeVPc+J5a0/JJxfm19YLatWaCnpfp1nHes</span><br><span class="line">YsQ3QdB6LKWd7OFwP6lw+OEKWRc3XhczfUBzOBPqj/QBUfHCQX6PgUJyLgiZTD/N</span><br><span class="line">YGOQzq0L9umxt/lrDQbrIKIuDLyWxe8gVyQ41g==</span><br><span class="line">---<span class="attr">--END</span> DSA PARAMETERS-----</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="text"><a href="#text" class="headerlink" title="-text"></a>-text</h3><p>把整个算法的过程结果直接全部输出到stdout，也就是打印到屏幕上，其中包括各种中间参数和密钥例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -text</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+...+..........+..+.........+....+...+++++++++++++++++++++++++++++++++++++++*.+.+............+...+......+.....+++++++++++++++++++++++++++++++++++++++*....+...........+...+.........+.......+...........+.........+...+.+..+...............+...+....+.....+.+.....+....+...........+......+.+.....+...+............+.........+....+..+...+......+....+..+....+.....+...+...+.......+......+......+...+......+...........+....+.........+..+......+.........+.............+..+.+...+......+.....+...+......+.+......+..+...+...+.......+..+.+......+......+........+.+......+............+......+.........+......+..............+...+.......+......+..........................++++++</span><br><span class="line">..........+++++++++++++++++++++++++++++++++++++++*...+.............................+...+...+....+......+.....+.............+.....+..........+..+...+.+...+...+.....+.......+++++++++++++++++++++++++++++++++++++++*...............+....+........................+.....+.+.....+.......+..+.............+.....+....+......+........+.......+...............+.....+.........+...+.+..++++++</span><br><span class="line">---<span class="attr">--BEGIN</span> PRIVATE KEY-----</span><br><span class="line">MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7n8puayHyAh0</span><br><span class="line">lU6/QfL9XrnyXcMKs4onmdPntVP2UO17jHvYXStNKhLKJkZKEta0yEKihdZdOzmN</span><br><span class="line">AJd2Er5uVWOixQAwphFurajknfEerfe6dOKiTXObWNjgwcHw/xUOT7FKNop8h5DG</span><br><span class="line">X56OwHzWQMma9fWarqxEYR36b8pIno/D7+rKZxrZaJObWoexu/KQT0JCusW1qgTM</span><br><span class="line">i3XFXw4/Lzv/joP/knoxmAIzGb5+YNRAL9TIZioA3AwgiRJrgQNdB9HQTijZplbJ</span><br><span class="line"><span class="number">705</span>eEwVoUSM1AddlS+wV2uhVSSThM/i87MQtSbsvfkUZauYLioJSfxaGWW4Y3Ybe</span><br><span class="line"><span class="number">7</span>ej4ELufAgMBAAECggEAG44bi/DPZa6JQosAN05Ilm+XISOOJva2OFNtL0Ryl6EH</span><br><span class="line">u7lkkhxQbdvJCNRJbte30fFAfUYbe0Wn04ofKpFQIqsm/<span class="number">2</span>vm5giQm18UR4ZDyF9U</span><br><span class="line">I0Phm9vKWbKaXb79JZRWGOmC37oZyMpMIS+Dq4FWW5RhzjcEguCvFNBKlYkak9GV</span><br><span class="line">eKYWdNLA0au4AXRqVmaI7YmGxakHSpVHPIGULk33dlll3/iLNQS3YH9vqvoe3GK8</span><br><span class="line"><span class="number">87</span>ekSAAWTsOZUiJ0MAWMhfkfEDjG3zFq632rg2S+m4e2J1pGVcXPTuHjTSdacWCM</span><br><span class="line">DNekPsKEBByMi00aZtcogxO6zHm121EoHPulcK26oQKBgQDYRq9JQFOCk6ZpeCeb</span><br><span class="line">U6slj+QcAnc95XaXtdg1Kh17IISTLJD1p3tSnbziBWmmugpL9P8tJC63ZcdadYqn</span><br><span class="line">cMzYctNSgMuOgNWKBtXPH4qxWJ8JL8I4Ft8NOiajfVonSjGz+emNzWnNUdDYx5PP</span><br><span class="line">w2WkD82mbAOOUu81Uj4h5WWi+QKBgQDH9avwENMi60WARd1vb+jfS78yuSf3zTe9</span><br><span class="line">s5XgSr2hAHjX0xODAOAEiX253Ube83n9oEkhHMKTcQfzrIgoJ3G5UZ6Pd43tiqrp</span><br><span class="line">ejygyxlOpH+grSiwHc7i3WZWx31kjBCmoFgCQUBfH4UUYzwOqvZgoC3G4lVvYug/</span><br><span class="line"><span class="number">33S</span>RqXZhVwKBgHI8I6nVSEbYJjXfOUxZzTRx5FLHGqSe5x0K98BdFmVKr7vs9kRK</span><br><span class="line">ymDA4Fuh8EQYUAf+yCnXyrUkFUA6hZobgpdxTx1s2hfTBPd61MQqLN+vp5D6oONv</span><br><span class="line">cTFTXcVNGKlYDxi5EBvOO+wvItjd0b0TwEP/<span class="number">9</span>OfKdbZfJ+pKHndY625BAoGAIlif</span><br><span class="line">fO/W5GOXH45gl7iYPmqrX9IP/<span class="selector-tag">G</span>+CiJIlR05vPg1vtFqsOk9XK1BWiStp9ffKV3dF</span><br><span class="line">uGtRPLQokoFrLcKAtT1AyBHYDhpIeywk59Wa9jgpN/cmSwIDvFIdNwCzGCc64PQf</span><br><span class="line">ydtdbDlkyXi2IyrYgQZidov/<span class="number">8s</span>8BZ59BTZfXHqcCgYEAtciV66BhhLSJ0P2hn453</span><br><span class="line">Q2/XvHXU68CKhl/<span class="number">8s</span>G8CyrPxO6Wk3oCIeZPhV0k8HAoU00r1L+j4uwY43/WDJtR5</span><br><span class="line">ljEn5xndTNmd0WWfaV1BruM7ql0I/URwpE6D6rsFq4SFHnKkVsB1Hb6d7YxRt+ct</span><br><span class="line">kjGDW1ZkJzDWKlf7Lf9oKqc=</span><br><span class="line">---<span class="attr">--END</span> PRIVATE KEY-----</span><br><span class="line">Private-Key: (<span class="number">2048</span> bit, <span class="number">2</span> primes)</span><br><span class="line">modulus:</span><br><span class="line">    <span class="number">00</span>:a8:ee:<span class="number">7</span>f:<span class="number">29</span>:b9:ac:<span class="number">87</span>:c8:<span class="number">08</span>:<span class="number">74</span>:<span class="number">95</span>:<span class="number">4</span>e:bf:<span class="number">41</span>:</span><br><span class="line">    f2:fd:<span class="number">5</span>e:b9:f2:<span class="number">5</span>d:c3:<span class="number">0</span>a:b3:<span class="number">8</span>a:<span class="number">27</span>:<span class="number">99</span>:d3:e7:b5:</span><br><span class="line">    <span class="number">53</span>:f6:<span class="number">50</span>:ed:<span class="number">7</span>b:<span class="number">8</span>c:<span class="number">7</span>b:d8:<span class="number">5</span>d:<span class="number">2</span>b:<span class="number">4</span>d:<span class="number">2</span>a:<span class="number">12</span>:ca:<span class="number">26</span>:</span><br><span class="line">    <span class="number">46</span>:<span class="number">4</span>a:<span class="number">12</span>:d6:b4:c8:<span class="number">42</span>:a2:<span class="number">85</span>:d6:<span class="number">5</span>d:<span class="number">3</span>b:<span class="number">39</span>:<span class="number">8</span>d:<span class="number">00</span>:</span><br><span class="line">    <span class="number">97</span>:<span class="number">76</span>:<span class="number">12</span>:be:<span class="number">6</span>e:<span class="number">55</span>:<span class="number">63</span>:a2:c5:<span class="number">00</span>:<span class="number">30</span>:a6:<span class="number">11</span>:<span class="number">6</span>e:ad:</span><br><span class="line">    a8:e4:<span class="number">9</span>d:f1:<span class="number">1</span>e:ad:f7:ba:<span class="number">74</span>:e2:a2:<span class="number">4</span>d:<span class="number">73</span>:<span class="number">9</span>b:<span class="number">58</span>:</span><br><span class="line">    d8:e0:c1:c1:f0:ff:<span class="number">15</span>:<span class="number">0</span>e:<span class="number">4</span>f:b1:<span class="number">4</span>a:<span class="number">36</span>:<span class="number">8</span>a:<span class="number">7</span>c:<span class="number">87</span>:</span><br><span class="line">    <span class="number">90</span>:c6:<span class="number">5</span>f:<span class="number">9</span>e:<span class="number">8</span>e:c0:<span class="number">7</span>c:d6:<span class="number">40</span>:c9:<span class="number">9</span>a:f5:f5:<span class="number">9</span>a:ae:</span><br><span class="line">    ac:<span class="number">44</span>:<span class="number">61</span>:<span class="number">1</span>d:fa:<span class="number">6</span>f:ca:<span class="number">48</span>:<span class="number">9</span>e:<span class="number">8</span>f:c3:ef:ea:ca:<span class="number">67</span>:</span><br><span class="line">    <span class="number">1</span>a:d9:<span class="number">68</span>:<span class="number">93</span>:<span class="number">9</span>b:<span class="number">5</span>a:<span class="number">87</span>:b1:bb:f2:<span class="number">90</span>:<span class="number">4</span>f:<span class="number">42</span>:<span class="number">42</span>:ba:</span><br><span class="line">    c5:b5:aa:<span class="number">04</span>:cc:<span class="number">8</span>b:<span class="number">75</span>:c5:<span class="number">5</span>f:<span class="number">0</span>e:<span class="number">3</span>f:<span class="number">2</span>f:<span class="number">3</span>b:ff:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">83</span>:ff:<span class="number">92</span>:<span class="number">7</span>a:<span class="number">31</span>:<span class="number">98</span>:<span class="number">02</span>:<span class="number">33</span>:<span class="number">19</span>:be:<span class="number">7</span>e:<span class="number">60</span>:d4:<span class="number">40</span>:<span class="number">2</span>f:</span><br><span class="line">    d4:c8:<span class="number">66</span>:<span class="number">2</span>a:<span class="number">00</span>:dc:<span class="number">0</span>c:<span class="number">20</span>:<span class="number">89</span>:<span class="number">12</span>:<span class="number">6</span>b:<span class="number">81</span>:<span class="number">03</span>:<span class="number">5</span>d:<span class="number">07</span>:</span><br><span class="line">    d1:d0:<span class="number">4</span>e:<span class="number">28</span>:d9:a6:<span class="number">56</span>:c9:ef:<span class="number">4</span>e:<span class="number">5</span>e:<span class="number">13</span>:<span class="number">05</span>:<span class="number">68</span>:<span class="number">51</span>:</span><br><span class="line">    <span class="number">23</span>:<span class="number">35</span>:<span class="number">01</span>:d7:<span class="number">65</span>:<span class="number">4</span>b:ec:<span class="number">15</span>:da:e8:<span class="number">55</span>:<span class="number">49</span>:<span class="number">24</span>:e1:<span class="number">33</span>:</span><br><span class="line">    f8:bc:ec:c4:<span class="number">2</span>d:<span class="number">49</span>:bb:<span class="number">2</span>f:<span class="number">7</span>e:<span class="number">45</span>:<span class="number">19</span>:<span class="number">6</span>a:e6:<span class="number">0</span>b:<span class="number">8</span>a:</span><br><span class="line">    <span class="number">82</span>:<span class="number">52</span>:<span class="number">7</span>f:<span class="number">16</span>:<span class="number">86</span>:<span class="number">59</span>:<span class="number">6</span>e:<span class="number">18</span>:dd:<span class="number">86</span>:de:ed:e8:f8:<span class="number">10</span>:</span><br><span class="line">    bb:<span class="number">9</span>f</span><br><span class="line">publicExponent: <span class="number">65537</span> (<span class="number">0</span>x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    <span class="number">1</span>b:<span class="number">8</span>e:<span class="number">1</span>b:<span class="number">8</span>b:f0:cf:<span class="number">65</span>:ae:<span class="number">89</span>:<span class="number">42</span>:<span class="number">8</span>b:<span class="number">00</span>:<span class="number">37</span>:<span class="number">4</span>e:<span class="number">48</span>:</span><br><span class="line">    <span class="number">96</span>:<span class="number">6</span>f:<span class="number">97</span>:<span class="number">21</span>:<span class="number">23</span>:<span class="number">8</span>e:<span class="number">26</span>:f6:b6:<span class="number">38</span>:<span class="number">53</span>:<span class="number">6</span>d:<span class="number">2</span>f:<span class="number">44</span>:<span class="number">72</span>:</span><br><span class="line">    <span class="number">97</span>:a1:<span class="number">07</span>:bb:b9:<span class="number">64</span>:<span class="number">92</span>:<span class="number">1</span>c:<span class="number">50</span>:<span class="number">6</span>d:db:c9:<span class="number">08</span>:d4:<span class="number">49</span>:</span><br><span class="line">    <span class="number">6</span>e:d7:b7:d1:f1:<span class="number">40</span>:<span class="number">7</span>d:<span class="number">46</span>:<span class="number">1</span>b:<span class="number">7</span>b:<span class="number">45</span>:a7:d3:<span class="number">8</span>a:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">2</span>a:<span class="number">91</span>:<span class="number">50</span>:<span class="number">22</span>:ab:<span class="number">26</span>:ff:<span class="number">6</span>b:e6:e6:<span class="number">08</span>:<span class="number">90</span>:<span class="number">9</span>b:<span class="number">5</span>f:<span class="number">14</span>:</span><br><span class="line">    <span class="number">47</span>:<span class="number">86</span>:<span class="number">43</span>:c8:<span class="number">5</span>f:<span class="number">54</span>:<span class="number">23</span>:<span class="number">43</span>:e1:<span class="number">9</span>b:db:ca:<span class="number">59</span>:b2:<span class="number">9</span>a:</span><br><span class="line">    <span class="number">5</span>d:be:fd:<span class="number">25</span>:<span class="number">94</span>:<span class="number">56</span>:<span class="number">18</span>:e9:<span class="number">82</span>:df:ba:<span class="number">19</span>:c8:ca:<span class="number">4</span>c:</span><br><span class="line">    <span class="number">21</span>:<span class="number">2</span>f:<span class="number">83</span>:ab:<span class="number">81</span>:<span class="number">56</span>:<span class="number">5</span>b:<span class="number">94</span>:<span class="number">61</span>:ce:<span class="number">37</span>:<span class="number">04</span>:<span class="number">82</span>:e0:af:</span><br><span class="line">    <span class="number">14</span>:d0:<span class="number">4</span>a:<span class="number">95</span>:<span class="number">89</span>:<span class="number">1</span>a:<span class="number">93</span>:d1:<span class="number">95</span>:<span class="number">78</span>:a6:<span class="number">16</span>:<span class="number">74</span>:d2:c0:</span><br><span class="line">    d1:ab:b8:<span class="number">01</span>:<span class="number">74</span>:<span class="number">6</span>a:<span class="number">56</span>:<span class="number">66</span>:<span class="number">88</span>:ed:<span class="number">89</span>:<span class="number">86</span>:c5:a9:<span class="number">07</span>:</span><br><span class="line">    <span class="number">4</span>a:<span class="number">95</span>:<span class="number">47</span>:<span class="number">3</span>c:<span class="number">81</span>:<span class="number">94</span>:<span class="number">2</span>e:<span class="number">4</span>d:f7:<span class="number">76</span>:<span class="number">59</span>:<span class="number">65</span>:df:f8:<span class="number">8</span>b:</span><br><span class="line">    <span class="number">35</span>:<span class="number">04</span>:b7:<span class="number">60</span>:<span class="number">7</span>f:<span class="number">6</span>f:aa:fa:<span class="number">1</span>e:dc:<span class="number">62</span>:bc:f3:b7:a4:</span><br><span class="line">    <span class="number">48</span>:<span class="number">00</span>:<span class="number">16</span>:<span class="number">4</span>e:c3:<span class="number">99</span>:<span class="number">52</span>:<span class="number">22</span>:<span class="number">74</span>:<span class="number">30</span>:<span class="number">05</span>:<span class="number">8</span>c:<span class="number">85</span>:f9:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">10</span>:<span class="number">38</span>:c6:df:<span class="number">31</span>:<span class="number">6</span>a:eb:<span class="number">7</span>d:ab:<span class="number">83</span>:<span class="number">64</span>:be:<span class="number">9</span>b:<span class="number">87</span>:b6:</span><br><span class="line">    <span class="number">27</span>:<span class="number">5</span>a:<span class="number">46</span>:<span class="number">55</span>:c5:cf:<span class="number">4</span>e:e1:e3:<span class="number">4</span>d:<span class="number">27</span>:<span class="number">5</span>a:<span class="number">71</span>:<span class="number">60</span>:<span class="number">8</span>c:</span><br><span class="line">    <span class="number">0</span>c:d7:a4:<span class="number">3</span>e:c2:<span class="number">84</span>:<span class="number">04</span>:<span class="number">1</span>c:<span class="number">8</span>c:<span class="number">8</span>b:<span class="number">4</span>d:<span class="number">1</span>a:<span class="number">66</span>:d7:<span class="number">28</span>:</span><br><span class="line">    <span class="number">83</span>:<span class="number">13</span>:ba:cc:<span class="number">79</span>:b5:db:<span class="number">51</span>:<span class="number">28</span>:<span class="number">1</span>c:fb:a5:<span class="number">70</span>:ad:ba:</span><br><span class="line">    a1</span><br><span class="line">prime1:</span><br><span class="line">    <span class="number">00</span>:d8:<span class="number">46</span>:af:<span class="number">49</span>:<span class="number">40</span>:<span class="number">53</span>:<span class="number">82</span>:<span class="number">93</span>:a6:<span class="number">69</span>:<span class="number">78</span>:<span class="number">27</span>:<span class="number">9</span>b:<span class="number">53</span>:</span><br><span class="line">    ab:<span class="number">25</span>:<span class="number">8</span>f:e4:<span class="number">1</span>c:<span class="number">02</span>:<span class="number">77</span>:<span class="number">3</span>d:e5:<span class="number">76</span>:<span class="number">97</span>:b5:d8:<span class="number">35</span>:<span class="number">2</span>a:</span><br><span class="line">    <span class="number">1</span>d:<span class="number">7</span>b:<span class="number">20</span>:<span class="number">84</span>:<span class="number">93</span>:<span class="number">2</span>c:<span class="number">90</span>:f5:a7:<span class="number">7</span>b:<span class="number">52</span>:<span class="number">9</span>d:bc:e2:<span class="number">05</span>:</span><br><span class="line">    <span class="number">69</span>:a6:ba:<span class="number">0</span>a:<span class="number">4</span>b:f4:ff:<span class="number">2</span>d:<span class="number">24</span>:<span class="number">2</span>e:b7:<span class="number">65</span>:c7:<span class="number">5</span>a:<span class="number">75</span>:</span><br><span class="line">    <span class="number">8</span>a:a7:<span class="number">70</span>:cc:d8:<span class="number">72</span>:d3:<span class="number">52</span>:<span class="number">80</span>:cb:<span class="number">8</span>e:<span class="number">80</span>:d5:<span class="number">8</span>a:<span class="number">06</span>:</span><br><span class="line">    d5:cf:<span class="number">1</span>f:<span class="number">8</span>a:b1:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">09</span>:<span class="number">2</span>f:c2:<span class="number">38</span>:<span class="number">16</span>:df:<span class="number">0</span>d:<span class="number">3</span>a:</span><br><span class="line">    <span class="number">26</span>:a3:<span class="number">7</span>d:<span class="number">5</span>a:<span class="number">27</span>:<span class="number">4</span>a:<span class="number">31</span>:b3:f9:e9:<span class="number">8</span>d:cd:<span class="number">69</span>:cd:<span class="number">51</span>:</span><br><span class="line">    d0:d8:c7:<span class="number">93</span>:cf:c3:<span class="number">65</span>:a4:<span class="number">0</span>f:cd:a6:<span class="number">6</span>c:<span class="number">03</span>:<span class="number">8</span>e:<span class="number">52</span>:</span><br><span class="line">    ef:<span class="number">35</span>:<span class="number">52</span>:<span class="number">3</span>e:<span class="number">21</span>:e5:<span class="number">65</span>:a2:f9</span><br><span class="line">prime2:</span><br><span class="line">    <span class="number">00</span>:c7:f5:ab:f0:<span class="number">10</span>:d3:<span class="number">22</span>:eb:<span class="number">45</span>:<span class="number">80</span>:<span class="number">45</span>:dd:<span class="number">6</span>f:<span class="number">6</span>f:</span><br><span class="line">    e8:df:<span class="number">4</span>b:bf:<span class="number">32</span>:b9:<span class="number">27</span>:f7:cd:<span class="number">37</span>:bd:b3:<span class="number">95</span>:e0:<span class="number">4</span>a:</span><br><span class="line">    bd:a1:<span class="number">00</span>:<span class="number">78</span>:d7:d3:<span class="number">13</span>:<span class="number">83</span>:<span class="number">00</span>:e0:<span class="number">04</span>:<span class="number">89</span>:<span class="number">7</span>d:b9:dd:</span><br><span class="line">    <span class="number">46</span>:de:f3:<span class="number">79</span>:fd:a0:<span class="number">49</span>:<span class="number">21</span>:<span class="number">1</span>c:c2:<span class="number">93</span>:<span class="number">71</span>:<span class="number">07</span>:f3:ac:</span><br><span class="line">    <span class="number">88</span>:<span class="number">28</span>:<span class="number">27</span>:<span class="number">71</span>:b9:<span class="number">51</span>:<span class="number">9</span>e:<span class="number">8</span>f:<span class="number">77</span>:<span class="number">8</span>d:ed:<span class="number">8</span>a:aa:e9:<span class="number">7</span>a:</span><br><span class="line">    <span class="number">3</span>c:a0:cb:<span class="number">19</span>:<span class="number">4</span>e:a4:<span class="number">7</span>f:a0:ad:<span class="number">28</span>:b0:<span class="number">1</span>d:ce:e2:dd:</span><br><span class="line">    <span class="number">66</span>:<span class="number">56</span>:c7:<span class="number">7</span>d:<span class="number">64</span>:<span class="number">8</span>c:<span class="number">10</span>:a6:a0:<span class="number">58</span>:<span class="number">02</span>:<span class="number">41</span>:<span class="number">40</span>:<span class="number">5</span>f:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">85</span>:<span class="number">14</span>:<span class="number">63</span>:<span class="number">3</span>c:<span class="number">0</span>e:aa:f6:<span class="number">60</span>:a0:<span class="number">2</span>d:c6:e2:<span class="number">55</span>:<span class="number">6</span>f:<span class="number">62</span>:</span><br><span class="line">    e8:<span class="number">3</span>f:df:<span class="number">74</span>:<span class="number">91</span>:a9:<span class="number">76</span>:<span class="number">61</span>:<span class="number">57</span></span><br><span class="line">exponent1:</span><br><span class="line">    <span class="number">72</span>:<span class="number">3</span>c:<span class="number">23</span>:a9:d5:<span class="number">48</span>:<span class="number">46</span>:d8:<span class="number">26</span>:<span class="number">35</span>:df:<span class="number">39</span>:<span class="number">4</span>c:<span class="number">59</span>:cd:</span><br><span class="line">    <span class="number">34</span>:<span class="number">71</span>:e4:<span class="number">52</span>:c7:<span class="number">1</span>a:a4:<span class="number">9</span>e:e7:<span class="number">1</span>d:<span class="number">0</span>a:f7:c0:<span class="number">5</span>d:<span class="number">16</span>:</span><br><span class="line">    <span class="number">65</span>:<span class="number">4</span>a:af:bb:ec:f6:<span class="number">44</span>:<span class="number">4</span>a:ca:<span class="number">60</span>:c0:e0:<span class="number">5</span>b:a1:f0:</span><br><span class="line">    <span class="number">44</span>:<span class="number">18</span>:<span class="number">50</span>:<span class="number">07</span>:fe:c8:<span class="number">29</span>:d7:ca:b5:<span class="number">24</span>:<span class="number">15</span>:<span class="number">40</span>:<span class="number">3</span>a:<span class="number">85</span>:</span><br><span class="line">    <span class="number">9</span>a:<span class="number">1</span>b:<span class="number">82</span>:<span class="number">97</span>:<span class="number">71</span>:<span class="number">4</span>f:<span class="number">1</span>d:<span class="number">6</span>c:da:<span class="number">17</span>:d3:<span class="number">04</span>:f7:<span class="number">7</span>a:d4:</span><br><span class="line">    c4:<span class="number">2</span>a:<span class="number">2</span>c:df:af:a7:<span class="number">90</span>:fa:a0:e3:<span class="number">6</span>f:<span class="number">71</span>:<span class="number">31</span>:<span class="number">53</span>:<span class="number">5</span>d:</span><br><span class="line">    c5:<span class="number">4</span>d:<span class="number">18</span>:a9:<span class="number">58</span>:<span class="number">0</span>f:<span class="number">18</span>:b9:<span class="number">10</span>:<span class="number">1</span>b:ce:<span class="number">3</span>b:ec:<span class="number">2</span>f:<span class="number">22</span>:</span><br><span class="line">    d8:dd:d1:bd:<span class="number">13</span>:c0:<span class="number">43</span>:ff:f4:e7:ca:<span class="number">75</span>:b6:<span class="number">5</span>f:<span class="number">27</span>:</span><br><span class="line">    ea:<span class="number">4</span>a:<span class="number">1</span>e:<span class="number">77</span>:<span class="number">58</span>:eb:<span class="number">6</span>e:<span class="number">41</span></span><br><span class="line">exponent2:</span><br><span class="line">    <span class="number">22</span>:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">7</span>c:ef:d6:e4:<span class="number">63</span>:<span class="number">97</span>:<span class="number">1</span>f:<span class="number">8</span>e:<span class="number">60</span>:<span class="number">97</span>:b8:<span class="number">98</span>:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">6</span>a:ab:<span class="number">5</span>f:d2:<span class="number">0</span>f:fc:<span class="number">6</span>f:<span class="number">82</span>:<span class="number">88</span>:<span class="number">92</span>:<span class="number">25</span>:<span class="number">47</span>:<span class="number">4</span>e:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">0</span>d:<span class="number">6</span>f:b4:<span class="number">5</span>a:ac:<span class="number">3</span>a:<span class="number">4</span>f:<span class="number">57</span>:<span class="number">2</span>b:<span class="number">50</span>:<span class="number">56</span>:<span class="number">89</span>:<span class="number">2</span>b:<span class="number">69</span>:</span><br><span class="line">    f5:f7:ca:<span class="number">57</span>:<span class="number">77</span>:<span class="number">45</span>:b8:<span class="number">6</span>b:<span class="number">51</span>:<span class="number">3</span>c:b4:<span class="number">28</span>:<span class="number">92</span>:<span class="number">81</span>:<span class="number">6</span>b:</span><br><span class="line">    <span class="number">2</span>d:c2:<span class="number">80</span>:b5:<span class="number">3</span>d:<span class="number">40</span>:c8:<span class="number">11</span>:d8:<span class="number">0</span>e:<span class="number">1</span>a:<span class="number">48</span>:<span class="number">7</span>b:<span class="number">2</span>c:<span class="number">24</span>:</span><br><span class="line">    e7:d5:<span class="number">9</span>a:f6:<span class="number">38</span>:<span class="number">29</span>:<span class="number">37</span>:f7:<span class="number">26</span>:<span class="number">4</span>b:<span class="number">02</span>:<span class="number">03</span>:bc:<span class="number">52</span>:<span class="number">1</span>d:</span><br><span class="line">    <span class="number">37</span>:<span class="number">00</span>:b3:<span class="number">18</span>:<span class="number">27</span>:<span class="number">3</span>a:e0:f4:<span class="number">1</span>f:c9:db:<span class="number">5</span>d:<span class="number">6</span>c:<span class="number">39</span>:<span class="number">64</span>:</span><br><span class="line">    c9:<span class="number">78</span>:b6:<span class="number">23</span>:<span class="number">2</span>a:d8:<span class="number">81</span>:<span class="number">06</span>:<span class="number">62</span>:<span class="number">76</span>:<span class="number">8</span>b:ff:f2:cf:<span class="number">01</span>:</span><br><span class="line">    <span class="number">67</span>:<span class="number">9</span>f:<span class="number">41</span>:<span class="number">4</span>d:<span class="number">97</span>:d7:<span class="number">1</span>e:a7</span><br><span class="line">coefficient:</span><br><span class="line">    <span class="number">00</span>:b5:c8:<span class="number">95</span>:eb:a0:<span class="number">61</span>:<span class="number">84</span>:b4:<span class="number">89</span>:d0:fd:a1:<span class="number">9</span>f:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">77</span>:<span class="number">43</span>:<span class="number">6</span>f:d7:bc:<span class="number">75</span>:d4:eb:c0:<span class="number">8</span>a:<span class="number">86</span>:<span class="number">5</span>f:fc:b0:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">02</span>:ca:b3:f1:<span class="number">3</span>b:a5:a4:de:<span class="number">80</span>:<span class="number">88</span>:<span class="number">79</span>:<span class="number">93</span>:e1:<span class="number">57</span>:<span class="number">49</span>:</span><br><span class="line">    <span class="number">3</span>c:<span class="number">1</span>c:<span class="number">0</span>a:<span class="number">14</span>:d3:<span class="number">4</span>a:f5:<span class="number">2</span>f:e8:f8:bb:<span class="number">06</span>:<span class="number">38</span>:df:f5:</span><br><span class="line">    <span class="number">83</span>:<span class="number">26</span>:d4:<span class="number">79</span>:<span class="number">96</span>:<span class="number">31</span>:<span class="number">27</span>:e7:<span class="number">19</span>:dd:<span class="number">4</span>c:d9:<span class="number">9</span>d:d1:<span class="number">65</span>:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">69</span>:<span class="number">5</span>d:<span class="number">41</span>:ae:e3:<span class="number">3</span>b:aa:<span class="number">5</span>d:<span class="number">08</span>:fd:<span class="number">44</span>:<span class="number">70</span>:a4:<span class="number">4</span>e:</span><br><span class="line">    <span class="number">83</span>:ea:bb:<span class="number">05</span>:ab:<span class="number">84</span>:<span class="number">85</span>:<span class="number">1</span>e:<span class="number">72</span>:a4:<span class="number">56</span>:c0:<span class="number">75</span>:<span class="number">1</span>d:be:</span><br><span class="line">    <span class="number">9</span>d:ed:<span class="number">8</span>c:<span class="number">51</span>:b7:e7:<span class="number">2</span>d:<span class="number">92</span>:<span class="number">31</span>:<span class="number">83</span>:<span class="number">5</span>b:<span class="number">56</span>:<span class="number">64</span>:<span class="number">27</span>:<span class="number">30</span>:</span><br><span class="line">    d6:<span class="number">2</span>a:<span class="number">57</span>:fb:<span class="number">2</span>d:ff:<span class="number">68</span>:<span class="number">2</span>a:a7</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id=""><a href="#" class="headerlink" title="-*"></a>-*</h3><p>这个指令的意思是可以自己指定用于保护密钥文件的对称加密算法，当然前提是当前版本的OpenSSL支持。</p>
+<p>例如，使用<code>AES-128-CTR</code>对这个密钥文件进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -AES-128-CTR -out RSA-2048-Encrypted-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
     <url>/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 对称加密使用经验，偶尔更新。</p>
@@ -288,100 +391,6 @@
       </tags>
   </entry>
   <entry>
-    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
-    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
-<p>一个输出示例是这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
-<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<p>或：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
-
-<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
-<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
-
-<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
-
-<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
-<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
-<hr>
-<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出为：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>示例输出为：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
-<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>示例输出为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
-<hr>
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
-
-<p>这代表生成32字节（256位）的随机数。</p>
-<hr>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>OpenSSL CLI 散列函数 个人使用经验</title>
     <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
@@ -509,6 +518,101 @@
       </tags>
   </entry>
   <entry>
+    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
+    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
+<p>一个输出示例是这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
+<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
+
+<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
+
+<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
+
+<p>这代表生成32字节（256位）的随机数。</p>
+<hr>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>一个极简的BitTorrent使用教程</title>
     <url>/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
     <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文是一篇完全面向技术小白的新手教程。</p>
@@ -575,111 +679,7 @@
         <category>Network</category>
       </categories>
       <tags>
-        <tag>BitTorrent</tag>
-        <tag>P2P</tag>
         <tag>Network</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>OpenSSL CLI 密钥对生成工具 个人使用经验</title>
-    <url>/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: genpkey [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"> -paramfile infile   Parameters file</span><br><span class="line"> -algorithm val      The public key algorithm</span><br><span class="line"> -quiet              Do not output status <span class="keyword">while</span> generating keys</span><br><span class="line"> -pkeyopt val        Set the public key algorithm option as opt:value</span><br><span class="line"> -config infile      Load a configuration file (this may load modules)</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -outform PEM|DER    output format (DER or PEM)</span><br><span class="line"> -pass val           Output file pass phrase <span class="built_in">source</span></span><br><span class="line"> -genparam           Generate parameters, not key</span><br><span class="line"> -text               Print the <span class="keyword">in</span> text</span><br><span class="line"> -*                  Cipher to use to encrypt the key</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line">Order of options may be important!  See the documentation.</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="简单的生成密钥对指令"><a href="#简单的生成密钥对指令" class="headerlink" title="简单的生成密钥对指令"></a>简单的生成密钥对指令</h2><hr>
-<h3 id="私钥生成"><a href="#私钥生成" class="headerlink" title="私钥生成"></a>私钥生成</h3><p>为了生成一个密钥对，至少需要指定一个算法，指定输出文件的名称。</p>
-<p>例如以下命令，它将会生成一个Ed25519私钥文件，文件名是<code>private-key-Ed25519.pem</code>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm Ed25519 -out private-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="公钥提取"><a href="#公钥提取" class="headerlink" title="公钥提取"></a>公钥提取</h3><p>可以从私钥文件中提取公钥。</p>
-<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>私钥文件中提取对应的Ed25519公钥文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -pubout -out public-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="查看公钥与私钥内容"><a href="#查看公钥与私钥内容" class="headerlink" title="查看公钥与私钥内容"></a>查看公钥与私钥内容</h3><p>可以用<code>pkey</code>指令访问OpenSSL的私钥文件，可以输出私钥、公钥的算法与内容：</p>
-<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>文件中读取算法、私钥内容、公钥内容，并显示在屏幕上：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -text -noout</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">ED25519 Private-Key:</span><br><span class="line">priv:</span><br><span class="line">    ea:f7:<span class="number">04</span>:a2:<span class="number">20</span>:b6:e8:<span class="number">65</span>:<span class="number">40</span>:<span class="number">65</span>:ad:<span class="number">44</span>:df:b4:<span class="number">9</span>f:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">9</span>b:<span class="number">6</span>c:b6:<span class="number">8</span>d:<span class="number">92</span>:<span class="number">66</span>:a9:<span class="number">73</span>:<span class="number">96</span>:cb:ae:aa:bd:<span class="number">52</span>:</span><br><span class="line">    <span class="number">28</span>:<span class="number">69</span></span><br><span class="line">pub:</span><br><span class="line">    <span class="number">42</span>:a3:<span class="number">68</span>:<span class="number">18</span>:<span class="number">8</span>e:df:<span class="number">3</span>e:<span class="number">0</span>c:c0:<span class="number">49</span>:<span class="number">29</span>:ef:e3:<span class="number">27</span>:c7:</span><br><span class="line">    <span class="number">31</span>:<span class="number">75</span>:b1:<span class="number">39</span>:<span class="number">43</span>:f4:<span class="number">26</span>:<span class="number">2</span>c:<span class="number">38</span>:<span class="number">07</span>:d4:d9:<span class="number">43</span>:e1:a1:</span><br><span class="line">    <span class="number">70</span>:<span class="number">45</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
-<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定引擎，通常没必要（实则我也不会）</p>
-<hr>
-<h3 id="paramfile"><a href="#paramfile" class="headerlink" title="-paramfile"></a>-paramfile</h3><p>输入参数文件</p>
-<hr>
-<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="-algorithm"></a>-algorithm</h3><p>指定算法，目前支持的算法有<code>RSA</code>, <code>RSA-PSS</code>, <code>EC</code>, <code>X25519</code>, <code>X448</code>, <code>Ed25519</code>, <code>Ed448</code>。（版本<code>3.1.3</code>）</p>
-<p>举个例子，生成RSA-2048私钥（这里不用指定参数是因为RSA默认2048位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="quiet"><a href="#quiet" class="headerlink" title="-quiet"></a>-quiet</h3><p>生成密钥时不输出信息，例如熵池等等。</p>
-<hr>
-<h3 id="pkeyopt"><a href="#pkeyopt" class="headerlink" title="-pkeyopt"></a>-pkeyopt</h3><p>修改算法的安全参数，这里很难一一列举，具体可以去看OpenSSL的文档：<a href="https://www.openssl.org/docs/manmaster/man1/openssl-genpkey.html#KEY-GENERATION-OPTIONS">&#x2F;docs&#x2F;manmaster&#x2F;man1&#x2F;openssl-genpkey.html</a></p>
-<p>安全参数是否可用需要根据选择的算法来判断。</p>
-<p>例如，这一串命令可以生成一个RSA-4096私钥：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out RSA-4096-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="config"><a href="#config" class="headerlink" title="-config"></a>-config</h3><p>外部导入配置文件，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-4096-Private-Key.pem -config my-config.cnf</span><br></pre></td></tr></table></figure>
-
-<p>Config文件，我个人还没弄清楚怎么写，这就不做误导性示范了。</p>
-<hr>
-<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
-<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文件名，例如输出为<code>RSA-2048-Private-Key.pem</code>:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="outform"><a href="#outform" class="headerlink" title="-outform"></a>-outform</h3><p>指定输出文件格式，支持两种格式——<code>PEM</code>和<code>DER</code></p>
-<p>**PEM(Privacy Enhanced Mail)**：可读的文本格式，包括边界标记、数据类型，编码为Base64。</p>
-<p>**DER(Distinguished Encoding Rules)**：不可读的二进制格式，格式紧凑，无边界标记。</p>
-<p>通常而言，为了提高兼容性和可读性，PEM是常见的选择，也是默认选项。</p>
-<p>如果要以DER格式输出文件，一个例子如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -outform DER -out RSA-2048-Private-Key.der</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="pass"><a href="#pass" class="headerlink" title="-pass"></a>-pass</h3><p>类似于对称加密的密钥，可以通过各种方式指定输出密钥文件的密码短语（Pass Phrase），例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm X25519 -out X25519-Private-Key.pem -pass pass:your_password</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="genparam"><a href="#genparam" class="headerlink" title="-genparam"></a>-genparam</h3><p>只生成参数而不生成密钥，此时<code>genpkey</code>指令可以兼容更多的算法，其中额外的有<code>DH</code>，<code>DSA</code>：</p>
-<p>例如，生成DSA参数：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm DSA -genparam</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+.....+..+.......+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">...........................+.....+.+....+...................+.............+........+.......+........................+.+...........+.+.....+......+..............+.....................+...........+....+...+.+........+.....+...+..+..........+..+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">---<span class="attr">--BEGIN</span> DSA PARAMETERS-----</span><br><span class="line">MIICKAKCAQEAruL2N9/nisKseg6CFjB/mXNC0FFRTcnecvbF+<span class="number">9</span>eD6UepnH7mv0K1</span><br><span class="line">+RFL8ECrHGxlYgAkLA9MN+ZiQQ7BSE6qQt0CEGMkgIW6GFUPt6opupB5Ql+qmEBo</span><br><span class="line">uivQr44/VJKjC0vzli85I+UD2f24xrroqssAf4n9B4t22Bg6dxV2AGAfDLdzsNwQ</span><br><span class="line">GITaruJmEj6Xkgyx3rx3KTvQfLtiHdMUJ9rBs5JonomNrEuX5kjf55chFub9IYDF</span><br><span class="line">Vpjsp57hvEJmDU6kQKihkax69V+NmF4T8cs3kAukYfLn/VubbF+FOEZuzQQsAO5n</span><br><span class="line">tGCedKsKmXCtxCgCqZu+FLIxil+A0w36OQIdAI4/RI2+Im2ZhBKGdtJ2Y8a9ndsU</span><br><span class="line">w5bAokSt+tECggEAEct/e8totsdL3RkD+qMq31Gk58yZoda876Uej6YJYYgt7RwB</span><br><span class="line">CCzOEYP/Hf/ditPSpJ4kFc8/qFp0nHAq4pctZKtywVE3T2XVwdzgBF0uLwIb505G</span><br><span class="line">o92Gcb/eEir8mBxSOvVT6X1hmZsnwHehWyasYYcNrjdorH9UvQ9VwAE5nnkK/HLH</span><br><span class="line">KxQ9P7MAdc6dGYxjFjW36ljlRCUvvNeeVPc+J5a0/JJxfm19YLatWaCnpfp1nHes</span><br><span class="line">YsQ3QdB6LKWd7OFwP6lw+OEKWRc3XhczfUBzOBPqj/QBUfHCQX6PgUJyLgiZTD/N</span><br><span class="line">YGOQzq0L9umxt/lrDQbrIKIuDLyWxe8gVyQ41g==</span><br><span class="line">---<span class="attr">--END</span> DSA PARAMETERS-----</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="text"><a href="#text" class="headerlink" title="-text"></a>-text</h3><p>把整个算法的过程结果直接全部输出到stdout，也就是打印到屏幕上，其中包括各种中间参数和密钥例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -text</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+...+..........+..+.........+....+...+++++++++++++++++++++++++++++++++++++++*.+.+............+...+......+.....+++++++++++++++++++++++++++++++++++++++*....+...........+...+.........+.......+...........+.........+...+.+..+...............+...+....+.....+.+.....+....+...........+......+.+.....+...+............+.........+....+..+...+......+....+..+....+.....+...+...+.......+......+......+...+......+...........+....+.........+..+......+.........+.............+..+.+...+......+.....+...+......+.+......+..+...+...+.......+..+.+......+......+........+.+......+............+......+.........+......+..............+...+.......+......+..........................++++++</span><br><span class="line">..........+++++++++++++++++++++++++++++++++++++++*...+.............................+...+...+....+......+.....+.............+.....+..........+..+...+.+...+...+.....+.......+++++++++++++++++++++++++++++++++++++++*...............+....+........................+.....+.+.....+.......+..+.............+.....+....+......+........+.......+...............+.....+.........+...+.+..++++++</span><br><span class="line">---<span class="attr">--BEGIN</span> PRIVATE KEY-----</span><br><span class="line">MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7n8puayHyAh0</span><br><span class="line">lU6/QfL9XrnyXcMKs4onmdPntVP2UO17jHvYXStNKhLKJkZKEta0yEKihdZdOzmN</span><br><span class="line">AJd2Er5uVWOixQAwphFurajknfEerfe6dOKiTXObWNjgwcHw/xUOT7FKNop8h5DG</span><br><span class="line">X56OwHzWQMma9fWarqxEYR36b8pIno/D7+rKZxrZaJObWoexu/KQT0JCusW1qgTM</span><br><span class="line">i3XFXw4/Lzv/joP/knoxmAIzGb5+YNRAL9TIZioA3AwgiRJrgQNdB9HQTijZplbJ</span><br><span class="line"><span class="number">705</span>eEwVoUSM1AddlS+wV2uhVSSThM/i87MQtSbsvfkUZauYLioJSfxaGWW4Y3Ybe</span><br><span class="line"><span class="number">7</span>ej4ELufAgMBAAECggEAG44bi/DPZa6JQosAN05Ilm+XISOOJva2OFNtL0Ryl6EH</span><br><span class="line">u7lkkhxQbdvJCNRJbte30fFAfUYbe0Wn04ofKpFQIqsm/<span class="number">2</span>vm5giQm18UR4ZDyF9U</span><br><span class="line">I0Phm9vKWbKaXb79JZRWGOmC37oZyMpMIS+Dq4FWW5RhzjcEguCvFNBKlYkak9GV</span><br><span class="line">eKYWdNLA0au4AXRqVmaI7YmGxakHSpVHPIGULk33dlll3/iLNQS3YH9vqvoe3GK8</span><br><span class="line"><span class="number">87</span>ekSAAWTsOZUiJ0MAWMhfkfEDjG3zFq632rg2S+m4e2J1pGVcXPTuHjTSdacWCM</span><br><span class="line">DNekPsKEBByMi00aZtcogxO6zHm121EoHPulcK26oQKBgQDYRq9JQFOCk6ZpeCeb</span><br><span class="line">U6slj+QcAnc95XaXtdg1Kh17IISTLJD1p3tSnbziBWmmugpL9P8tJC63ZcdadYqn</span><br><span class="line">cMzYctNSgMuOgNWKBtXPH4qxWJ8JL8I4Ft8NOiajfVonSjGz+emNzWnNUdDYx5PP</span><br><span class="line">w2WkD82mbAOOUu81Uj4h5WWi+QKBgQDH9avwENMi60WARd1vb+jfS78yuSf3zTe9</span><br><span class="line">s5XgSr2hAHjX0xODAOAEiX253Ube83n9oEkhHMKTcQfzrIgoJ3G5UZ6Pd43tiqrp</span><br><span class="line">ejygyxlOpH+grSiwHc7i3WZWx31kjBCmoFgCQUBfH4UUYzwOqvZgoC3G4lVvYug/</span><br><span class="line"><span class="number">33S</span>RqXZhVwKBgHI8I6nVSEbYJjXfOUxZzTRx5FLHGqSe5x0K98BdFmVKr7vs9kRK</span><br><span class="line">ymDA4Fuh8EQYUAf+yCnXyrUkFUA6hZobgpdxTx1s2hfTBPd61MQqLN+vp5D6oONv</span><br><span class="line">cTFTXcVNGKlYDxi5EBvOO+wvItjd0b0TwEP/<span class="number">9</span>OfKdbZfJ+pKHndY625BAoGAIlif</span><br><span class="line">fO/W5GOXH45gl7iYPmqrX9IP/<span class="selector-tag">G</span>+CiJIlR05vPg1vtFqsOk9XK1BWiStp9ffKV3dF</span><br><span class="line">uGtRPLQokoFrLcKAtT1AyBHYDhpIeywk59Wa9jgpN/cmSwIDvFIdNwCzGCc64PQf</span><br><span class="line">ydtdbDlkyXi2IyrYgQZidov/<span class="number">8s</span>8BZ59BTZfXHqcCgYEAtciV66BhhLSJ0P2hn453</span><br><span class="line">Q2/XvHXU68CKhl/<span class="number">8s</span>G8CyrPxO6Wk3oCIeZPhV0k8HAoU00r1L+j4uwY43/WDJtR5</span><br><span class="line">ljEn5xndTNmd0WWfaV1BruM7ql0I/URwpE6D6rsFq4SFHnKkVsB1Hb6d7YxRt+ct</span><br><span class="line">kjGDW1ZkJzDWKlf7Lf9oKqc=</span><br><span class="line">---<span class="attr">--END</span> PRIVATE KEY-----</span><br><span class="line">Private-Key: (<span class="number">2048</span> bit, <span class="number">2</span> primes)</span><br><span class="line">modulus:</span><br><span class="line">    <span class="number">00</span>:a8:ee:<span class="number">7</span>f:<span class="number">29</span>:b9:ac:<span class="number">87</span>:c8:<span class="number">08</span>:<span class="number">74</span>:<span class="number">95</span>:<span class="number">4</span>e:bf:<span class="number">41</span>:</span><br><span class="line">    f2:fd:<span class="number">5</span>e:b9:f2:<span class="number">5</span>d:c3:<span class="number">0</span>a:b3:<span class="number">8</span>a:<span class="number">27</span>:<span class="number">99</span>:d3:e7:b5:</span><br><span class="line">    <span class="number">53</span>:f6:<span class="number">50</span>:ed:<span class="number">7</span>b:<span class="number">8</span>c:<span class="number">7</span>b:d8:<span class="number">5</span>d:<span class="number">2</span>b:<span class="number">4</span>d:<span class="number">2</span>a:<span class="number">12</span>:ca:<span class="number">26</span>:</span><br><span class="line">    <span class="number">46</span>:<span class="number">4</span>a:<span class="number">12</span>:d6:b4:c8:<span class="number">42</span>:a2:<span class="number">85</span>:d6:<span class="number">5</span>d:<span class="number">3</span>b:<span class="number">39</span>:<span class="number">8</span>d:<span class="number">00</span>:</span><br><span class="line">    <span class="number">97</span>:<span class="number">76</span>:<span class="number">12</span>:be:<span class="number">6</span>e:<span class="number">55</span>:<span class="number">63</span>:a2:c5:<span class="number">00</span>:<span class="number">30</span>:a6:<span class="number">11</span>:<span class="number">6</span>e:ad:</span><br><span class="line">    a8:e4:<span class="number">9</span>d:f1:<span class="number">1</span>e:ad:f7:ba:<span class="number">74</span>:e2:a2:<span class="number">4</span>d:<span class="number">73</span>:<span class="number">9</span>b:<span class="number">58</span>:</span><br><span class="line">    d8:e0:c1:c1:f0:ff:<span class="number">15</span>:<span class="number">0</span>e:<span class="number">4</span>f:b1:<span class="number">4</span>a:<span class="number">36</span>:<span class="number">8</span>a:<span class="number">7</span>c:<span class="number">87</span>:</span><br><span class="line">    <span class="number">90</span>:c6:<span class="number">5</span>f:<span class="number">9</span>e:<span class="number">8</span>e:c0:<span class="number">7</span>c:d6:<span class="number">40</span>:c9:<span class="number">9</span>a:f5:f5:<span class="number">9</span>a:ae:</span><br><span class="line">    ac:<span class="number">44</span>:<span class="number">61</span>:<span class="number">1</span>d:fa:<span class="number">6</span>f:ca:<span class="number">48</span>:<span class="number">9</span>e:<span class="number">8</span>f:c3:ef:ea:ca:<span class="number">67</span>:</span><br><span class="line">    <span class="number">1</span>a:d9:<span class="number">68</span>:<span class="number">93</span>:<span class="number">9</span>b:<span class="number">5</span>a:<span class="number">87</span>:b1:bb:f2:<span class="number">90</span>:<span class="number">4</span>f:<span class="number">42</span>:<span class="number">42</span>:ba:</span><br><span class="line">    c5:b5:aa:<span class="number">04</span>:cc:<span class="number">8</span>b:<span class="number">75</span>:c5:<span class="number">5</span>f:<span class="number">0</span>e:<span class="number">3</span>f:<span class="number">2</span>f:<span class="number">3</span>b:ff:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">83</span>:ff:<span class="number">92</span>:<span class="number">7</span>a:<span class="number">31</span>:<span class="number">98</span>:<span class="number">02</span>:<span class="number">33</span>:<span class="number">19</span>:be:<span class="number">7</span>e:<span class="number">60</span>:d4:<span class="number">40</span>:<span class="number">2</span>f:</span><br><span class="line">    d4:c8:<span class="number">66</span>:<span class="number">2</span>a:<span class="number">00</span>:dc:<span class="number">0</span>c:<span class="number">20</span>:<span class="number">89</span>:<span class="number">12</span>:<span class="number">6</span>b:<span class="number">81</span>:<span class="number">03</span>:<span class="number">5</span>d:<span class="number">07</span>:</span><br><span class="line">    d1:d0:<span class="number">4</span>e:<span class="number">28</span>:d9:a6:<span class="number">56</span>:c9:ef:<span class="number">4</span>e:<span class="number">5</span>e:<span class="number">13</span>:<span class="number">05</span>:<span class="number">68</span>:<span class="number">51</span>:</span><br><span class="line">    <span class="number">23</span>:<span class="number">35</span>:<span class="number">01</span>:d7:<span class="number">65</span>:<span class="number">4</span>b:ec:<span class="number">15</span>:da:e8:<span class="number">55</span>:<span class="number">49</span>:<span class="number">24</span>:e1:<span class="number">33</span>:</span><br><span class="line">    f8:bc:ec:c4:<span class="number">2</span>d:<span class="number">49</span>:bb:<span class="number">2</span>f:<span class="number">7</span>e:<span class="number">45</span>:<span class="number">19</span>:<span class="number">6</span>a:e6:<span class="number">0</span>b:<span class="number">8</span>a:</span><br><span class="line">    <span class="number">82</span>:<span class="number">52</span>:<span class="number">7</span>f:<span class="number">16</span>:<span class="number">86</span>:<span class="number">59</span>:<span class="number">6</span>e:<span class="number">18</span>:dd:<span class="number">86</span>:de:ed:e8:f8:<span class="number">10</span>:</span><br><span class="line">    bb:<span class="number">9</span>f</span><br><span class="line">publicExponent: <span class="number">65537</span> (<span class="number">0</span>x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    <span class="number">1</span>b:<span class="number">8</span>e:<span class="number">1</span>b:<span class="number">8</span>b:f0:cf:<span class="number">65</span>:ae:<span class="number">89</span>:<span class="number">42</span>:<span class="number">8</span>b:<span class="number">00</span>:<span class="number">37</span>:<span class="number">4</span>e:<span class="number">48</span>:</span><br><span class="line">    <span class="number">96</span>:<span class="number">6</span>f:<span class="number">97</span>:<span class="number">21</span>:<span class="number">23</span>:<span class="number">8</span>e:<span class="number">26</span>:f6:b6:<span class="number">38</span>:<span class="number">53</span>:<span class="number">6</span>d:<span class="number">2</span>f:<span class="number">44</span>:<span class="number">72</span>:</span><br><span class="line">    <span class="number">97</span>:a1:<span class="number">07</span>:bb:b9:<span class="number">64</span>:<span class="number">92</span>:<span class="number">1</span>c:<span class="number">50</span>:<span class="number">6</span>d:db:c9:<span class="number">08</span>:d4:<span class="number">49</span>:</span><br><span class="line">    <span class="number">6</span>e:d7:b7:d1:f1:<span class="number">40</span>:<span class="number">7</span>d:<span class="number">46</span>:<span class="number">1</span>b:<span class="number">7</span>b:<span class="number">45</span>:a7:d3:<span class="number">8</span>a:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">2</span>a:<span class="number">91</span>:<span class="number">50</span>:<span class="number">22</span>:ab:<span class="number">26</span>:ff:<span class="number">6</span>b:e6:e6:<span class="number">08</span>:<span class="number">90</span>:<span class="number">9</span>b:<span class="number">5</span>f:<span class="number">14</span>:</span><br><span class="line">    <span class="number">47</span>:<span class="number">86</span>:<span class="number">43</span>:c8:<span class="number">5</span>f:<span class="number">54</span>:<span class="number">23</span>:<span class="number">43</span>:e1:<span class="number">9</span>b:db:ca:<span class="number">59</span>:b2:<span class="number">9</span>a:</span><br><span class="line">    <span class="number">5</span>d:be:fd:<span class="number">25</span>:<span class="number">94</span>:<span class="number">56</span>:<span class="number">18</span>:e9:<span class="number">82</span>:df:ba:<span class="number">19</span>:c8:ca:<span class="number">4</span>c:</span><br><span class="line">    <span class="number">21</span>:<span class="number">2</span>f:<span class="number">83</span>:ab:<span class="number">81</span>:<span class="number">56</span>:<span class="number">5</span>b:<span class="number">94</span>:<span class="number">61</span>:ce:<span class="number">37</span>:<span class="number">04</span>:<span class="number">82</span>:e0:af:</span><br><span class="line">    <span class="number">14</span>:d0:<span class="number">4</span>a:<span class="number">95</span>:<span class="number">89</span>:<span class="number">1</span>a:<span class="number">93</span>:d1:<span class="number">95</span>:<span class="number">78</span>:a6:<span class="number">16</span>:<span class="number">74</span>:d2:c0:</span><br><span class="line">    d1:ab:b8:<span class="number">01</span>:<span class="number">74</span>:<span class="number">6</span>a:<span class="number">56</span>:<span class="number">66</span>:<span class="number">88</span>:ed:<span class="number">89</span>:<span class="number">86</span>:c5:a9:<span class="number">07</span>:</span><br><span class="line">    <span class="number">4</span>a:<span class="number">95</span>:<span class="number">47</span>:<span class="number">3</span>c:<span class="number">81</span>:<span class="number">94</span>:<span class="number">2</span>e:<span class="number">4</span>d:f7:<span class="number">76</span>:<span class="number">59</span>:<span class="number">65</span>:df:f8:<span class="number">8</span>b:</span><br><span class="line">    <span class="number">35</span>:<span class="number">04</span>:b7:<span class="number">60</span>:<span class="number">7</span>f:<span class="number">6</span>f:aa:fa:<span class="number">1</span>e:dc:<span class="number">62</span>:bc:f3:b7:a4:</span><br><span class="line">    <span class="number">48</span>:<span class="number">00</span>:<span class="number">16</span>:<span class="number">4</span>e:c3:<span class="number">99</span>:<span class="number">52</span>:<span class="number">22</span>:<span class="number">74</span>:<span class="number">30</span>:<span class="number">05</span>:<span class="number">8</span>c:<span class="number">85</span>:f9:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">10</span>:<span class="number">38</span>:c6:df:<span class="number">31</span>:<span class="number">6</span>a:eb:<span class="number">7</span>d:ab:<span class="number">83</span>:<span class="number">64</span>:be:<span class="number">9</span>b:<span class="number">87</span>:b6:</span><br><span class="line">    <span class="number">27</span>:<span class="number">5</span>a:<span class="number">46</span>:<span class="number">55</span>:c5:cf:<span class="number">4</span>e:e1:e3:<span class="number">4</span>d:<span class="number">27</span>:<span class="number">5</span>a:<span class="number">71</span>:<span class="number">60</span>:<span class="number">8</span>c:</span><br><span class="line">    <span class="number">0</span>c:d7:a4:<span class="number">3</span>e:c2:<span class="number">84</span>:<span class="number">04</span>:<span class="number">1</span>c:<span class="number">8</span>c:<span class="number">8</span>b:<span class="number">4</span>d:<span class="number">1</span>a:<span class="number">66</span>:d7:<span class="number">28</span>:</span><br><span class="line">    <span class="number">83</span>:<span class="number">13</span>:ba:cc:<span class="number">79</span>:b5:db:<span class="number">51</span>:<span class="number">28</span>:<span class="number">1</span>c:fb:a5:<span class="number">70</span>:ad:ba:</span><br><span class="line">    a1</span><br><span class="line">prime1:</span><br><span class="line">    <span class="number">00</span>:d8:<span class="number">46</span>:af:<span class="number">49</span>:<span class="number">40</span>:<span class="number">53</span>:<span class="number">82</span>:<span class="number">93</span>:a6:<span class="number">69</span>:<span class="number">78</span>:<span class="number">27</span>:<span class="number">9</span>b:<span class="number">53</span>:</span><br><span class="line">    ab:<span class="number">25</span>:<span class="number">8</span>f:e4:<span class="number">1</span>c:<span class="number">02</span>:<span class="number">77</span>:<span class="number">3</span>d:e5:<span class="number">76</span>:<span class="number">97</span>:b5:d8:<span class="number">35</span>:<span class="number">2</span>a:</span><br><span class="line">    <span class="number">1</span>d:<span class="number">7</span>b:<span class="number">20</span>:<span class="number">84</span>:<span class="number">93</span>:<span class="number">2</span>c:<span class="number">90</span>:f5:a7:<span class="number">7</span>b:<span class="number">52</span>:<span class="number">9</span>d:bc:e2:<span class="number">05</span>:</span><br><span class="line">    <span class="number">69</span>:a6:ba:<span class="number">0</span>a:<span class="number">4</span>b:f4:ff:<span class="number">2</span>d:<span class="number">24</span>:<span class="number">2</span>e:b7:<span class="number">65</span>:c7:<span class="number">5</span>a:<span class="number">75</span>:</span><br><span class="line">    <span class="number">8</span>a:a7:<span class="number">70</span>:cc:d8:<span class="number">72</span>:d3:<span class="number">52</span>:<span class="number">80</span>:cb:<span class="number">8</span>e:<span class="number">80</span>:d5:<span class="number">8</span>a:<span class="number">06</span>:</span><br><span class="line">    d5:cf:<span class="number">1</span>f:<span class="number">8</span>a:b1:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">09</span>:<span class="number">2</span>f:c2:<span class="number">38</span>:<span class="number">16</span>:df:<span class="number">0</span>d:<span class="number">3</span>a:</span><br><span class="line">    <span class="number">26</span>:a3:<span class="number">7</span>d:<span class="number">5</span>a:<span class="number">27</span>:<span class="number">4</span>a:<span class="number">31</span>:b3:f9:e9:<span class="number">8</span>d:cd:<span class="number">69</span>:cd:<span class="number">51</span>:</span><br><span class="line">    d0:d8:c7:<span class="number">93</span>:cf:c3:<span class="number">65</span>:a4:<span class="number">0</span>f:cd:a6:<span class="number">6</span>c:<span class="number">03</span>:<span class="number">8</span>e:<span class="number">52</span>:</span><br><span class="line">    ef:<span class="number">35</span>:<span class="number">52</span>:<span class="number">3</span>e:<span class="number">21</span>:e5:<span class="number">65</span>:a2:f9</span><br><span class="line">prime2:</span><br><span class="line">    <span class="number">00</span>:c7:f5:ab:f0:<span class="number">10</span>:d3:<span class="number">22</span>:eb:<span class="number">45</span>:<span class="number">80</span>:<span class="number">45</span>:dd:<span class="number">6</span>f:<span class="number">6</span>f:</span><br><span class="line">    e8:df:<span class="number">4</span>b:bf:<span class="number">32</span>:b9:<span class="number">27</span>:f7:cd:<span class="number">37</span>:bd:b3:<span class="number">95</span>:e0:<span class="number">4</span>a:</span><br><span class="line">    bd:a1:<span class="number">00</span>:<span class="number">78</span>:d7:d3:<span class="number">13</span>:<span class="number">83</span>:<span class="number">00</span>:e0:<span class="number">04</span>:<span class="number">89</span>:<span class="number">7</span>d:b9:dd:</span><br><span class="line">    <span class="number">46</span>:de:f3:<span class="number">79</span>:fd:a0:<span class="number">49</span>:<span class="number">21</span>:<span class="number">1</span>c:c2:<span class="number">93</span>:<span class="number">71</span>:<span class="number">07</span>:f3:ac:</span><br><span class="line">    <span class="number">88</span>:<span class="number">28</span>:<span class="number">27</span>:<span class="number">71</span>:b9:<span class="number">51</span>:<span class="number">9</span>e:<span class="number">8</span>f:<span class="number">77</span>:<span class="number">8</span>d:ed:<span class="number">8</span>a:aa:e9:<span class="number">7</span>a:</span><br><span class="line">    <span class="number">3</span>c:a0:cb:<span class="number">19</span>:<span class="number">4</span>e:a4:<span class="number">7</span>f:a0:ad:<span class="number">28</span>:b0:<span class="number">1</span>d:ce:e2:dd:</span><br><span class="line">    <span class="number">66</span>:<span class="number">56</span>:c7:<span class="number">7</span>d:<span class="number">64</span>:<span class="number">8</span>c:<span class="number">10</span>:a6:a0:<span class="number">58</span>:<span class="number">02</span>:<span class="number">41</span>:<span class="number">40</span>:<span class="number">5</span>f:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">85</span>:<span class="number">14</span>:<span class="number">63</span>:<span class="number">3</span>c:<span class="number">0</span>e:aa:f6:<span class="number">60</span>:a0:<span class="number">2</span>d:c6:e2:<span class="number">55</span>:<span class="number">6</span>f:<span class="number">62</span>:</span><br><span class="line">    e8:<span class="number">3</span>f:df:<span class="number">74</span>:<span class="number">91</span>:a9:<span class="number">76</span>:<span class="number">61</span>:<span class="number">57</span></span><br><span class="line">exponent1:</span><br><span class="line">    <span class="number">72</span>:<span class="number">3</span>c:<span class="number">23</span>:a9:d5:<span class="number">48</span>:<span class="number">46</span>:d8:<span class="number">26</span>:<span class="number">35</span>:df:<span class="number">39</span>:<span class="number">4</span>c:<span class="number">59</span>:cd:</span><br><span class="line">    <span class="number">34</span>:<span class="number">71</span>:e4:<span class="number">52</span>:c7:<span class="number">1</span>a:a4:<span class="number">9</span>e:e7:<span class="number">1</span>d:<span class="number">0</span>a:f7:c0:<span class="number">5</span>d:<span class="number">16</span>:</span><br><span class="line">    <span class="number">65</span>:<span class="number">4</span>a:af:bb:ec:f6:<span class="number">44</span>:<span class="number">4</span>a:ca:<span class="number">60</span>:c0:e0:<span class="number">5</span>b:a1:f0:</span><br><span class="line">    <span class="number">44</span>:<span class="number">18</span>:<span class="number">50</span>:<span class="number">07</span>:fe:c8:<span class="number">29</span>:d7:ca:b5:<span class="number">24</span>:<span class="number">15</span>:<span class="number">40</span>:<span class="number">3</span>a:<span class="number">85</span>:</span><br><span class="line">    <span class="number">9</span>a:<span class="number">1</span>b:<span class="number">82</span>:<span class="number">97</span>:<span class="number">71</span>:<span class="number">4</span>f:<span class="number">1</span>d:<span class="number">6</span>c:da:<span class="number">17</span>:d3:<span class="number">04</span>:f7:<span class="number">7</span>a:d4:</span><br><span class="line">    c4:<span class="number">2</span>a:<span class="number">2</span>c:df:af:a7:<span class="number">90</span>:fa:a0:e3:<span class="number">6</span>f:<span class="number">71</span>:<span class="number">31</span>:<span class="number">53</span>:<span class="number">5</span>d:</span><br><span class="line">    c5:<span class="number">4</span>d:<span class="number">18</span>:a9:<span class="number">58</span>:<span class="number">0</span>f:<span class="number">18</span>:b9:<span class="number">10</span>:<span class="number">1</span>b:ce:<span class="number">3</span>b:ec:<span class="number">2</span>f:<span class="number">22</span>:</span><br><span class="line">    d8:dd:d1:bd:<span class="number">13</span>:c0:<span class="number">43</span>:ff:f4:e7:ca:<span class="number">75</span>:b6:<span class="number">5</span>f:<span class="number">27</span>:</span><br><span class="line">    ea:<span class="number">4</span>a:<span class="number">1</span>e:<span class="number">77</span>:<span class="number">58</span>:eb:<span class="number">6</span>e:<span class="number">41</span></span><br><span class="line">exponent2:</span><br><span class="line">    <span class="number">22</span>:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">7</span>c:ef:d6:e4:<span class="number">63</span>:<span class="number">97</span>:<span class="number">1</span>f:<span class="number">8</span>e:<span class="number">60</span>:<span class="number">97</span>:b8:<span class="number">98</span>:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">6</span>a:ab:<span class="number">5</span>f:d2:<span class="number">0</span>f:fc:<span class="number">6</span>f:<span class="number">82</span>:<span class="number">88</span>:<span class="number">92</span>:<span class="number">25</span>:<span class="number">47</span>:<span class="number">4</span>e:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">0</span>d:<span class="number">6</span>f:b4:<span class="number">5</span>a:ac:<span class="number">3</span>a:<span class="number">4</span>f:<span class="number">57</span>:<span class="number">2</span>b:<span class="number">50</span>:<span class="number">56</span>:<span class="number">89</span>:<span class="number">2</span>b:<span class="number">69</span>:</span><br><span class="line">    f5:f7:ca:<span class="number">57</span>:<span class="number">77</span>:<span class="number">45</span>:b8:<span class="number">6</span>b:<span class="number">51</span>:<span class="number">3</span>c:b4:<span class="number">28</span>:<span class="number">92</span>:<span class="number">81</span>:<span class="number">6</span>b:</span><br><span class="line">    <span class="number">2</span>d:c2:<span class="number">80</span>:b5:<span class="number">3</span>d:<span class="number">40</span>:c8:<span class="number">11</span>:d8:<span class="number">0</span>e:<span class="number">1</span>a:<span class="number">48</span>:<span class="number">7</span>b:<span class="number">2</span>c:<span class="number">24</span>:</span><br><span class="line">    e7:d5:<span class="number">9</span>a:f6:<span class="number">38</span>:<span class="number">29</span>:<span class="number">37</span>:f7:<span class="number">26</span>:<span class="number">4</span>b:<span class="number">02</span>:<span class="number">03</span>:bc:<span class="number">52</span>:<span class="number">1</span>d:</span><br><span class="line">    <span class="number">37</span>:<span class="number">00</span>:b3:<span class="number">18</span>:<span class="number">27</span>:<span class="number">3</span>a:e0:f4:<span class="number">1</span>f:c9:db:<span class="number">5</span>d:<span class="number">6</span>c:<span class="number">39</span>:<span class="number">64</span>:</span><br><span class="line">    c9:<span class="number">78</span>:b6:<span class="number">23</span>:<span class="number">2</span>a:d8:<span class="number">81</span>:<span class="number">06</span>:<span class="number">62</span>:<span class="number">76</span>:<span class="number">8</span>b:ff:f2:cf:<span class="number">01</span>:</span><br><span class="line">    <span class="number">67</span>:<span class="number">9</span>f:<span class="number">41</span>:<span class="number">4</span>d:<span class="number">97</span>:d7:<span class="number">1</span>e:a7</span><br><span class="line">coefficient:</span><br><span class="line">    <span class="number">00</span>:b5:c8:<span class="number">95</span>:eb:a0:<span class="number">61</span>:<span class="number">84</span>:b4:<span class="number">89</span>:d0:fd:a1:<span class="number">9</span>f:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">77</span>:<span class="number">43</span>:<span class="number">6</span>f:d7:bc:<span class="number">75</span>:d4:eb:c0:<span class="number">8</span>a:<span class="number">86</span>:<span class="number">5</span>f:fc:b0:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">02</span>:ca:b3:f1:<span class="number">3</span>b:a5:a4:de:<span class="number">80</span>:<span class="number">88</span>:<span class="number">79</span>:<span class="number">93</span>:e1:<span class="number">57</span>:<span class="number">49</span>:</span><br><span class="line">    <span class="number">3</span>c:<span class="number">1</span>c:<span class="number">0</span>a:<span class="number">14</span>:d3:<span class="number">4</span>a:f5:<span class="number">2</span>f:e8:f8:bb:<span class="number">06</span>:<span class="number">38</span>:df:f5:</span><br><span class="line">    <span class="number">83</span>:<span class="number">26</span>:d4:<span class="number">79</span>:<span class="number">96</span>:<span class="number">31</span>:<span class="number">27</span>:e7:<span class="number">19</span>:dd:<span class="number">4</span>c:d9:<span class="number">9</span>d:d1:<span class="number">65</span>:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">69</span>:<span class="number">5</span>d:<span class="number">41</span>:ae:e3:<span class="number">3</span>b:aa:<span class="number">5</span>d:<span class="number">08</span>:fd:<span class="number">44</span>:<span class="number">70</span>:a4:<span class="number">4</span>e:</span><br><span class="line">    <span class="number">83</span>:ea:bb:<span class="number">05</span>:ab:<span class="number">84</span>:<span class="number">85</span>:<span class="number">1</span>e:<span class="number">72</span>:a4:<span class="number">56</span>:c0:<span class="number">75</span>:<span class="number">1</span>d:be:</span><br><span class="line">    <span class="number">9</span>d:ed:<span class="number">8</span>c:<span class="number">51</span>:b7:e7:<span class="number">2</span>d:<span class="number">92</span>:<span class="number">31</span>:<span class="number">83</span>:<span class="number">5</span>b:<span class="number">56</span>:<span class="number">64</span>:<span class="number">27</span>:<span class="number">30</span>:</span><br><span class="line">    d6:<span class="number">2</span>a:<span class="number">57</span>:fb:<span class="number">2</span>d:ff:<span class="number">68</span>:<span class="number">2</span>a:a7</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id=""><a href="#" class="headerlink" title="-*"></a>-*</h3><p>这个指令的意思是可以自己指定用于保护密钥文件的对称加密算法，当然前提是当前版本的OpenSSL支持。</p>
-<p>例如，使用<code>AES-128-CTR</code>对这个密钥文件进行加密：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -AES-128-CTR -out RSA-2048-Encrypted-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
       </tags>
   </entry>
   <entry>
@@ -890,12 +890,11 @@
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>JavaScript</category>
+        <category>Web Front-End</category>
       </categories>
       <tags>
         <tag>JavaScript</tag>
-        <tag>R-18</tag>
-        <tag>Webtease</tag>
+        <tag>Interactive Fiction</tag>
       </tags>
   </entry>
   <entry>
@@ -1438,12 +1437,114 @@
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>JavaScript</category>
+        <category>Web Front-End</category>
       </categories>
       <tags>
         <tag>JavaScript</tag>
-        <tag>R-18</tag>
-        <tag>Webtease</tag>
+        <tag>Interactive Fiction</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
+<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
+<span id="more"></span>
+
+<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
+<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
+<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
+<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
+<hr>
+<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
+<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
+<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
+<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
+<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
+
+<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
+<hr>
+<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
+
+<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
+<hr>
+<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
+<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
+
+<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
+<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+
+<hr>
+<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
+<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
+<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
+<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
+<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
+
+<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
+<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
+<hr>
+<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+
+<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+
+<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
+<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
+<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
+<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
+<p>就类似于这样。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+
+<hr>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
+<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<hr>
+<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
+<p>举个例子，就像这样：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+
+<hr>
+<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
+<p>类似于这种：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+
+<hr>
+<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+
+<p>一个Audio，播放音频，不阻塞。</p>
+<p>一个Timer，计时，阻塞。</p>
+<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<hr>
+<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
+<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
+<p>是否允许用户跳过看你自己。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+
+<hr>
+<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
+<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
+<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
+<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
       </tags>
   </entry>
   <entry>
@@ -1677,116 +1778,11 @@
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>JavaScript</category>
+        <category>Web Front-End</category>
       </categories>
       <tags>
         <tag>JavaScript</tag>
-        <tag>R-18</tag>
-        <tag>Webtease</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
-<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
-<span id="more"></span>
-
-<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
-<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
-<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
-<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
-<hr>
-<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
-<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
-<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
-<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
-<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
-
-<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
-<hr>
-<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
-
-<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
-<hr>
-<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
-<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
-
-<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
-<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
-
-<hr>
-<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
-<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
-<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
-<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
-<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
-
-<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
-<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
-<hr>
-<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
-
-<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
-
-<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
-<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
-<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
-<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
-<p>就类似于这样。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
-
-<hr>
-<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
-<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
-<hr>
-<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
-<p>举个例子，就像这样：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
-
-<hr>
-<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
-<p>类似于这种：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
-
-<hr>
-<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
-
-<p>一个Audio，播放音频，不阻塞。</p>
-<p>一个Timer，计时，阻塞。</p>
-<p>一个Eval，通过一行JS代码停止播放音频。</p>
-<hr>
-<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
-<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
-<p>是否允许用户跳过看你自己。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
-
-<hr>
-<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
-<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
-<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
-
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
-<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>JavaScript</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>R-18</tag>
-        <tag>Webtease</tag>
+        <tag>Interactive Fiction</tag>
       </tags>
   </entry>
   <entry>
@@ -1811,9 +1807,11 @@
         <category>Network</category>
       </categories>
       <tags>
+        <tag>Linux</tag>
         <tag>Network</tag>
         <tag>Circumvention</tag>
-        <tag>Cloud</tag>
+        <tag>Proxy</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
   <entry>
@@ -1840,6 +1838,136 @@
       <tags>
         <tag>Linux</tag>
         <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
+    <url>/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>VMess是V2Ray设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。</p>
+<p>本文主要简单介绍如何在Debian 12上搭建VMess + TCP这种最基本的VMess服务器。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="安装V2Ray"><a href="#安装V2Ray" class="headerlink" title="安装V2Ray"></a>安装V2Ray</h2><p>SSH连接VPS的过程略。</p>
+<p>建议通过官方安装脚本安装V2Ray：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
+
+<p>安装最新的geoip.dat和geosite.dat：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="配置V2Ray"><a href="#配置V2Ray" class="headerlink" title="配置V2Ray"></a>配置V2Ray</h2><hr>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开V2Ray的配置文件，这里以最简单的文本编辑器nano为例。当然，如果会用vim自然是更好的：</p>
+<p>（不同云服务器供应商的文件结构可能不同，请注意找一下自己的V2Ray配置文件位置，并根据自己的情况修改目录）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>一个非常简单的示例配置文件如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;inbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">8443</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;clients&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;766ff83e-c497-4ea9-8ad8-434be59c6bb9&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;outbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;freedom&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Ctrl+X退出，Y保存，回车，完成编辑。</p>
+<hr>
+<h3 id="配置文件简单说明："><a href="#配置文件简单说明：" class="headerlink" title="配置文件简单说明："></a>配置文件简单说明：</h3><p><code>inbounds</code>：入站配置</p>
+<p><code>port</code>：服务器监听端口，可以自己修改</p>
+<p><code>protocol</code>：入站协议，此处使用VMess</p>
+<p><code>settings</code>：VMess的设置</p>
+<p><code>clients</code>：客户端</p>
+<p><code>id</code>：一个UUID，用于加密通信和身份验证，可以用UUID生成器生成：<a href="https://www.uuidgenerator.net/version4">Online UUID Generator Tool</a></p>
+<p><code>outbounds</code>：出站设置</p>
+<p><code>protocol</code>：出站协议，此处使用freedom，即无限制</p>
+<hr>
+<h2 id="启动并连接到V2Ray服务器"><a href="#启动并连接到V2Ray服务器" class="headerlink" title="启动并连接到V2Ray服务器"></a>启动并连接到V2Ray服务器</h2><p>使用<code>v2ray run</code>命令来启动v2ray服务端，<code>-c</code>参数可用于指定配置文件路径，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">v2ray run -c /usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
+
+<p>在客户端配置指定服务器的IP地址、端口、UUID即可连接，传输层协议默认TCP，加密方式可以选择Auto，VMess的服务端能自适应解密。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台简单的VMess + TCP的代理服务器搭建完成，可以用于代理上网。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Network</tag>
+        <tag>Circumvention</tag>
+        <tag>Proxy</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
+    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
+<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
+<span id="more"></span>
+
+<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
+<p>一般而言npm也是会一并安装的</p>
+<p>装好了以后确认一下有没有成功安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，确认一下Hexo的版本信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
+<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
+
+<p>使用Hexo初始化博客文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+
+<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
+<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
+
+<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
+<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+
+<p>可以重复生成时使用的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
+<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
+<p>直接拉到底，进行修改：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完成后保存，可以退出</p>
+<p>使用npm安装Hexo的Git部署工具：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
+
+<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
+<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
+<p>创建新博文：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>更新本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>尝试查看本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>Web Front-End</tag>
+        <tag>Node.js</tag>
       </tags>
   </entry>
   <entry>
@@ -2000,88 +2128,6 @@
         <tag>Linux</tag>
         <tag>VPS</tag>
         <tag>MineCraft</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Debian 12上搭建简单的VMess + TCP服务器</title>
-    <url>/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>VMess是V2Ray设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。</p>
-<p>本文主要简单介绍如何在Debian 12上搭建VMess + TCP这种最基本的VMess服务器。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="安装V2Ray"><a href="#安装V2Ray" class="headerlink" title="安装V2Ray"></a>安装V2Ray</h2><p>SSH连接VPS的过程略。</p>
-<p>建议通过官方安装脚本安装V2Ray：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)</span><br></pre></td></tr></table></figure>
-
-<p>安装最新的geoip.dat和geosite.dat：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -L https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="配置V2Ray"><a href="#配置V2Ray" class="headerlink" title="配置V2Ray"></a>配置V2Ray</h2><hr>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开V2Ray的配置文件，这里以最简单的文本编辑器nano为例。当然，如果会用vim自然是更好的：</p>
-<p>（不同云服务器供应商的文件结构可能不同，请注意找一下自己的V2Ray配置文件位置，并根据自己的情况修改目录）</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
-
-<p>一个非常简单的示例配置文件如下：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;inbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;port&quot;</span><span class="punctuation">:</span> <span class="number">8443</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;vmess&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;settings&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">                <span class="attr">&quot;clients&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                    <span class="punctuation">&#123;</span></span><br><span class="line">                        <span class="attr">&quot;id&quot;</span><span class="punctuation">:</span> <span class="string">&quot;766ff83e-c497-4ea9-8ad8-434be59c6bb9&quot;</span></span><br><span class="line">                    <span class="punctuation">&#125;</span></span><br><span class="line">                <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;outbounds&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;protocol&quot;</span><span class="punctuation">:</span> <span class="string">&quot;freedom&quot;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">    <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>Ctrl+X退出，Y保存，回车，完成编辑。</p>
-<hr>
-<h3 id="配置文件简单说明："><a href="#配置文件简单说明：" class="headerlink" title="配置文件简单说明："></a>配置文件简单说明：</h3><p><code>inbounds</code>：入站配置</p>
-<p><code>port</code>：服务器监听端口，可以自己修改</p>
-<p><code>protocol</code>：入站协议，此处使用VMess</p>
-<p><code>settings</code>：VMess的设置</p>
-<p><code>clients</code>：客户端</p>
-<p><code>id</code>：一个UUID，用于加密通信和身份验证，可以用UUID生成器生成：<a href="https://www.uuidgenerator.net/version4">Online UUID Generator Tool</a></p>
-<p><code>outbounds</code>：出站设置</p>
-<p><code>protocol</code>：出站协议，此处使用freedom，即无限制</p>
-<hr>
-<h2 id="启动并连接到V2Ray服务器"><a href="#启动并连接到V2Ray服务器" class="headerlink" title="启动并连接到V2Ray服务器"></a>启动并连接到V2Ray服务器</h2><p>使用<code>v2ray run</code>命令来启动v2ray服务端，<code>-c</code>参数可用于指定配置文件路径，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">v2ray run -c /usr/local/etc/v2ray/config.json</span><br></pre></td></tr></table></figure>
-
-<p>在客户端配置指定服务器的IP地址、端口、UUID即可连接，传输层协议默认TCP，加密方式可以选择Auto，VMess的服务端能自适应解密。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，一台简单的VMess + TCP的代理服务器搭建完成，可以用于代理上网。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>Network</tag>
-        <tag>Circumvention</tag>
-        <tag>VPS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Qt Creator中使用OpenSSL</title>
-    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
-<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
-<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
-<hr>
-<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
-<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
-<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
-        <tag>Qt</tag>
       </tags>
   </entry>
   <entry>
@@ -2256,84 +2302,8 @@
         <tag>Linux</tag>
         <tag>Network</tag>
         <tag>Circumvention</tag>
+        <tag>Proxy</tag>
         <tag>VPS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
-    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
-<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
-<span id="more"></span>
-
-<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-
-<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
-<p>一般而言npm也是会一并安装的</p>
-<p>装好了以后确认一下有没有成功安装：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
-<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后，确认一下Hexo的版本信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
-<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
-
-<p>使用Hexo初始化博客文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
-
-<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
-<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
-
-<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
-<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
-
-<p>可以重复生成时使用的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
-<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
-<p>直接拉到底，进行修改：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-
-<p>修改完成后保存，可以退出</p>
-<p>使用npm安装Hexo的Git部署工具：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
-
-<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
-<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
-<p>创建新博文：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>更新本地博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
-<p>尝试查看本地博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>Web Front-End</tag>
-        <tag>Hexo</tag>
       </tags>
   </entry>
   <entry>
@@ -2516,6 +2486,7 @@
       </categories>
       <tags>
         <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
@@ -2752,6 +2723,7 @@
       </categories>
       <tags>
         <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
@@ -2792,6 +2764,249 @@
       <tags>
         <tag>Network</tag>
         <tag>Circumvention</tag>
+        <tag>Proxy</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Qt Creator中使用OpenSSL</title>
+    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
+<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
+<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<hr>
+<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
+<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
+<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
+        <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
+    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
+<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
+<span id="more"></span>
+
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
+<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
+<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
+<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
+
+<p>如果安装成功，就会返回一个版本信息，例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果正常运行，这个程序输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>轻微程度的隐私保护技巧</title>
+    <url>/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍一些入门程度的隐私保护技巧。作者也是<strong>门外汉</strong>，无法提供专业的建议。本文在内行看来应该是绝对纯属<strong>胡扯</strong>。</p>
+<p>这可能会稍微提高一点点防人肉能力，但不多，也许能防一些小白。但也就顶多只会<strong>稍微增加调查的成本</strong>而已。对于体系化的社工库团队而言，拿下<strong>普通人</strong>这种事基本上是<strong>轻而易举</strong>的，你通常防了也没用。</p>
+<span id="more"></span>
+
+<p>其实，这也不绝对，一套合理的防护手段和身份隔离可以显著增加调查成本，至少是严重拖延调查的时间。但是，要做到真正意义上的滴水不漏是不可能的。</p>
+<p>本文不打算配图，不太好。可能，看起来会有点枯燥，抱歉。</p>
+<hr>
+<h2 id="减少信息检索机会"><a href="#减少信息检索机会" class="headerlink" title="减少信息检索机会"></a>减少信息检索机会</h2><p>信息检索是调查一个人的基本手段，它是<strong>合法</strong>的。</p>
+<p>普通网民也可以通过信息检索挖掘出一个人的部分个人信息来。</p>
+<p>其主要利用的问题在于——利用不同平台之间互相搜索的关系来放大某一条线索。</p>
+<hr>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>举个例子，拿到一条QQ号，普通人可以怎么查？</p>
+<p>一个常见的做法是直接在<strong>微信</strong>上搜索这个QQ号。如果没有关闭微信的QQ号搜索功能的话，微信号会被确认。</p>
+<p>而常见的微信号格式（偷懒的话）可能会包含手机号、姓名首字母缩写、生日、QQ主号等关键信息。这很容易暴露更多信息。</p>
+<p>另一个常见的做法就是直接在<strong>搜索引擎</strong>上搜索这个QQ号。</p>
+<p>此时可以如何拓宽线索呢？例如之前在某个贴吧交流的时候，你发帖留下了一个QQ号作为联系方式，没删。</p>
+<p>或者，你干脆是个文援什么的，在推特上把自己的QQ号一挂——<strong>门牌xxxxxxxxxx</strong>。那么，别人直接就搜出来了，推特账号。</p>
+<hr>
+<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h3><h4 id="删除发言"><a href="#删除发言" class="headerlink" title="删除发言"></a>删除发言</h4><p>对自己曾经留下互联网足迹，但已经不常用的平台，注意检查一下有没有留过敏感信息，可以自搜一下。</p>
+<p>有的话，可以选择删掉。这会稍微增加一点调查的难度。</p>
+<h4 id="销号跑路"><a href="#销号跑路" class="headerlink" title="销号跑路"></a>销号跑路</h4><p>对于微博一类的数据泄露和开盒重灾区，如果曾经使用，但现在已经不用，或者是没必要用。建议在尽量删除自己的言论后<strong>销号跑路</strong>。</p>
+<p>这能减少攻击者利用微博上的信息、发帖和线索来进一步拓宽调查面，稍微增加难度和拖延时间。</p>
+<h4 id="使用小号-买号"><a href="#使用小号-买号" class="headerlink" title="使用小号 &#x2F; 买号"></a>使用小号 &#x2F; 买号</h4><p>使用QQ进行交流时，如果对方是陌生人，可以考虑使用小号。</p>
+<p>小号的捆绑信息和检索价值相对而言会更少一点，稍微增加调查难度。</p>
+<h4 id="混淆昵称-头像"><a href="#混淆昵称-头像" class="headerlink" title="混淆昵称 &#x2F; 头像"></a>混淆昵称 &#x2F; 头像</h4><p>如果你在意隐私保护，不要在一堆平台上使用十分类似或者干脆是完全一样的昵称和头像。尤其是昵称和ID，这个是容易被检索锁定的。</p>
+<p>为了追求个性，可以稍微增加一点变化。但<strong>最好不要</strong>在昵称、ID当中添加自己的个人真实信息，例如<strong>生日</strong>，<strong>姓名缩写</strong>，<strong>出生年份</strong>等。</p>
+<h4 id="注意隐私设置"><a href="#注意隐私设置" class="headerlink" title="注意隐私设置"></a>注意隐私设置</h4><p>在有必要和自己能接受的范围内，尽可能地隐藏自己的个人信息，减少平台间关联。多隐藏一点，查的难度就多一分，不过也就是一分。</p>
+<p>尤其应该避免直接泄露的包括<strong>手机号</strong>，<strong>真实姓名</strong>，<strong>身份证号</strong>。这三者如果直接泄露，那么开盒将会是非常轻松的一件事情。</p>
+<h4 id="谨慎分享敏感信息"><a href="#谨慎分享敏感信息" class="headerlink" title="谨慎分享敏感信息"></a>谨慎分享敏感信息</h4><p>典型的包括<strong>录取通知书</strong>，<strong>机票</strong>，<strong>火车票</strong>等。不要以为对一些地方打码就能高枕无忧，不是这样的。虽然确实会好得多，但通常还是会暴露一些信息。</p>
+<p>最好还是，控制一下分享的欲望。想要分享的话，可以直接发给信任的朋友，而最好不要直接在帖子、推文、空间之类的地方往那一挂，也不删，长时间就挂在那。</p>
+<h4 id="谨慎分享摄影作品"><a href="#谨慎分享摄影作品" class="headerlink" title="谨慎分享摄影作品"></a>谨慎分享摄影作品</h4><p>不要以为图片定位很困难，不是这样的。</p>
+<h4 id="减少检索机会"><a href="#减少检索机会" class="headerlink" title="减少检索机会"></a>减少检索机会</h4><p>关闭<strong>微信的QQ号搜索，微信的手机号搜索，支付宝的手机号搜索，QQ的手机号搜索，Telegram的手机号展示</strong>，以及各种平台的<strong>通讯录功能</strong>。</p>
+<p>这会稍微增加一点调查难度。</p>
+<h4 id="使用强加密邮箱"><a href="#使用强加密邮箱" class="headerlink" title="使用强加密邮箱"></a>使用强加密邮箱</h4><p>强加密邮箱通常采用端到端加密技术，相对而言是更加可控，它的安全性通常是不可妥协的。</p>
+<p>但也有不方便的一点——主密钥丢失以后，通常还挺难恢复的，可能直接炸了。注意一下。</p>
+<p>推荐两个：</p>
+<p><a href="https://protonmail.com/">ProtonMail (protonmail.com)</a></p>
+<p><a href="https://mail.riseup.net/">RiseUpMail (mail.riseup.net)</a></p>
+<hr>
+<h2 id="减少撞库机会"><a href="#减少撞库机会" class="headerlink" title="减少撞库机会"></a>减少撞库机会</h2><p>稍微解释一下什么是撞库。</p>
+<h3 id="撞库"><a href="#撞库" class="headerlink" title="撞库"></a>撞库</h3><p>比如说，攻击者通过某种手段获取了一条账密信息——<code>Bob@gmail.com</code>, <code>BobLoveAlice1314520</code>。</p>
+<p>他可以尝试，在不同的平台去利用这条账密信息尝试登录。有些平台会触发2FA（国内通常是手机，国外可以是手机、邮件、OTP等），这倒是还能防住，但是有些平台（特别是邮箱和一些小网站）是很容易直接账密登录的。</p>
+<p>一旦撞库成功一次，就可以获取大量的个人信息，直接用于检索，钓鱼，甚至可以说是结案了。</p>
+<p>这种攻击的可行性通常来自于用户的一种<strong>常见的坏习惯——在一堆平台使用几近相同甚至是完全相同的密码</strong>。</p>
+<h3 id="预防撞库"><a href="#预防撞库" class="headerlink" title="预防撞库"></a>预防撞库</h3><p>显然，在每个平台上使用完全不同的密码是很费劲的一件事，也不好记忆，不太方便。</p>
+<p>这里推荐几种稍微增加安全性的方式。</p>
+<h4 id="异地登录保护"><a href="#异地登录保护" class="headerlink" title="异地登录保护"></a>异地登录保护</h4><p>这东西很多平台都有，有的记得打开（当然很多是自带的）。可以稍微增加一点撞库难度。</p>
+<h4 id="稍微差异化的密码"><a href="#稍微差异化的密码" class="headerlink" title="稍微差异化的密码"></a>稍微差异化的密码</h4><p>如果你懒得用什么技术手段保管密码，又懒得记很复杂的密码，那就对每个平台的密码<strong>稍加差异化</strong>。</p>
+<p>这可以稍微增加撞库的成本，或许可以触发尝试次数警告，冻结账户，拖延时间甚至是挫败撞库什么的。</p>
+<h4 id="手机验证码2FA"><a href="#手机验证码2FA" class="headerlink" title="手机验证码2FA"></a>手机验证码2FA</h4><p>对于重要的平台，最好别嫌麻烦，加个<strong>手机验证码</strong>2FA是有助于防止撞库爆破这种情况的，特别是你密码习惯不太好的话。</p>
+<h4 id="邮件验证码2fA"><a href="#邮件验证码2fA" class="headerlink" title="邮件验证码2fA"></a>邮件验证码2fA</h4><p>这<strong>邮件验证码</strong>其实比手机稍弱一些，甚至有时候会帮倒忙（所以说邮件安全要注意的）。</p>
+<p>但其实，这个也看你的邮箱。至少，它也会给攻击者制造麻烦，并且会造成通知、警示的效果。</p>
+<h4 id="Authenticator-OTP应用"><a href="#Authenticator-OTP应用" class="headerlink" title="Authenticator &#x2F; OTP应用"></a>Authenticator &#x2F; OTP应用</h4><p><strong>Microsoft Authenticator</strong>， <strong>Google Authenticator</strong>之类的应用能根据一个PSK和时间戳生成一个动态变更的OTP。它让撞库攻击变得很困难——除非你的手机被入侵，或认证被某种方式绕过。</p>
+<h4 id="密钥管理应用"><a href="#密钥管理应用" class="headerlink" title="密钥管理应用"></a>密钥管理应用</h4><p><strong>1Pass</strong>，<strong>Bitwarden</strong>这样的应用只需要记忆一个主密钥，就可以自动化管理多平台账密，通常具有多端同步、自动填充、密钥生成等功能。</p>
+<p>如果你想要使用多平台不同的随机长密钥，这是很好的选择。这能显著增加撞库的难度。</p>
+<p>如果你的每个平台都使用了至少12字节的随机密钥，且互不相同，那么撞库的威胁对你而言是比较小的。</p>
+<h4 id="生物识别"><a href="#生物识别" class="headerlink" title="生物识别"></a>生物识别</h4><p>指纹、虹膜、掌纹（不推荐人脸和声音）是目前绕过成本较高的生物识别技术，采用这种方式进行登录可以免除管理密码的麻烦，也能增加撞库的困难。</p>
+<h4 id="硬件密钥"><a href="#硬件密钥" class="headerlink" title="硬件密钥"></a>硬件密钥</h4><p>硬件密钥显然是几乎无法绕过的，但也是很麻烦的。</p>
+<hr>
+<h2 id="注意支付手段"><a href="#注意支付手段" class="headerlink" title="注意支付手段"></a>注意支付手段</h2><p>支付手段可能会暴露你的一些个人信息。</p>
+<h3 id="微信和支付宝"><a href="#微信和支付宝" class="headerlink" title="微信和支付宝"></a>微信和支付宝</h3><p><strong>微信收款码</strong>和<strong>支付宝收款码</strong>会暴露你<strong>真实姓名的最后一个字</strong>。</p>
+<p>如果你想要避免这一点，请尝试使用<strong>赞赏码</strong>和<strong>口令红包</strong>。</p>
+<p><strong>支付宝账号被搜索确定</strong>将会暴露你的<strong>性别、部分手机号和真实姓名的最后一个字</strong>。</p>
+<h3 id="PayPal和虚拟信用卡"><a href="#PayPal和虚拟信用卡" class="headerlink" title="PayPal和虚拟信用卡"></a>PayPal和虚拟信用卡</h3><p>这种通常都要好一些，但我也不太了解，太菜了。</p>
+<h3 id="加密货币"><a href="#加密货币" class="headerlink" title="加密货币"></a>加密货币</h3><p>只要你不直接提现到人民币，加密货币一般不会出什么大事。用加密货币支付服务通常具有较高的匿名性，特别是对于一些开不了口，上不了台面，见不得光的交易而言。</p>
+<p>如果硬要提现，可以提现到境外的银行卡，信用卡，虚拟信用卡，再把钱转回来之类的。虽然吃点手续费，但是出事的概率更低。黑转灰，灰洗白。</p>
+<p>仅仅作为支付手段的话，USDT，USDC和TRX是很不错的。</p>
+<p>当然如果提现，最好找个靠谱的C2C商家，千万注意对方的身份和支付信息，如果和标注的不一致，请不要收款。如果收到黑钱，可能会被卷入很麻烦的事情。</p>
+<hr>
+<h2 id="快递信息"><a href="#快递信息" class="headerlink" title="快递信息"></a>快递信息</h2><p>这没什么好说的，数据泄露重灾区。最多要做的就是，注意自己销毁一下信息标签，还有就是填个化名吧。</p>
+<p>用个不常用的手机号也挺好的。</p>
+<hr>
+<h2 id="基本的网络安全防范意识"><a href="#基本的网络安全防范意识" class="headerlink" title="基本的网络安全防范意识"></a>基本的网络安全防范意识</h2><p>这个东西简直是……可能耳朵都要听出茧子来了吧？但还是稍微讲讲。</p>
+<h3 id="钓鱼链接"><a href="#钓鱼链接" class="headerlink" title="钓鱼链接"></a>钓鱼链接</h3><p>借贷、赌博、涉黄、钓鱼的短信、邮件链接不要乱点，看清楚再点。</p>
+<p>不要以为反正点进去不输信息就没事（当然你输信息就，对吧，不用看了），有时候会被定位之类的，情况复杂得很，注意一下。</p>
+<h3 id="深度伪造"><a href="#深度伪造" class="headerlink" title="深度伪造"></a>深度伪造</h3><p>音视频AI伪造很发达，总之熟人的一些请求也是需要找他们本人再三确认的，不要直接相信了。</p>
+<h3 id="虚拟身份证明"><a href="#虚拟身份证明" class="headerlink" title="虚拟身份证明"></a>虚拟身份证明</h3><p>用SMS代收发这种服务来绕过你不太信任的一些平台的注册。</p>
+<p><a href="https://sms-bus.com/">SMS Bus</a></p>
+<p><a href="https://sms-activate.io/">SMS Activate</a></p>
+<h3 id="底线意识"><a href="#底线意识" class="headerlink" title="底线意识"></a>底线意识</h3><p>不涉三就是不涉三，<strong>底线卡死</strong>，不要什么软磨硬泡的给个联系方式，给点什么信息，收个礼物什么的，甚至去搞线下。</p>
+<h3 id="不明物品"><a href="#不明物品" class="headerlink" title="不明物品"></a>不明物品</h3><p>比如说你是个V，收了一堆礼物，请务必<strong>仔细检查</strong>一下，到底有没有定位器、录音器、针孔摄像头一类的东西。网络上再怎么熟络，交情再怎么深的人，也不是完全可信的。</p>
+<hr>
+<h2 id="一些简单的自查手段"><a href="#一些简单的自查手段" class="headerlink" title="一些简单的自查手段"></a>一些简单的自查手段</h2><p>这些东西，可以用来自查。可以看看自己哪些账号信息泄露了，这样可以提前做防范，有个心理预期。</p>
+<p>可以尝试对自己进行几次调查看看，难度会不会很高。就用之前的那点，简单方法。</p>
+<p>当然，你也可以用这种东西去查别人。<strong>技术就在那里，看你怎么用了</strong>。</p>
+<p><a href="https://www.reg007.com/">REG007</a> —— 账号绑定关联等，仅用于自查</p>
+<p><a href="https://qb.heikebook.com/index">Q绑查询-HeikeBook</a> —— QQ数据泄露，LoL数据泄露等</p>
+<p><a href="https://haveibeenpwned.com/">Have I Been Pwned？</a> —— 一个简单的自查系统</p>
+<p><a href="https://privacy.aiuys.com/">Privacy | 个人数据泄漏检测 (aiuys.com)</a> —— 简单的查询系统，数据不少</p>
+<p><a href="https://ouotool.com/qq/direct">查隐藏QQ_QQ号码查询分析工具 (ouotool.com)</a> —— 隐藏QQ查询</p>
+<p><a href="https://qq.ip138.com/idsearch/">身份证查询 (ip138.com)</a> —— 身份证号信息分析工具</p>
+<p><a href="https://www.ip138.com/sj/">手机号归属地查询 (ip138.com)</a> —— 手机号信息分析工具</p>
+<p><a href="https://www.ip138.com/">IP地址查询 (ip138.com)</a> —— IP地址信息分析工具</p>
+<p><a href="https://qq.ip138.com/day/">万年历查询 (ip138.com)</a> —— 阴阳历转换 用于锁定生日等</p>
+<hr>
+<h2 id="社工库"><a href="#社工库" class="headerlink" title="社工库"></a>社工库</h2><p>简单解释一下社工库。</p>
+<h3 id="什么是社工库？"><a href="#什么是社工库？" class="headerlink" title="什么是社工库？"></a>什么是社工库？</h3><p>社工库是一个灰产&#x2F;黑产数据库，其中包含了大量来自于互联网数据泄露事件、隐私暴露事件、信息安全事件、内鬼泄露、数据贩卖等灰色、黑色链条输入的数据。个人信息在这种数据库上关联起来，用于检索和定位。</p>
+<p>其中最主要的信息泄露事件和领域包括：</p>
+<p><strong>新浪微博，腾讯QQ，顺丰快递，超星学习通，英雄联盟，网贷平台</strong>等。</p>
+<p>通常而言，以下几条信息是容易被关联在一起：</p>
+<p><strong>QQ号，微博号，LoL用户名，LoL大区，曾用密码MD5，真实姓名，手机号，身份证号，家庭住址，学号</strong>。</p>
+<p>社工库通常以<strong>Telegram Bot</strong>的方式提供服务。</p>
+<p>免费用一般是可以的，签到送额度。用户通常可以免费检索，但是额度不高。要想自由使用，通常要付费。</p>
+<p>付费通常会解锁一个较大的检索额度，并且会增加一些额外的模式，例如猎魔（类似于盲搜）——给出一定的范围，例如<strong>部分姓名，籍贯，出生日期范围&#x2F;生日，性别</strong>，随后社工库返还数十条记录，用于参考和大致锁定范围。</p>
+<p>最有效的手段是雇佣社工库的专业团队，对某个人进行调查。这个服务一般会比较贵，但绝大多数个人都可以被完全调查出来，包括<strong>个人真实信息，开房记录，借贷记录，征信体系，犯罪历史，三网定位</strong>等等。这里就可能会超出一般的信息检索范畴，会用到一些……内部的帮助。这个我也不是很清楚。</p>
+<h3 id="推荐几个社工库？"><a href="#推荐几个社工库？" class="headerlink" title="推荐几个社工库？"></a>推荐几个社工库？</h3><p>可以用来自查，也可以拿去查别人。</p>
+<p>总之，还是那句话，<strong>技术就在那里，看你怎么用了</strong>。</p>
+<p><a href="https://t.me/qbjSGKbot">情报局社工库</a></p>
+<p><a href="https://t.me/AJL01_bot">暗精灵社工库</a></p>
+<p><a href="https://t.me/DogeSGK_bot">狗狗社工库</a></p>
+<p><a href="https://t.me/Zonesgk_bot?start=TZUYZTTPQ">X-ray社工库</a></p>
+<p>这种东西，互联网上很多，可以自己去找。反正也是付费交易。你把钱付给他们，他们把你想要的东西交给你。</p>
+<p>Q：用社工库违法吗？A：<strong>没错，但不太好抓，一般睁一只眼闭一只眼，不要宣扬和传播。</strong></p>
+<p>Q：没有风险吗？A：<strong>有的，求别人办事最好说话客气点，少废话，直接给钱。还有不要用动漫头像。</strong></p>
+<p>Q：能查敏感人物吗？A：<strong>不一定，有的要加钱，有的干脆不能，建议是不要，反正一般也用不着。</strong></p>
+<hr>
+<h2 id="一些忠告"><a href="#一些忠告" class="headerlink" title="一些忠告"></a>一些忠告</h2><p>简单写写。</p>
+<h3 id="避免节奏"><a href="#避免节奏" class="headerlink" title="避免节奏"></a>避免节奏</h3><p>作为普通人，而非信息安全专家，想要保护自己免于网络暴力和开盒，最好的办法之一就是<strong>保持低调</strong>。</p>
+<p>少带节奏，少和别人起冲突。看了就行，自己心里有个判断，有个态度，可以了。</p>
+<p>喜欢说，可能会有人来找你麻烦，警察可能也会找你麻烦。</p>
+<p>少说点，没什么人会注意到你，警察也睁一只眼闭一只眼。</p>
+<p>不要以为就自己可以去开别人，别人同样也可以开你——<strong>网络暴力是相互的</strong>。</p>
+<p>不要以为代理或者VPN的开关打开了，就是谁也抓不到你。公安基本照抓不误，除非你人在国外。</p>
+<p>哪些事情，可能相对会比较危险？个人认为，<strong>饭圈，键政，对喷，乐子，VTuber，文援</strong>等。</p>
+<p>不是说不能做这些事情，当然是可以的，这是你自己的自由。就是要特别注意一些。</p>
+<h3 id="客气一些"><a href="#客气一些" class="headerlink" title="客气一些"></a>客气一些</h3><p>找社工库人工查人的时候最好态度好一点，简单明白说清楚自己的目的和需求，让你给钱就给钱，不要话多。</p>
+<p>就算自己被讹，或者对方查不出来，也是纯纯活该，直接认了。这种财产，<strong>法律是不保护的</strong>。</p>
+<p>不要以为自己一个TG，“匿名性”上来就可以为所欲为，人家查你，可能也是照查不误的。</p>
+<p>等下直接被盒，挂在人工频道上，那就好玩了。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了一些个人隐私保护、信息安全方面的内容。包括隐私保护手段，自查工具、建议行为准则等等。</p>
+<p>写得非常外行，内行肯定是见笑的，抱歉。</p>
+<p>本文到此结束。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Security</category>
+      </categories>
+      <tags>
+        <tag>Crypto</tag>
+        <tag>Cyber Security</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
+    <url>/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ChatGPT之前封锁了很多大机房的IP段，这导致Vultr、Digital Ocean等常用的VPS供应商机房访问OpenAI的服务会被屏蔽。</p>
+<p>本文介绍如何简单地配置CloudFlare Warp进行出站流量转发，以绕过OpenAI的屏蔽策略，访问OpenAI的服务。</p>
+<span id="more"></span>
+
+<h3 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h3><p>非常简单，只需要一行命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -fsSL git.io/warp.sh) d</span><br></pre></td></tr></table></figure>
+
+<p>部署已完成，所有出站流量都走CloudFlare Warp。可能会引入些许延迟和轻微降速，但是几乎无感。</p>
+<p>喜欢的可以去给脚本的作者点个Star：<a href="https://github.com/P3TERX/warp.sh">P3TERX&#x2F;warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)</a></p>
+<p>更详细的文档在作者的文档当中也已经说明。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Network</tag>
+        <tag>Circumvention</tag>
+        <tag>Proxy</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
   <entry>
@@ -2802,7 +3017,7 @@
 <span id="more"></span>
 
 <p>本教程需要读者掌握Twine 2的UI基本使用方法，这些之前讲过，所以本文的节奏会明显加快。</p>
-<p>本教程的其中一部分可能需要读者掌握Twine 2的UI基本使用方法和少量Web前端基础（HTML、CSS、JS）。</p>
+<p>本教程的其中一部分可能需要读者掌握Twine 2的UI基本使用方法和少量Web前端基础（HTML、CSS）。</p>
 <p>最好在本地安装一个Web前端开发工具，以便编写前端代码，个人推荐的是<a href="https://code.visualstudio.com/">VSCode</a>。</p>
 <p>VSCode是免费的，只要随便装几个插件就可以高效地编写前端代码了。安装配置过程略去。</p>
 <hr>
@@ -3055,7 +3270,7 @@
 <h4 id="一个不恰当的例子"><a href="#一个不恰当的例子" class="headerlink" title="一个不恰当的例子"></a>一个不恰当的例子</h4><p>稍微举个例子来解释一下类选择器。</p>
 <p>什么是类选择器，比如说：</p>
 <p><strong>头发为粉色的，出列！</strong></p>
-<p>你可以理解为，<strong>类选择器</strong>就是<strong>头发为粉色的</strong>这么一句话，<strong>出列</strong>就是<strong>一组样式</strong>。</p>
+<p>你可以理解为，<strong>头发为粉色的</strong>这么一句话就是<strong>类选择器</strong>，<strong>出列</strong>就是<strong>一组样式</strong>。</p>
 <p>比如说，这么一组HTML元素就像是一些人在列队。</p>
 <p>每个类名之间用空格隔开。一个元素可以有多个类名。可以理解为特征、标识符、Tag之类的东西。</p>
 <figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;pinkHair shortHair&quot;</span>&gt;</span>Saigyoji Yuyuko<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;whiteHair shortHair&quot;</span>&gt;</span>Konpaku Yomu<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;blueHair longHair&quot;</span>&gt;</span>Hinanawi Tenshi<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;pinkHair longHair&quot;</span>&gt;</span>Sakura Antenna<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -3103,220 +3318,10 @@
       </categories>
       <tags>
         <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
-    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
-<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
-<span id="more"></span>
-
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
-<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
-<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
-<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
-<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
-<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
-
-<p>如果安装成功，就会返回一个版本信息，例如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
-
-<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果正常运行，这个程序输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
-
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>轻微程度的隐私保护技巧</title>
-    <url>/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍一些入门程度的隐私保护技巧。作者也是<strong>门外汉</strong>，无法提供专业的建议。本文在内行看来应该是绝对纯属<strong>胡扯</strong>。</p>
-<p>这可能会稍微提高一点点防人肉能力，但不多，也许能防一些小白。但也就顶多只会<strong>稍微增加调查的成本</strong>而已。对于体系化的社工库团队而言，拿下<strong>普通人</strong>这种事基本上是<strong>轻而易举</strong>的，你通常防了也没用。</p>
-<span id="more"></span>
-
-<p>其实，这也不绝对，一套合理的防护手段和身份隔离可以显著增加调查成本，至少是严重拖延调查的时间。但是，要做到真正意义上的滴水不漏是不可能的。</p>
-<p>本文不打算配图，不太好。可能，看起来会有点枯燥，抱歉。</p>
-<hr>
-<h2 id="减少信息检索机会"><a href="#减少信息检索机会" class="headerlink" title="减少信息检索机会"></a>减少信息检索机会</h2><p>信息检索是调查一个人的基本手段，它是<strong>合法</strong>的。</p>
-<p>普通网民也可以通过信息检索挖掘出一个人的部分个人信息来。</p>
-<p>其主要利用的问题在于——利用不同平台之间互相搜索的关系来放大某一条线索。</p>
-<hr>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>举个例子，拿到一条QQ号，普通人可以怎么查？</p>
-<p>一个常见的做法是直接在<strong>微信</strong>上搜索这个QQ号。如果没有关闭微信的QQ号搜索功能的话，微信号会被确认。</p>
-<p>而常见的微信号格式（偷懒的话）可能会包含手机号、姓名首字母缩写、生日、QQ主号等关键信息。这很容易暴露更多信息。</p>
-<p>另一个常见的做法就是直接在<strong>搜索引擎</strong>上搜索这个QQ号。</p>
-<p>此时可以如何拓宽线索呢？例如之前在某个贴吧交流的时候，你发帖留下了一个QQ号作为联系方式，没删。</p>
-<p>或者，你干脆是个文援什么的，在推特上把自己的QQ号一挂——<strong>门牌xxxxxxxxxx</strong>。那么，别人直接就搜出来了，推特账号。</p>
-<hr>
-<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h3><h4 id="删除发言"><a href="#删除发言" class="headerlink" title="删除发言"></a>删除发言</h4><p>对自己曾经留下互联网足迹，但已经不常用的平台，注意检查一下有没有留过敏感信息，可以自搜一下。</p>
-<p>有的话，可以选择删掉。这会稍微增加一点调查的难度。</p>
-<h4 id="销号跑路"><a href="#销号跑路" class="headerlink" title="销号跑路"></a>销号跑路</h4><p>对于微博一类的数据泄露和开盒重灾区，如果曾经使用，但现在已经不用，或者是没必要用。建议在尽量删除自己的言论后<strong>销号跑路</strong>。</p>
-<p>这能减少攻击者利用微博上的信息、发帖和线索来进一步拓宽调查面，稍微增加难度和拖延时间。</p>
-<h4 id="使用小号-买号"><a href="#使用小号-买号" class="headerlink" title="使用小号 &#x2F; 买号"></a>使用小号 &#x2F; 买号</h4><p>使用QQ进行交流时，如果对方是陌生人，可以考虑使用小号。</p>
-<p>小号的捆绑信息和检索价值相对而言会更少一点，稍微增加调查难度。</p>
-<h4 id="混淆昵称-头像"><a href="#混淆昵称-头像" class="headerlink" title="混淆昵称 &#x2F; 头像"></a>混淆昵称 &#x2F; 头像</h4><p>如果你在意隐私保护，不要在一堆平台上使用十分类似或者干脆是完全一样的昵称和头像。尤其是昵称和ID，这个是容易被检索锁定的。</p>
-<p>为了追求个性，可以稍微增加一点变化。但<strong>最好不要</strong>在昵称、ID当中添加自己的个人真实信息，例如<strong>生日</strong>，<strong>姓名缩写</strong>，<strong>出生年份</strong>等。</p>
-<h4 id="注意隐私设置"><a href="#注意隐私设置" class="headerlink" title="注意隐私设置"></a>注意隐私设置</h4><p>在有必要和自己能接受的范围内，尽可能地隐藏自己的个人信息，减少平台间关联。多隐藏一点，查的难度就多一分，不过也就是一分。</p>
-<p>尤其应该避免直接泄露的包括<strong>手机号</strong>，<strong>真实姓名</strong>，<strong>身份证号</strong>。这三者如果直接泄露，那么开盒将会是非常轻松的一件事情。</p>
-<h4 id="谨慎分享敏感信息"><a href="#谨慎分享敏感信息" class="headerlink" title="谨慎分享敏感信息"></a>谨慎分享敏感信息</h4><p>典型的包括<strong>录取通知书</strong>，<strong>机票</strong>，<strong>火车票</strong>等。不要以为对一些地方打码就能高枕无忧，不是这样的。虽然确实会好得多，但通常还是会暴露一些信息。</p>
-<p>最好还是，控制一下分享的欲望。想要分享的话，可以直接发给信任的朋友，而最好不要直接在帖子、推文、空间之类的地方往那一挂，也不删，长时间就挂在那。</p>
-<h4 id="谨慎分享摄影作品"><a href="#谨慎分享摄影作品" class="headerlink" title="谨慎分享摄影作品"></a>谨慎分享摄影作品</h4><p>不要以为图片定位很困难，不是这样的。</p>
-<h4 id="减少检索机会"><a href="#减少检索机会" class="headerlink" title="减少检索机会"></a>减少检索机会</h4><p>关闭<strong>微信的QQ号搜索，微信的手机号搜索，支付宝的手机号搜索，QQ的手机号搜索，Telegram的手机号展示</strong>，以及各种平台的<strong>通讯录功能</strong>。</p>
-<p>这会稍微增加一点调查难度。</p>
-<h4 id="使用强加密邮箱"><a href="#使用强加密邮箱" class="headerlink" title="使用强加密邮箱"></a>使用强加密邮箱</h4><p>强加密邮箱通常采用端到端加密技术，相对而言是更加可控，它的安全性通常是不可妥协的。</p>
-<p>但也有不方便的一点——主密钥丢失以后，通常还挺难恢复的，可能直接炸了。注意一下。</p>
-<p>推荐两个：</p>
-<p><a href="https://protonmail.com/">ProtonMail (protonmail.com)</a></p>
-<p><a href="https://mail.riseup.net/">RiseUpMail (mail.riseup.net)</a></p>
-<hr>
-<h2 id="减少撞库机会"><a href="#减少撞库机会" class="headerlink" title="减少撞库机会"></a>减少撞库机会</h2><p>稍微解释一下什么是撞库。</p>
-<h3 id="撞库"><a href="#撞库" class="headerlink" title="撞库"></a>撞库</h3><p>比如说，攻击者通过某种手段获取了一条账密信息——<code>Bob@gmail.com</code>, <code>BobLoveAlice1314520</code>。</p>
-<p>他可以尝试，在不同的平台去利用这条账密信息尝试登录。有些平台会触发2FA（国内通常是手机，国外可以是手机、邮件、OTP等），这倒是还能防住，但是有些平台（特别是邮箱和一些小网站）是很容易直接账密登录的。</p>
-<p>一旦撞库成功一次，就可以获取大量的个人信息，直接用于检索，钓鱼，甚至可以说是结案了。</p>
-<p>这种攻击的可行性通常来自于用户的一种<strong>常见的坏习惯——在一堆平台使用几近相同甚至是完全相同的密码</strong>。</p>
-<h3 id="预防撞库"><a href="#预防撞库" class="headerlink" title="预防撞库"></a>预防撞库</h3><p>显然，在每个平台上使用完全不同的密码是很费劲的一件事，也不好记忆，不太方便。</p>
-<p>这里推荐几种稍微增加安全性的方式。</p>
-<h4 id="异地登录保护"><a href="#异地登录保护" class="headerlink" title="异地登录保护"></a>异地登录保护</h4><p>这东西很多平台都有，有的记得打开（当然很多是自带的）。可以稍微增加一点撞库难度。</p>
-<h4 id="稍微差异化的密码"><a href="#稍微差异化的密码" class="headerlink" title="稍微差异化的密码"></a>稍微差异化的密码</h4><p>如果你懒得用什么技术手段保管密码，又懒得记很复杂的密码，那就对每个平台的密码<strong>稍加差异化</strong>。</p>
-<p>这可以稍微增加撞库的成本，或许可以触发尝试次数警告，冻结账户，拖延时间甚至是挫败撞库什么的。</p>
-<h4 id="手机验证码2FA"><a href="#手机验证码2FA" class="headerlink" title="手机验证码2FA"></a>手机验证码2FA</h4><p>对于重要的平台，最好别嫌麻烦，加个<strong>手机验证码</strong>2FA是有助于防止撞库爆破这种情况的，特别是你密码习惯不太好的话。</p>
-<h4 id="邮件验证码2fA"><a href="#邮件验证码2fA" class="headerlink" title="邮件验证码2fA"></a>邮件验证码2fA</h4><p>这<strong>邮件验证码</strong>其实比手机稍弱一些，甚至有时候会帮倒忙（所以说邮件安全要注意的）。</p>
-<p>但其实，这个也看你的邮箱。至少，它也会给攻击者制造麻烦，并且会造成通知、警示的效果。</p>
-<h4 id="Authenticator-OTP应用"><a href="#Authenticator-OTP应用" class="headerlink" title="Authenticator &#x2F; OTP应用"></a>Authenticator &#x2F; OTP应用</h4><p><strong>Microsoft Authenticator</strong>， <strong>Google Authenticator</strong>之类的应用能根据一个PSK和时间戳生成一个动态变更的OTP。它让撞库攻击变得很困难——除非你的手机被入侵，或认证被某种方式绕过。</p>
-<h4 id="密钥管理应用"><a href="#密钥管理应用" class="headerlink" title="密钥管理应用"></a>密钥管理应用</h4><p><strong>1Pass</strong>，<strong>Bitwarden</strong>这样的应用只需要记忆一个主密钥，就可以自动化管理多平台账密，通常具有多端同步、自动填充、密钥生成等功能。</p>
-<p>如果你想要使用多平台不同的随机长密钥，这是很好的选择。这能显著增加撞库的难度。</p>
-<p>如果你的每个平台都使用了至少12字节的随机密钥，且互不相同，那么撞库的威胁对你而言是比较小的。</p>
-<h4 id="生物识别"><a href="#生物识别" class="headerlink" title="生物识别"></a>生物识别</h4><p>指纹、虹膜、掌纹（不推荐人脸和声音）是目前绕过成本较高的生物识别技术，采用这种方式进行登录可以免除管理密码的麻烦，也能增加撞库的困难。</p>
-<h4 id="硬件密钥"><a href="#硬件密钥" class="headerlink" title="硬件密钥"></a>硬件密钥</h4><p>硬件密钥显然是几乎无法绕过的，但也是很麻烦的。</p>
-<hr>
-<h2 id="注意支付手段"><a href="#注意支付手段" class="headerlink" title="注意支付手段"></a>注意支付手段</h2><p>支付手段可能会暴露你的一些个人信息。</p>
-<h3 id="微信和支付宝"><a href="#微信和支付宝" class="headerlink" title="微信和支付宝"></a>微信和支付宝</h3><p><strong>微信收款码</strong>和<strong>支付宝收款码</strong>会暴露你<strong>真实姓名的最后一个字</strong>。</p>
-<p>如果你想要避免这一点，请尝试使用<strong>赞赏码</strong>和<strong>口令红包</strong>。</p>
-<p><strong>支付宝账号被搜索确定</strong>将会暴露你的<strong>性别、部分手机号和真实姓名的最后一个字</strong>。</p>
-<h3 id="PayPal和虚拟信用卡"><a href="#PayPal和虚拟信用卡" class="headerlink" title="PayPal和虚拟信用卡"></a>PayPal和虚拟信用卡</h3><p>这种通常都要好一些，但我也不太了解，太菜了。</p>
-<h3 id="加密货币"><a href="#加密货币" class="headerlink" title="加密货币"></a>加密货币</h3><p>只要你不直接提现到人民币，加密货币一般不会出什么大事。用加密货币支付服务通常具有较高的匿名性，特别是对于一些开不了口，上不了台面，见不得光的交易而言。</p>
-<p>如果硬要提现，可以提现到境外的银行卡，信用卡，虚拟信用卡，再把钱转回来之类的。虽然吃点手续费，但是出事的概率更低。黑转灰，灰洗白。</p>
-<p>仅仅作为支付手段的话，USDT，USDC和TRX是很不错的。</p>
-<p>当然如果提现，最好找个靠谱的C2C商家，千万注意对方的身份和支付信息，如果和标注的不一致，请不要收款。如果收到黑钱，可能会被卷入很麻烦的事情。</p>
-<hr>
-<h2 id="快递信息"><a href="#快递信息" class="headerlink" title="快递信息"></a>快递信息</h2><p>这没什么好说的，数据泄露重灾区。最多要做的就是，注意自己销毁一下信息标签，还有就是填个化名吧。</p>
-<p>用个不常用的手机号也挺好的。</p>
-<hr>
-<h2 id="基本的网络安全防范意识"><a href="#基本的网络安全防范意识" class="headerlink" title="基本的网络安全防范意识"></a>基本的网络安全防范意识</h2><p>这个东西简直是……可能耳朵都要听出茧子来了吧？但还是稍微讲讲。</p>
-<h3 id="钓鱼链接"><a href="#钓鱼链接" class="headerlink" title="钓鱼链接"></a>钓鱼链接</h3><p>借贷、赌博、涉黄、钓鱼的短信、邮件链接不要乱点，看清楚再点。</p>
-<p>不要以为反正点进去不输信息就没事（当然你输信息就，对吧，不用看了），有时候会被定位之类的，情况复杂得很，注意一下。</p>
-<h3 id="深度伪造"><a href="#深度伪造" class="headerlink" title="深度伪造"></a>深度伪造</h3><p>音视频AI伪造很发达，总之熟人的一些请求也是需要找他们本人再三确认的，不要直接相信了。</p>
-<h3 id="虚拟身份证明"><a href="#虚拟身份证明" class="headerlink" title="虚拟身份证明"></a>虚拟身份证明</h3><p>用SMS代收发这种服务来绕过你不太信任的一些平台的注册。</p>
-<p><a href="https://sms-bus.com/">SMS Bus</a></p>
-<p><a href="https://sms-activate.io/">SMS Activate</a></p>
-<h3 id="底线意识"><a href="#底线意识" class="headerlink" title="底线意识"></a>底线意识</h3><p>不涉三就是不涉三，<strong>底线卡死</strong>，不要什么软磨硬泡的给个联系方式，给点什么信息，收个礼物什么的，甚至去搞线下。</p>
-<h3 id="不明物品"><a href="#不明物品" class="headerlink" title="不明物品"></a>不明物品</h3><p>比如说你是个V，收了一堆礼物，请务必<strong>仔细检查</strong>一下，到底有没有定位器、录音器、针孔摄像头一类的东西。网络上再怎么熟络，交情再怎么深的人，也不是完全可信的。</p>
-<hr>
-<h2 id="一些简单的自查手段"><a href="#一些简单的自查手段" class="headerlink" title="一些简单的自查手段"></a>一些简单的自查手段</h2><p>这些东西，可以用来自查。可以看看自己哪些账号信息泄露了，这样可以提前做防范，有个心理预期。</p>
-<p>可以尝试对自己进行几次调查看看，难度会不会很高。就用之前的那点，简单方法。</p>
-<p>当然，你也可以用这种东西去查别人。<strong>技术就在那里，看你怎么用了</strong>。</p>
-<p><a href="https://www.reg007.com/">REG007</a> —— 账号绑定关联等，仅用于自查</p>
-<p><a href="https://qb.heikebook.com/index">Q绑查询-HeikeBook</a> —— QQ数据泄露，LoL数据泄露等</p>
-<p><a href="https://haveibeenpwned.com/">Have I Been Pwned？</a> —— 一个简单的自查系统</p>
-<p><a href="https://privacy.aiuys.com/">Privacy | 个人数据泄漏检测 (aiuys.com)</a> —— 简单的查询系统，数据不少</p>
-<p><a href="https://ouotool.com/qq/direct">查隐藏QQ_QQ号码查询分析工具 (ouotool.com)</a> —— 隐藏QQ查询</p>
-<p><a href="https://qq.ip138.com/idsearch/">身份证查询 (ip138.com)</a> —— 身份证号信息分析工具</p>
-<p><a href="https://www.ip138.com/sj/">手机号归属地查询 (ip138.com)</a> —— 手机号信息分析工具</p>
-<p><a href="https://www.ip138.com/">IP地址查询 (ip138.com)</a> —— IP地址信息分析工具</p>
-<p><a href="https://qq.ip138.com/day/">万年历查询 (ip138.com)</a> —— 阴阳历转换 用于锁定生日等</p>
-<hr>
-<h2 id="社工库"><a href="#社工库" class="headerlink" title="社工库"></a>社工库</h2><p>简单解释一下社工库。</p>
-<h3 id="什么是社工库？"><a href="#什么是社工库？" class="headerlink" title="什么是社工库？"></a>什么是社工库？</h3><p>社工库是一个灰产&#x2F;黑产数据库，其中包含了大量来自于互联网数据泄露事件、隐私暴露事件、信息安全事件、内鬼泄露、数据贩卖等灰色、黑色链条输入的数据。个人信息在这种数据库上关联起来，用于检索和定位。</p>
-<p>其中最主要的信息泄露事件和领域包括：</p>
-<p><strong>新浪微博，腾讯QQ，顺丰快递，超星学习通，英雄联盟，网贷平台</strong>等。</p>
-<p>通常而言，以下几条信息是容易被关联在一起：</p>
-<p><strong>QQ号，微博号，LoL用户名，LoL大区，曾用密码MD5，真实姓名，手机号，身份证号，家庭住址，学号</strong>。</p>
-<p>社工库通常以<strong>Telegram Bot</strong>的方式提供服务。</p>
-<p>免费用一般是可以的，签到送额度。用户通常可以免费检索，但是额度不高。要想自由使用，通常要付费。</p>
-<p>付费通常会解锁一个较大的检索额度，并且会增加一些额外的模式，例如猎魔（类似于盲搜）——给出一定的范围，例如<strong>部分姓名，籍贯，出生日期范围&#x2F;生日，性别</strong>，随后社工库返还数十条记录，用于参考和大致锁定范围。</p>
-<p>最有效的手段是雇佣社工库的专业团队，对某个人进行调查。这个服务一般会比较贵，但绝大多数个人都可以被完全调查出来，包括<strong>个人真实信息，开房记录，借贷记录，征信体系，犯罪历史，三网定位</strong>等等。这里就可能会超出一般的信息检索范畴，会用到一些……内部的帮助。这个我也不是很清楚。</p>
-<h3 id="推荐几个社工库？"><a href="#推荐几个社工库？" class="headerlink" title="推荐几个社工库？"></a>推荐几个社工库？</h3><p>可以用来自查，也可以拿去查别人。</p>
-<p>总之，还是那句话，<strong>技术就在那里，看你怎么用了</strong>。</p>
-<p><a href="https://t.me/qbjSGKbot">情报局社工库</a></p>
-<p><a href="https://t.me/AJL01_bot">暗精灵社工库</a></p>
-<p><a href="https://t.me/DogeSGK_bot">狗狗社工库</a></p>
-<p><a href="https://t.me/Zonesgk_bot?start=TZUYZTTPQ">X-ray社工库</a></p>
-<p>这种东西，互联网上很多，可以自己去找。反正也是付费交易。你把钱付给他们，他们把你想要的东西交给你。</p>
-<p>Q：用社工库违法吗？A：<strong>没错，但不太好抓，一般睁一只眼闭一只眼，不要宣扬和传播。</strong></p>
-<p>Q：没有风险吗？A：<strong>有的，求别人办事最好说话客气点，少废话，直接给钱。还有不要用动漫头像。</strong></p>
-<p>Q：能查敏感人物吗？A：<strong>不一定，有的要加钱，有的干脆不能，建议是不要，反正一般也用不着。</strong></p>
-<hr>
-<h2 id="一些忠告"><a href="#一些忠告" class="headerlink" title="一些忠告"></a>一些忠告</h2><p>简单写写。</p>
-<h3 id="避免节奏"><a href="#避免节奏" class="headerlink" title="避免节奏"></a>避免节奏</h3><p>作为普通人，而非信息安全专家，想要保护自己免于网络暴力和开盒，最好的办法之一就是<strong>保持低调</strong>。</p>
-<p>少带节奏，少和别人起冲突。看了就行，自己心里有个判断，有个态度，可以了。</p>
-<p>喜欢说，可能会有人来找你麻烦，警察可能也会找你麻烦。</p>
-<p>少说点，没什么人会注意到你，警察也睁一只眼闭一只眼。</p>
-<p>不要以为就自己可以去开别人，别人同样也可以开你——<strong>网络暴力是相互的</strong>。</p>
-<p>不要以为代理或者VPN的开关打开了，就是谁也抓不到你。公安基本照抓不误，除非你人在国外。</p>
-<p>哪些事情，可能相对会比较危险？个人认为，<strong>饭圈，键政，对喷，乐子，VTuber，文援</strong>等。</p>
-<p>不是说不能做这些事情，当然是可以的，这是你自己的自由。就是要特别注意一些。</p>
-<h3 id="客气一些"><a href="#客气一些" class="headerlink" title="客气一些"></a>客气一些</h3><p>找社工库人工查人的时候最好态度好一点，简单明白说清楚自己的目的和需求，让你给钱就给钱，不要话多。</p>
-<p>就算自己被讹，或者对方查不出来，也是纯纯活该，直接认了。这种财产，<strong>法律是不保护的</strong>。</p>
-<p>不要以为自己一个TG，“匿名性”上来就可以为所欲为，人家查你，可能也是照查不误的。</p>
-<p>等下直接被盒，挂在人工频道上，那就好玩了。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了一些个人隐私保护、信息安全方面的内容。包括隐私保护手段，自查工具、建议行为准则等等。</p>
-<p>写得非常外行，内行肯定是见笑的，抱歉。</p>
-<p>本文到此结束。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Security</category>
-      </categories>
-      <tags>
-        <tag>Crypto</tag>
-        <tag>Social Engineering</tag>
-        <tag>Info Security</tag>
-        <tag>Cyber Security</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
-    <url>/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ChatGPT之前封锁了很多大机房的IP段，这导致Vultr、Digital Ocean等常用的VPS供应商机房访问OpenAI的服务会被屏蔽。</p>
-<p>本文介绍如何简单地配置CloudFlare Warp进行出站流量转发，以绕过OpenAI的屏蔽策略，访问OpenAI的服务。</p>
-<span id="more"></span>
-
-<h3 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h3><p>非常简单，只需要一行命令行：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -fsSL git.io/warp.sh) d</span><br></pre></td></tr></table></figure>
-
-<p>部署已完成，所有出站流量都走CloudFlare Warp。可能会引入些许延迟和轻微降速，但是几乎无感。</p>
-<p>喜欢的可以去给脚本的作者点个Star：<a href="https://github.com/P3TERX/warp.sh">P3TERX&#x2F;warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)</a></p>
-<p>更详细的文档在作者的文档当中也已经说明。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Network</tag>
-        <tag>Circumvention</tag>
-        <tag>VPS</tag>
       </tags>
   </entry>
 </search>

@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-09-30T07:56:09.519Z</updated>
+  <updated>2024-09-30T09:38:25.834Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/"/>
     <id>https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/</id>
     <published>2024-09-29T05:59:12.000Z</published>
-    <updated>2024-09-30T07:56:09.519Z</updated>
+    <updated>2024-09-30T09:38:25.834Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS等。&lt;/p&gt;
@@ -36,6 +36,8 @@
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
+    
     <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
     
     <category term="HTML" scheme="https://bluemap1e.github.io/tags/HTML/"/>
@@ -49,7 +51,7 @@
     <link href="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/"/>
     <id>https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/</id>
     <published>2024-09-28T12:20:56.000Z</published>
-    <updated>2024-09-28T17:15:10.707Z</updated>
+    <updated>2024-09-30T09:32:01.166Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文尝试介绍一下Twine的UI界面。篇幅冗长，废话很多。&lt;/p&gt;
@@ -64,6 +66,8 @@
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
+    
     <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
     
     <category term="HTML" scheme="https://bluemap1e.github.io/tags/HTML/"/>
@@ -77,7 +81,7 @@
     <link href="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
     <published>2024-09-28T05:29:09.000Z</published>
-    <updated>2024-09-29T05:59:24.157Z</updated>
+    <updated>2024-09-30T09:38:21.351Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。&lt;/p&gt;
@@ -92,6 +96,8 @@
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
+    
     <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
     
     <category term="HTML" scheme="https://bluemap1e.github.io/tags/HTML/"/>
@@ -105,7 +111,7 @@
     <link href="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/"/>
     <id>https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</id>
     <published>2024-09-26T10:06:03.000Z</published>
-    <updated>2024-09-28T10:39:31.800Z</updated>
+    <updated>2024-09-30T09:32:22.869Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。&lt;/p&gt;
@@ -115,14 +121,12 @@
     
     <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
     
-    <category term="JavaScript" scheme="https://bluemap1e.github.io/categories/Tech/JavaScript/"/>
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/categories/Tech/Web-Front-End/"/>
     
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
-    <category term="R-18" scheme="https://bluemap1e.github.io/tags/R-18/"/>
-    
-    <category term="Webtease" scheme="https://bluemap1e.github.io/tags/Webtease/"/>
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
     
   </entry>
   
@@ -131,7 +135,7 @@
     <link href="https://bluemap1e.github.io/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/"/>
     <id>https://bluemap1e.github.io/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/</id>
     <published>2024-09-24T13:09:53.000Z</published>
-    <updated>2024-09-25T03:26:42.660Z</updated>
+    <updated>2024-09-30T09:22:46.079Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要介绍一些入门程度的隐私保护技巧。作者也是&lt;strong&gt;门外汉&lt;/strong&gt;，无法提供专业的建议。本文在内行看来应该是绝对纯属&lt;strong&gt;胡扯&lt;/strong&gt;。&lt;/p&gt;
@@ -146,10 +150,6 @@
     
     <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
     
-    <category term="Social Engineering" scheme="https://bluemap1e.github.io/tags/Social-Engineering/"/>
-    
-    <category term="Info Security" scheme="https://bluemap1e.github.io/tags/Info-Security/"/>
-    
     <category term="Cyber Security" scheme="https://bluemap1e.github.io/tags/Cyber-Security/"/>
     
   </entry>
@@ -159,7 +159,7 @@
     <link href="https://bluemap1e.github.io/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/"/>
     <id>https://bluemap1e.github.io/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</id>
     <published>2024-09-23T07:30:57.000Z</published>
-    <updated>2024-09-24T02:01:11.474Z</updated>
+    <updated>2024-09-30T09:22:59.458Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;简介&quot;&gt;&lt;a href=&quot;#简介&quot; class=&quot;headerlink&quot; title=&quot;简介&quot;&gt;&lt;/a&gt;简介&lt;/h2&gt;&lt;p&gt;本文是一篇完全面向技术小白的新手教程。&lt;/p&gt;
@@ -172,10 +172,6 @@
     <category term="Network" scheme="https://bluemap1e.github.io/categories/Tech/Network/"/>
     
     
-    <category term="BitTorrent" scheme="https://bluemap1e.github.io/tags/BitTorrent/"/>
-    
-    <category term="P2P" scheme="https://bluemap1e.github.io/tags/P2P/"/>
-    
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
   </entry>
@@ -185,7 +181,7 @@
     <link href="https://bluemap1e.github.io/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/"/>
     <id>https://bluemap1e.github.io/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</id>
     <published>2024-09-20T16:59:55.000Z</published>
-    <updated>2024-09-23T06:23:37.703Z</updated>
+    <updated>2024-09-30T09:32:13.613Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。&lt;/p&gt;
@@ -195,14 +191,12 @@
     
     <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
     
-    <category term="JavaScript" scheme="https://bluemap1e.github.io/categories/Tech/JavaScript/"/>
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/categories/Tech/Web-Front-End/"/>
     
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
-    <category term="R-18" scheme="https://bluemap1e.github.io/tags/R-18/"/>
-    
-    <category term="Webtease" scheme="https://bluemap1e.github.io/tags/Webtease/"/>
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
     
   </entry>
   
@@ -211,7 +205,7 @@
     <link href="https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/"/>
     <id>https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/</id>
     <published>2024-09-19T13:16:22.000Z</published>
-    <updated>2024-09-24T02:12:49.011Z</updated>
+    <updated>2024-09-30T09:32:18.842Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;行为（Actions）&lt;/strong&gt;是Milovana Webtease的核心机制，它构成了一个互动文游的框架和主体。&lt;/p&gt;
@@ -221,14 +215,12 @@
     
     <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
     
-    <category term="JavaScript" scheme="https://bluemap1e.github.io/categories/Tech/JavaScript/"/>
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/categories/Tech/Web-Front-End/"/>
     
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
-    <category term="R-18" scheme="https://bluemap1e.github.io/tags/R-18/"/>
-    
-    <category term="Webtease" scheme="https://bluemap1e.github.io/tags/Webtease/"/>
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
     
   </entry>
   
@@ -237,7 +229,7 @@
     <link href="https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/"/>
     <id>https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/</id>
     <published>2024-09-19T03:51:11.000Z</published>
-    <updated>2024-09-22T10:45:09.623Z</updated>
+    <updated>2024-09-30T09:32:09.705Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;EOS Editor&lt;/strong&gt;是&lt;strong&gt;Milovana&lt;/strong&gt;的一个Web UI，可以用于制作简单的互动小游戏。&lt;/p&gt;
@@ -247,14 +239,12 @@
     
     <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
     
-    <category term="JavaScript" scheme="https://bluemap1e.github.io/categories/Tech/JavaScript/"/>
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/categories/Tech/Web-Front-End/"/>
     
     
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
-    <category term="R-18" scheme="https://bluemap1e.github.io/tags/R-18/"/>
-    
-    <category term="Webtease" scheme="https://bluemap1e.github.io/tags/Webtease/"/>
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
     
   </entry>
   
@@ -263,7 +253,7 @@
     <link href="https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/"/>
     <id>https://bluemap1e.github.io/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
     <published>2023-11-15T12:00:04.000Z</published>
-    <updated>2024-09-23T07:02:04.763Z</updated>
+    <updated>2024-09-30T09:33:08.419Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。&lt;/p&gt;</summary>
@@ -279,6 +269,8 @@
     
     <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
     
+    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
+    
   </entry>
   
   <entry>
@@ -286,7 +278,7 @@
     <link href="https://bluemap1e.github.io/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/"/>
     <id>https://bluemap1e.github.io/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
     <published>2023-11-14T07:55:23.000Z</published>
-    <updated>2024-09-23T07:02:13.567Z</updated>
+    <updated>2024-09-30T09:32:59.996Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。&lt;/p&gt;</summary>
@@ -302,6 +294,8 @@
     
     <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
     
+    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
+    
   </entry>
   
   <entry>
@@ -309,7 +303,7 @@
     <link href="https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/"/>
     <id>https://bluemap1e.github.io/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</id>
     <published>2023-11-13T17:10:07.000Z</published>
-    <updated>2024-09-23T07:02:25.085Z</updated>
+    <updated>2024-09-30T09:32:49.037Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。&lt;/p&gt;</summary>
@@ -360,7 +354,7 @@
     <link href="https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     <id>https://bluemap1e.github.io/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
     <published>2023-11-11T12:19:25.000Z</published>
-    <updated>2024-09-23T06:54:02.161Z</updated>
+    <updated>2024-09-30T09:41:09.621Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;VMess是V2Ray设计的一种代理协议，能使用各种安全层和传输层协议，实现不同的代理方式。&lt;/p&gt;
@@ -379,6 +373,8 @@
     
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
+    <category term="Proxy" scheme="https://bluemap1e.github.io/tags/Proxy/"/>
+    
     <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
@@ -388,7 +384,7 @@
     <link href="https://bluemap1e.github.io/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"/>
     <id>https://bluemap1e.github.io/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</id>
     <published>2023-11-09T07:38:23.000Z</published>
-    <updated>2024-09-23T06:53:43.918Z</updated>
+    <updated>2024-09-30T09:41:26.014Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。&lt;/p&gt;
@@ -405,6 +401,10 @@
     
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
+    <category term="Proxy" scheme="https://bluemap1e.github.io/tags/Proxy/"/>
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/tags/Windows/"/>
+    
   </entry>
   
   <entry>
@@ -412,7 +412,7 @@
     <link href="https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/"/>
     <id>https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
     <published>2023-11-08T08:33:53.000Z</published>
-    <updated>2024-09-23T07:02:00.256Z</updated>
+    <updated>2024-09-30T09:33:13.203Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;一篇简单的OpenSSL 对称加密使用经验，偶尔更新。&lt;/p&gt;</summary>
@@ -437,7 +437,7 @@
     <link href="https://bluemap1e.github.io/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/"/>
     <id>https://bluemap1e.github.io/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
     <published>2023-11-05T16:34:17.000Z</published>
-    <updated>2024-09-23T07:02:09.194Z</updated>
+    <updated>2024-09-30T09:33:03.900Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;一篇简单的OpenSSL 散列使用经验，偶尔更新。&lt;/p&gt;</summary>
@@ -462,7 +462,7 @@
     <link href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
     <published>2023-11-01T09:28:21.000Z</published>
-    <updated>2024-09-23T06:53:48.284Z</updated>
+    <updated>2024-09-30T09:33:39.781Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。&lt;/p&gt;
@@ -511,7 +511,7 @@
     <link href="https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     <id>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
     <published>2023-10-21T05:35:09.000Z</published>
-    <updated>2024-09-23T06:54:07.250Z</updated>
+    <updated>2024-09-30T09:35:21.845Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;昨天看到了阿里云的经济型e服务器，感觉性价比挺不错的，因此尝试用来搭一台MineCraft服务器玩玩，这样用Curtain之类的模组挂机很方便。&lt;/p&gt;</summary>
