@@ -22,12 +22,12 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言（这篇教程还在施工中，随时可能会有较大的改动） 本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
+  <meta name="description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于Twine-SugarCube的互动文游制作（3）Twine基础">
 <meta property="og:url" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言（这篇教程还在施工中，随时可能会有较大的改动） 本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
+<meta property="og:description" content="前言本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS等。 阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkSample.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/simpleLinkAddText.png">
@@ -37,6 +37,7 @@
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/sepLinkTest.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkSample.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/arrowLinkTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/treeSample.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/textEdit.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldText.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/boldTextTest.png">
@@ -61,8 +62,10 @@
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/massHTMLTest.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/cssSample.png">
 <meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/cssTest.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/classSelectorSample.png">
+<meta property="og:image" content="https://bluemap1e.github.io/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/classSelectorTest.png">
 <meta property="article:published_time" content="2024-09-29T05:59:12.000Z">
-<meta property="article:modified_time" content="2024-09-30T07:02:14.017Z">
+<meta property="article:modified_time" content="2024-09-30T07:56:09.519Z">
 <meta property="article:author" content="BlueMap1e">
 <meta property="article:tag" content="JavaScript">
 <meta property="article:tag" content="Web Front-End">
@@ -291,7 +294,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-30 15:02:14" itemprop="dateModified" datetime="2024-09-30T15:02:14+08:00">2024-09-30</time>
+                <time title="Modified: 2024-09-30 15:56:09" itemprop="dateModified" datetime="2024-09-30T15:56:09+08:00">2024-09-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -334,14 +337,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>3.2k</span>
+              <span>4.1k</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>16 mins.</span>
+              <span>20 mins.</span>
             </span>
 
         </div>
@@ -353,8 +356,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>（这篇教程还在施工中，随时可能会有较大的改动）</p>
-<p>本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS、JS等。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要结合实操，介绍Twine 2的一些基础特性，包括链接、HTML、CSS等。</p>
 <p>阅读本教程后，读者应该能够制作一个简单的Twine 2非线性故事。</p>
 <span id="more"></span>
 
@@ -414,6 +416,10 @@
 <hr>
 <h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>好了，你已经学会链接了。</p>
 <p>如果没有什么复杂的互动需要，单纯就是多分支故事，已经不用往下看了，你已经会了。</p>
+<p>利用链接已经可以创造出复杂的故事结构，随便举个例子吧。</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/treeSample.png" class="" title="treeSample">
+
+<p>链接反正不限制数量，在片段视图的这个平面布局下也可以清楚地看到故事的分支和走向，可以用来设计剧情了。</p>
 <hr>
 <h2 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h2><p>（注意：这部分内容可能需要读者具有初级的HTML基础）</p>
 <p>作者的话：我会尝试尽量讲得浅显一些，通过举例子来讲解。但如果实在是完全看不懂，没办法，学一点前端吧，就HTML部分就行。很快，很轻松，没难度的。<del>学前端绝对会害了你，快跑</del></p>
@@ -514,6 +520,7 @@
 
 <hr>
 <h4 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h4><p>尝试尽量详细地介绍了一下如何通过嵌入HTML标签的形式，调整一些基本的字体样式。</p>
+<p>现在可以做出花哨的文本了。</p>
 <hr>
 <h3 id="超链接"><a href="#超链接" class="headerlink" title="超链接"></a>超链接</h3><p>创建超链接应该也是一个常见的需求。</p>
 <p>比如说，需要创建一个指向外部网页的连接。这里用到HTML的<code>&lt;a&gt;</code>元素。</p>
@@ -582,7 +589,8 @@
 <p>语义化程度也很低。</p>
 <p>此时使用CSS就可以较好地解决这个问题。</p>
 <p>此处就还是刚才这个例子，为了实现相同的效果，可以有更加优雅的方案：</p>
-<p>找到故事（Story）-样式表（Style Sheet），写一个类选择器和一组样式：</p>
+<p>找到故事（Story）-样式表（Style Sheet），写一个类选择器和一组样式。</p>
+<p>现在看不懂没关系（当然，还是那句话，最好自学一点CSS），就试试看：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.sampleText</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#00FFFF</span>;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">24px</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>: bold;</span><br><span class="line">    <span class="attribute">font-style</span>: italic;</span><br><span class="line">    <span class="attribute">text-decoration</span>: underline;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>此时，只需要在Passage中写这样一小段：</p>
@@ -598,7 +606,55 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;sampleText&quot;</span>&gt;</span> some content <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>这样提高了效率，精简了代码。也不会破坏文本的结构，更加美观。</p>
+<p>如果想要修改，可以直接修改CSS代码，例如调整颜色、调整字体大小，对应的HTML元素也会跟着调整。不用一个个去改了。</p>
 <hr>
+<h3 id="类选择器"><a href="#类选择器" class="headerlink" title="类选择器"></a>类选择器</h3><p>如果是新手的话，建议是全部用类选择器来添加样式。这样比较直观，容易管理。</p>
+<p>像是元素、ID、属性这种选择器，可能会有点复杂。具体的还是，学了CSS以后才能理解。</p>
+<hr>
+<h4 id="一个不恰当的例子"><a href="#一个不恰当的例子" class="headerlink" title="一个不恰当的例子"></a>一个不恰当的例子</h4><p>稍微举个例子来解释一下类选择器。</p>
+<p>什么是类选择器，比如说：</p>
+<p><strong>头发为粉色的，出列！</strong></p>
+<p>你可以理解为，<strong>类选择器</strong>就是<strong>头发为粉色的</strong>这么一句话，<strong>出列</strong>就是<strong>一组样式</strong>。</p>
+<p>比如说，这么一组HTML元素就像是一些人在列队。</p>
+<p>每个类名之间用空格隔开。一个元素可以有多个类名。可以理解为特征、标识符、Tag之类的东西。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;pinkHair shortHair&quot;</span>&gt;</span>Saigyoji Yuyuko<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;whiteHair shortHair&quot;</span>&gt;</span>Konpaku Yomu<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;blueHair longHair&quot;</span>&gt;</span>Hinanawi Tenshi<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;pinkHair longHair&quot;</span>&gt;</span>Sakura Antenna<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>谁被选中了？有<code>pinkHair</code>这个类的元素被选中了。在这个语境下是Saigyoji Yuyuko和Sakura Antenna。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.pinkHair</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* out of the ranks! */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那如果换一个类选择器呢？比如说，<strong>长发的，好看！</strong></p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.longHair</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">/* looks good */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在是有<code>longHair</code>这个类的元素被选中了，在这个语境下是Hinanawi Tenshi和Sakura Antenna。</p>
+<p>不知道这个奇怪的例子有没有帮助读者理解什么是类选择器，<del>反正作者自娱自乐的目的是已经达到了</del>。</p>
+<hr>
+<h4 id="类选择器的简单应用"><a href="#类选择器的简单应用" class="headerlink" title="类选择器的简单应用"></a>类选择器的简单应用</h4><p>咳咳，回归正题。那么，类选择器要怎么用呢？</p>
+<p>还是举个例子吧。比如说，在Passage中，需要用到三种样式。</p>
+<p>一种是红色加粗的文本，用于显示警告：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.alert</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">color</span>: <span class="number">#FF0000</span>;</span><br><span class="line">    <span class="attribute">font-weight</span>: bold;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一种是放大的斜体文本，用来强调或吸引注意力。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.attention</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">24px</span>;</span><br><span class="line">    <span class="attribute">font-style</span>: italic;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一种是划去的文本，<del>用来开玩笑</del>：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.joke</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attribute">text-decoration</span>: line-through;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后写一些故事片段文本中的HTML元素作为样例，顺便展示一下叠加的效果：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">span</span>&gt;</span>这是一段普通的文本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;alert&quot;</span>&gt;</span>这是一段红色加粗的文本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;attention&quot;</span>&gt;</span>这是一段放大的斜体文本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;joke&quot;</span>&gt;</span>这是一段被划去的文本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;alert attention&quot;</span>&gt;</span>这是一段红色、加粗、放大、斜体的文本<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;attention joke&quot;</span>&gt;</span>天子最可爱了<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>尝试一下：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/classSelectorSample.png" class="" title="classSelectorSample">
+
+<p>测试，看看效果：</p>
+<img src="/2024/09/29/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%883%EF%BC%89Twine%E5%9F%BA%E7%A1%80/classSelectorTest.png" class="" title="classSelectorTest">
+
+<hr>
+<h3 id="小结-3"><a href="#小结-3" class="headerlink" title="小结"></a>小结</h3><p>这里简单介绍了一下使用CSS的优点，以及类选择器的一点基本用法。基本是针对新手。</p>
+<p>不打算深入，如果打算深入研究的话，建议是掌握CSS，然后去阅读对应故事框架的CSS选择器文档。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了Twine 2的一些基本概念，包括链接、故事分支结构、HTML、CSS等内容。</p>
+<p>读者阅读本文后，应该有能力制作一个多分支的、包含丰富文字样式、外链和图片的Twine 2故事。如果不能，那应该是我的文章写得太烂了（</p>
+<p>就这样。</p>
 
     </div>
 
@@ -618,10 +674,10 @@
       <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\21\从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
+      <div class="popular-posts-title"><a href="\2024\09\26\从零开始的小黄油制作——-Milovana-EOS-Editor教程（4）-进阶行为与JavaScript\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</a></div>
     </li>
   </ul>
 
@@ -729,7 +785,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%EF%BC%88Link%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">链接（Link）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">语法格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E5%90%91%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.1.1.</span> <span class="nav-text">直接指向页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E8%AE%BE%E7%BD%AE%E9%93%BE%E6%8E%A5%E6%96%87%E6%9C%AC"><span class="nav-number">2.1.2.</span> <span class="nav-text">单独设置链接文本</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">分隔符写法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">箭头写法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML"><span class="nav-number">3.</span> <span class="nav-text">HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">调整文本样式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B2%97%E4%BD%93"><span class="nav-number">3.1.1.</span> <span class="nav-text">粗体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%9C%E4%BD%93"><span class="nav-number">3.1.2.</span> <span class="nav-text">斜体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E7%A4%BA%E8%8C%83%EF%BC%88%E5%8A%A0%E7%B2%97-%E6%96%9C%E4%BD%93%EF%BC%89"><span class="nav-number">3.1.3.</span> <span class="nav-text">嵌套示范（加粗+斜体）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="nav-number">3.1.4.</span> <span class="nav-text">下划线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E4%BA%AE%E6%96%87%E6%9C%AC"><span class="nav-number">3.1.5.</span> <span class="nav-text">高亮文本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.6.</span> <span class="nav-text">调整字体大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%AD%97%E4%BD%93%E9%A2%9C%E8%89%B2"><span class="nav-number">3.1.7.</span> <span class="nav-text">调整字体颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">3.1.8.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E9%93%BE%E6%8E%A5"><span class="nav-number">3.2.</span> <span class="nav-text">超链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E7%89%87"><span class="nav-number">3.3.</span> <span class="nav-text">图片</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%A8%E7%BA%BF%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90"><span class="nav-number">3.3.1.</span> <span class="nav-text">使用在线图片资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90"><span class="nav-number">3.3.2.</span> <span class="nav-text">使用本地图片资源</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-2"><span class="nav-number">3.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS"><span class="nav-number">4.</span> <span class="nav-text">CSS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8CSS%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">为什么要用CSS？</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%93%BE%E6%8E%A5%EF%BC%88Link%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">链接（Link）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AF%AD%E6%B3%95%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.</span> <span class="nav-text">语法格式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E6%8C%87%E5%90%91%E9%A1%B5%E9%9D%A2"><span class="nav-number">2.1.1.</span> <span class="nav-text">直接指向页面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%8B%AC%E8%AE%BE%E7%BD%AE%E9%93%BE%E6%8E%A5%E6%96%87%E6%9C%AC"><span class="nav-number">2.1.2.</span> <span class="nav-text">单独设置链接文本</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%88%86%E9%9A%94%E7%AC%A6%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">分隔符写法</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%86%99%E6%B3%95"><span class="nav-number">2.1.2.2.</span> <span class="nav-text">箭头写法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93"><span class="nav-number">2.2.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTML"><span class="nav-number">3.</span> <span class="nav-text">HTML</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E6%96%87%E6%9C%AC%E6%A0%B7%E5%BC%8F"><span class="nav-number">3.1.</span> <span class="nav-text">调整文本样式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B2%97%E4%BD%93"><span class="nav-number">3.1.1.</span> <span class="nav-text">粗体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%9C%E4%BD%93"><span class="nav-number">3.1.2.</span> <span class="nav-text">斜体</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E7%A4%BA%E8%8C%83%EF%BC%88%E5%8A%A0%E7%B2%97-%E6%96%9C%E4%BD%93%EF%BC%89"><span class="nav-number">3.1.3.</span> <span class="nav-text">嵌套示范（加粗+斜体）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%8B%E5%88%92%E7%BA%BF"><span class="nav-number">3.1.4.</span> <span class="nav-text">下划线</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%AB%98%E4%BA%AE%E6%96%87%E6%9C%AC"><span class="nav-number">3.1.5.</span> <span class="nav-text">高亮文本</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%AD%97%E4%BD%93%E5%A4%A7%E5%B0%8F"><span class="nav-number">3.1.6.</span> <span class="nav-text">调整字体大小</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E5%AD%97%E4%BD%93%E9%A2%9C%E8%89%B2"><span class="nav-number">3.1.7.</span> <span class="nav-text">调整字体颜色</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="nav-number">3.1.8.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E9%93%BE%E6%8E%A5"><span class="nav-number">3.2.</span> <span class="nav-text">超链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E7%89%87"><span class="nav-number">3.3.</span> <span class="nav-text">图片</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%A8%E7%BA%BF%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90"><span class="nav-number">3.3.1.</span> <span class="nav-text">使用在线图片资源</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9C%AC%E5%9C%B0%E5%9B%BE%E7%89%87%E8%B5%84%E6%BA%90"><span class="nav-number">3.3.2.</span> <span class="nav-text">使用本地图片资源</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-2"><span class="nav-number">3.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CSS"><span class="nav-number">4.</span> <span class="nav-text">CSS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8CSS%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">为什么要用CSS？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8"><span class="nav-number">4.2.</span> <span class="nav-text">类选择器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%80%E4%B8%AA%E4%B8%8D%E6%81%B0%E5%BD%93%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="nav-number">4.2.1.</span> <span class="nav-text">一个不恰当的例子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E9%80%89%E6%8B%A9%E5%99%A8%E7%9A%84%E7%AE%80%E5%8D%95%E5%BA%94%E7%94%A8"><span class="nav-number">4.2.2.</span> <span class="nav-text">类选择器的简单应用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%8F%E7%BB%93-3"><span class="nav-number">4.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -823,13 +879,13 @@
       <i class="fa fa-chart-area"></i>
     </span>
       <span class="post-meta-item-text">Symbols count total: </span>
-    <span title="Symbols count total">42k</span>
+    <span title="Symbols count total">43k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
       <span class="post-meta-item-text">Reading time total &asymp;</span>
-    <span title="Reading time total">3:31</span>
+    <span title="Reading time total">3:36</span>
 </div>
   <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
