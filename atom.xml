@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-09-30T09:38:25.834Z</updated>
+  <updated>2024-10-17T16:49:40.935Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于Ink的简单互动文游制作</title>
+    <link href="https://bluemap1e.github.io/2024/10/17/%E5%9F%BA%E4%BA%8EInk%E7%9A%84%E7%AE%80%E5%8D%95%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C/"/>
+    <id>https://bluemap1e.github.io/2024/10/17/%E5%9F%BA%E4%BA%8EInk%E7%9A%84%E7%AE%80%E5%8D%95%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C/</id>
+    <published>2024-10-17T12:39:03.000Z</published>
+    <updated>2024-10-17T16:49:40.935Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文是一个非常草台和简略的Ink互动文游制作讲解，作者也并不是很懂Ink。&lt;/p&gt;
+&lt;p&gt;&lt;a</summary>
+        
+      
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/categories/Tech/Web-Front-End/"/>
+    
+    
+    <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
+    
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
+    
+  </entry>
   
   <entry>
     <title>基于Twine-SugarCube的互动文游制作（3）Twine基础</title>
@@ -111,7 +141,7 @@
     <link href="https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/"/>
     <id>https://bluemap1e.github.io/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</id>
     <published>2024-09-26T10:06:03.000Z</published>
-    <updated>2024-09-30T10:59:13.344Z</updated>
+    <updated>2024-10-17T15:16:34.379Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。&lt;/p&gt;
@@ -127,6 +157,8 @@
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
     <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
+    
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
     
   </entry>
   
@@ -181,7 +213,7 @@
     <link href="https://bluemap1e.github.io/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/"/>
     <id>https://bluemap1e.github.io/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</id>
     <published>2024-09-20T16:59:55.000Z</published>
-    <updated>2024-09-30T11:02:37.602Z</updated>
+    <updated>2024-10-17T15:16:08.017Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。&lt;/p&gt;
@@ -198,6 +230,8 @@
     
     <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
     
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
+    
   </entry>
   
   <entry>
@@ -205,7 +239,7 @@
     <link href="https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/"/>
     <id>https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/</id>
     <published>2024-09-19T13:16:22.000Z</published>
-    <updated>2024-09-30T11:02:05.490Z</updated>
+    <updated>2024-10-17T15:16:26.194Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;行为（Actions）&lt;/strong&gt;是Milovana Webtease的核心机制，它构成了一个互动文游的框架和主体。&lt;/p&gt;
@@ -222,6 +256,8 @@
     
     <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
     
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
+    
   </entry>
   
   <entry>
@@ -229,7 +265,7 @@
     <link href="https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/"/>
     <id>https://bluemap1e.github.io/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/</id>
     <published>2024-09-19T03:51:11.000Z</published>
-    <updated>2024-09-30T11:03:20.302Z</updated>
+    <updated>2024-10-17T15:16:16.622Z</updated>
     
     
     <summary type="html">&lt;h2 id=&quot;引言&quot;&gt;&lt;a href=&quot;#引言&quot; class=&quot;headerlink&quot; title=&quot;引言&quot;&gt;&lt;/a&gt;引言&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;EOS Editor&lt;/strong&gt;是&lt;strong&gt;Milovana&lt;/strong&gt;的一个Web UI，可以用于制作简单的互动小游戏。&lt;/p&gt;
@@ -245,6 +281,8 @@
     <category term="JavaScript" scheme="https://bluemap1e.github.io/tags/JavaScript/"/>
     
     <category term="Interactive Fiction" scheme="https://bluemap1e.github.io/tags/Interactive-Fiction/"/>
+    
+    <category term="Web Front-End" scheme="https://bluemap1e.github.io/tags/Web-Front-End/"/>
     
   </entry>
   
@@ -371,11 +409,11 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
     <category term="Proxy" scheme="https://bluemap1e.github.io/tags/Proxy/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
@@ -503,31 +541,6 @@
     <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
     
     <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
-    <link href="https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    <id>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
-    <published>2023-10-21T05:35:09.000Z</published>
-    <updated>2024-09-30T09:35:21.845Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;昨天看到了阿里云的经济型e服务器，感觉性价比挺不错的，因此尝试用来搭一台MineCraft服务器玩玩，这样用Curtain之类的模组挂机很方便。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/categories/Tech/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
-    
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
-    <category term="MineCraft" scheme="https://bluemap1e.github.io/tags/MineCraft/"/>
     
   </entry>
   
