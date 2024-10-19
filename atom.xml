@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-10-19T09:23:20.413Z</updated>
+  <updated>2024-10-19T10:07:40.707Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,17 +21,11 @@
     <link href="https://bluemap1e.github.io/2024/10/17/%E5%9F%BA%E4%BA%8EInk%E7%9A%84%E7%AE%80%E5%8D%95%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C/"/>
     <id>https://bluemap1e.github.io/2024/10/17/%E5%9F%BA%E4%BA%8EInk%E7%9A%84%E7%AE%80%E5%8D%95%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C/</id>
     <published>2024-10-17T12:39:03.000Z</published>
-    <updated>2024-10-19T09:23:20.413Z</updated>
+    <updated>2024-10-19T10:07:40.707Z</updated>
     
     
-      
-      
-        
-        
     <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文是一个非常草台和简略的Ink互动文游制作讲解，作者也并不是很懂Ink。&lt;/p&gt;
-&lt;p&gt;&lt;a</summary>
-        
-      
+&lt;p&gt;&lt;a href=&quot;https://www.inklestudios.com/ink/&quot;&gt;Ink&lt;/a&gt;是一种Inkle Studio开发的&lt;strong&gt;编程语言&lt;/strong&gt;，它是专门用来写互动故事的。&lt;/p&gt;</summary>
     
     
     
@@ -409,11 +403,11 @@
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
     <category term="Proxy" scheme="https://bluemap1e.github.io/tags/Proxy/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   

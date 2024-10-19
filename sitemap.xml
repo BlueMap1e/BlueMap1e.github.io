@@ -348,13 +348,6 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
-    <lastmod>2024-10-19</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://bluemap1e.github.io/tags/Circumvention/</loc>
     <lastmod>2024-10-19</lastmod>
     <changefreq>weekly</changefreq>
@@ -363,6 +356,13 @@
   
   <url>
     <loc>https://bluemap1e.github.io/tags/Proxy/</loc>
+    <lastmod>2024-10-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
     <lastmod>2024-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -434,14 +434,14 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Crypto/</loc>
+    <loc>https://bluemap1e.github.io/categories/Tech/Network/</loc>
     <lastmod>2024-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Network/</loc>
+    <loc>https://bluemap1e.github.io/categories/Tech/Crypto/</loc>
     <lastmod>2024-10-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
