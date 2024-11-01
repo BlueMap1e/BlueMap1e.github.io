@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2024-10-19T10:07:40.707Z</updated>
+  <updated>2024-11-01T08:02:30.828Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
+    <link href="https://bluemap1e.github.io/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/"/>
+    <id>https://bluemap1e.github.io/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</id>
+    <published>2024-11-01T07:53:46.000Z</published>
+    <updated>2024-11-01T08:02:30.828Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。&lt;/p&gt;
+&lt;p&gt;这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/categories/Tech/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/tags/Windows/"/>
+    
+  </entry>
   
   <entry>
     <title>基于Ink的简单互动文游制作</title>
@@ -512,29 +534,6 @@
     <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
     
     <category term="C++" scheme="https://bluemap1e.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>免费领取一台IBM LinuxOne服务器</title>
-    <link href="https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    <id>https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
-    <published>2023-10-22T00:17:39.000Z</published>
-    <updated>2024-09-26T03:21:35.244Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/categories/Tech/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
-    
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
