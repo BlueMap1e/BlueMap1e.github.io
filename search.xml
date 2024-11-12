@@ -104,298 +104,6 @@
       </tags>
   </entry>
   <entry>
-    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
-    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
-<p>一个输出示例是这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
-<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<p>或：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
-
-<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
-<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
-
-<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
-
-<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
-<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
-<hr>
-<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出为：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
-
-<p>示例输出为：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
-<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>示例输出为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
-
-<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
-<hr>
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
-
-<p>这代表生成32字节（256位）的随机数。</p>
-<hr>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>OpenSSL CLI 散列函数 个人使用经验</title>
-    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
-
-<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
-
-<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
-<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
-<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
-<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
-<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
-<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
-<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
-<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
-<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
-<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
-<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
-<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
-<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
-<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
-<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
-<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
-<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
-<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
-<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
-<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
-<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
-<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
-<hr>
-<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
-
-<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
-
-<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
-<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
-
-<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>和</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>它们的输出一样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
-
-<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
-
-<p>可以尝试把它输出到文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
-
-<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
-<p>例如，这是默认的SHAKE-128：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>它的输出为128位：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
-<p>例如，将输出调节为24字节（192位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
-
-<p>将输出调节为32字节（256位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
-
-<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一个极简的BitTorrent使用教程</title>
-    <url>/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
-    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文是一篇完全面向技术小白的新手教程。</p>
-<p>作为技术用户，阅读这篇文章可能导致你<strong>血压升高</strong>。请<strong>谨慎阅读</strong>。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>请问你是否遇到过以下问题：</p>
-<h3 id="磁力链接"><a href="#磁力链接" class="headerlink" title="磁力链接"></a>磁力链接</h3><p>群友在转发的聊天记录中包含了这样的一串看不懂的东西：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:93827283defcd6519e6ec7967048b6e8fae7f661</span><br></pre></td></tr></table></figure>
-
-<p>把它输入浏览器后，却没有反应？</p>
-<h3 id="种子文件"><a href="#种子文件" class="headerlink" title="种子文件"></a>种子文件</h3><p>你在下载某个资源之后，得到了这样一个文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">10e3d3b6a62b5698bdebb34f31bcd70389ee9a6a.torrent</span><br></pre></td></tr></table></figure>
-
-<p>点击后却打不开，没办法解压，也找不到exe？</p>
-<h3 id="求助方式"><a href="#求助方式" class="headerlink" title="求助方式"></a>求助方式</h3><p>你是否进行过类似的求助：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">可以私发我一份吗？</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">可以给个安装包吗？</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">解压密码是多少？</span><br></pre></td></tr></table></figure>
-
-
-
-<p>不用担心，本期教程就是解决这些问题的。</p>
-<hr>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>本教程<strong>不讲解原理</strong>，你只需要按照以下步骤进行<strong>操作</strong>，就可以获得磁力链接和种子文件指定的资源。</p>
-<hr>
-<h3 id="下载qBittorrent"><a href="#下载qBittorrent" class="headerlink" title="下载qBittorrent"></a>下载qBittorrent</h3><p>点击这个链接，下载qBittorrent。</p>
-<p>注意选取对应的系统版本。对于大多数需要看这篇教程的用户，你的系统版本应该是<strong>Windows x64</strong> 。</p>
-<p><a href="https://www.qbittorrent.org/download">qBittorrent Official Website</a></p>
-<hr>
-<h3 id="安装qBittorrent"><a href="#安装qBittorrent" class="headerlink" title="安装qBittorrent"></a>安装qBittorrent</h3><p>下载完成后，双击qBittorrent的安装包，跟着一步步安装qBittorrent。</p>
-<p>接受许可协议。</p>
-<p>勾选 创建桌面快捷方式。</p>
-<p>点击安装。</p>
-<hr>
-<h3 id="使用qBittorrent"><a href="#使用qBittorrent" class="headerlink" title="使用qBittorrent"></a>使用qBittorrent</h3><p>打开qBittorrent，进入主界面。</p>
-<hr>
-<h3 id="磁力链接-下载"><a href="#磁力链接-下载" class="headerlink" title="磁力链接 下载"></a>磁力链接 下载</h3><p>要下载磁力链接指定的资源，点击qBittorrent界面左上角这个蓝色的小按钮。</p>
-<img src="/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/qBittorrentMagnet.png" class="" title="qBittorrentMagnet">
-
-<p>把那串magnet开头的字符串复制进来，例如：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:93827283defcd6519e6ec7967048b6e8fae7f661</span><br></pre></td></tr></table></figure>
-
-<p>点击下载，选择目录（你也可以不选择），然后点击确定。</p>
-<p>资源就会逐渐下载到本地。</p>
-<hr>
-<h3 id="种子文件-下载"><a href="#种子文件-下载" class="headerlink" title="种子文件 下载"></a>种子文件 下载</h3><p>要下载种子文件指定的资源，点击qBittorrent界面左上角这个蓝色的小按钮。</p>
-<img src="/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/qBittorrentTorrent.png" class="" title="qBittorrentTorrent">
-
-<p>在本地找到你之前拿到的.torrent文件，或者直接拖到qBittorrent的界面上也行。</p>
-<p>可以选择目录，也可以不选择，点击确定。</p>
-<p>资源就会逐渐下载到本地。</p>
-<hr>
-<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>下载完毕后，记得关闭qBittorrent客户端。如果你不关闭，也是可以的，它会耗费你一些上传网络带宽，你可以理解为做了一项<strong>公益事业</strong>。</p>
-<p>这样，磁力链接和种子文件对应的资源就下载到本地了，是不是很容易。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文用简单的语言介绍了如何使用qBittorrent下载磁力链接和种子文件对应的文件。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Network</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
     <url>/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 对称加密使用经验，偶尔更新。</p>
@@ -683,6 +391,298 @@
       </tags>
   </entry>
   <entry>
+    <title>OpenSSL CLI 散列函数 个人使用经验</title>
+    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
+
+<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
+<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
+<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
+<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
+<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
+<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
+<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
+<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
+<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
+<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
+<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
+<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
+<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
+<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
+<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
+<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
+<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
+<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
+<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
+<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
+<hr>
+<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
+
+<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
+<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它们的输出一样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
+
+<p>可以尝试把它输出到文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
+<p>例如，这是默认的SHAKE-128：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它的输出为128位：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
+<p>例如，将输出调节为24字节（192位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
+
+<p>将输出调节为32字节（256位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
+
+<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
+    <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="生成随机数"><a href="#生成随机数" class="headerlink" title="生成随机数"></a>生成随机数</h2><p>一个最基本的OpenSSL rand指令大致是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>这个指令让OpenSSL生成一个32字节（256位）的随机数，并以16进制的形式进行输出。</p>
+<p>一个输出示例是这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="number">993500</span>b078f18f45a87176f27b75a836d55a674de4981eec9c3016b7c40adb81</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="help-或-h"><a href="#help-或-h" class="headerlink" title="-help 或 -h"></a>-help 或 -h</h3><p>获取帮助，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>或：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -h</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL版本是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: rand [options] num</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -<span class="built_in">base64</span>             Base64 encode output</span><br><span class="line"> -hex                Hex encode output</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> num                 Number of bytes to generate</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="engine"></a>engine</h3><p>使用指定的引擎来产生随机数。</p>
+<p>你可以首先尝试使用OpenSSL的engine指令来查一下本机支持的引擎：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl engine -t</span><br></pre></td></tr></table></figure>
+
+<p>如果你的机器是Intel CPU，那么一般会有RDRAND引擎，输出类似于这样：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">(rdrand) Intel RDRAND engine</span><br><span class="line">     <span class="selector-attr">[ available ]</span></span><br><span class="line">(dynamic) Dynamic engine loading support</span><br><span class="line">     <span class="selector-attr">[ unavailable ]</span></span><br></pre></td></tr></table></figure>
+
+<p>那么此时你可以使用Intel的RDRAND引擎作为熵源之一来生成随机数，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -engine rdrand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Engine &quot;rdrand&quot; set.</span><br><span class="line"><span class="number">7</span>ad8327169d40997c58d350f7e03d6805b2de240303ab5501fe7081719e8e150</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>把生成的随机数据写入到指定的位置，例如，写入到<code>rand.bin</code>文件中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -out rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h3 id="base64"><a href="#base64" class="headerlink" title="-base64"></a>-base64</h3><p>输出以Base64进行编码，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>输出为16进制，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -hex 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">LyAhQ/wFwbvpAhibZUb1zUbQWyKQ/DNgjDO5A+cmgsI=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="随机状态选项"><a href="#随机状态选项" class="headerlink" title="随机状态选项"></a>随机状态选项</h2><hr>
+<h3 id="rand"><a href="#rand" class="headerlink" title="-rand"></a>-rand</h3><p>把指定的文件加入到随机数生成器的熵源当中，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> -rand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>示例输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">VwphXVGWk+ImerchS+rlR6VCy6EFNuiqjV9NU88Ty1Y=</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="writerand"><a href="#writerand" class="headerlink" title="-writerand"></a>-writerand</h3><p>向指定文件写入随机数据，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand -writerand rand.bin 32</span><br></pre></td></tr></table></figure>
+
+<p>它会向<code>rand.bin</code>写入32字节（256位）的随机数据。</p>
+<hr>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><h3 id="num"><a href="#num" class="headerlink" title="num"></a>num</h3><p>附在指令的最后，单位为字节，代表希望生成的随机数长度，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl rand 32</span><br></pre></td></tr></table></figure>
+
+<p>这代表生成32字节（256位）的随机数。</p>
+<hr>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一个极简的BitTorrent使用教程</title>
+    <url>/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/</url>
+    <content><![CDATA[<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>本文是一篇完全面向技术小白的新手教程。</p>
+<p>作为技术用户，阅读这篇文章可能导致你<strong>血压升高</strong>。请<strong>谨慎阅读</strong>。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><p>请问你是否遇到过以下问题：</p>
+<h3 id="磁力链接"><a href="#磁力链接" class="headerlink" title="磁力链接"></a>磁力链接</h3><p>群友在转发的聊天记录中包含了这样的一串看不懂的东西：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:93827283defcd6519e6ec7967048b6e8fae7f661</span><br></pre></td></tr></table></figure>
+
+<p>把它输入浏览器后，却没有反应？</p>
+<h3 id="种子文件"><a href="#种子文件" class="headerlink" title="种子文件"></a>种子文件</h3><p>你在下载某个资源之后，得到了这样一个文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">10e3d3b6a62b5698bdebb34f31bcd70389ee9a6a.torrent</span><br></pre></td></tr></table></figure>
+
+<p>点击后却打不开，没办法解压，也找不到exe？</p>
+<h3 id="求助方式"><a href="#求助方式" class="headerlink" title="求助方式"></a>求助方式</h3><p>你是否进行过类似的求助：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">可以私发我一份吗？</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">可以给个安装包吗？</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">解压密码是多少？</span><br></pre></td></tr></table></figure>
+
+
+
+<p>不用担心，本期教程就是解决这些问题的。</p>
+<hr>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>本教程<strong>不讲解原理</strong>，你只需要按照以下步骤进行<strong>操作</strong>，就可以获得磁力链接和种子文件指定的资源。</p>
+<hr>
+<h3 id="下载qBittorrent"><a href="#下载qBittorrent" class="headerlink" title="下载qBittorrent"></a>下载qBittorrent</h3><p>点击这个链接，下载qBittorrent。</p>
+<p>注意选取对应的系统版本。对于大多数需要看这篇教程的用户，你的系统版本应该是<strong>Windows x64</strong> 。</p>
+<p><a href="https://www.qbittorrent.org/download">qBittorrent Official Website</a></p>
+<hr>
+<h3 id="安装qBittorrent"><a href="#安装qBittorrent" class="headerlink" title="安装qBittorrent"></a>安装qBittorrent</h3><p>下载完成后，双击qBittorrent的安装包，跟着一步步安装qBittorrent。</p>
+<p>接受许可协议。</p>
+<p>勾选 创建桌面快捷方式。</p>
+<p>点击安装。</p>
+<hr>
+<h3 id="使用qBittorrent"><a href="#使用qBittorrent" class="headerlink" title="使用qBittorrent"></a>使用qBittorrent</h3><p>打开qBittorrent，进入主界面。</p>
+<hr>
+<h3 id="磁力链接-下载"><a href="#磁力链接-下载" class="headerlink" title="磁力链接 下载"></a>磁力链接 下载</h3><p>要下载磁力链接指定的资源，点击qBittorrent界面左上角这个蓝色的小按钮。</p>
+<img src="/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/qBittorrentMagnet.png" class="" title="qBittorrentMagnet">
+
+<p>把那串magnet开头的字符串复制进来，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">magnet:?xt=urn:btih:93827283defcd6519e6ec7967048b6e8fae7f661</span><br></pre></td></tr></table></figure>
+
+<p>点击下载，选择目录（你也可以不选择），然后点击确定。</p>
+<p>资源就会逐渐下载到本地。</p>
+<hr>
+<h3 id="种子文件-下载"><a href="#种子文件-下载" class="headerlink" title="种子文件 下载"></a>种子文件 下载</h3><p>要下载种子文件指定的资源，点击qBittorrent界面左上角这个蓝色的小按钮。</p>
+<img src="/2024/09/23/%E4%B8%80%E4%B8%AA%E6%9E%81%E7%AE%80%E7%9A%84BitTorrent%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B/qBittorrentTorrent.png" class="" title="qBittorrentTorrent">
+
+<p>在本地找到你之前拿到的.torrent文件，或者直接拖到qBittorrent的界面上也行。</p>
+<p>可以选择目录，也可以不选择，点击确定。</p>
+<p>资源就会逐渐下载到本地。</p>
+<hr>
+<h3 id="问题解决"><a href="#问题解决" class="headerlink" title="问题解决"></a>问题解决</h3><p>下载完毕后，记得关闭qBittorrent客户端。如果你不关闭，也是可以的，它会耗费你一些上传网络带宽，你可以理解为做了一项<strong>公益事业</strong>。</p>
+<p>这样，磁力链接和种子文件对应的资源就下载到本地了，是不是很容易。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文用简单的语言介绍了如何使用qBittorrent下载磁力链接和种子文件对应的文件。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Network</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</title>
     <url>/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/</url>
     <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong>EOS Editor</strong>是<strong>Milovana</strong>的一个Web UI，可以用于制作简单的互动小游戏。</p>
@@ -882,6 +882,354 @@
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了注册Milovana的过程，以及简单介绍了一下左侧侧边栏UI的功能。</p>
 <p>可能略显冗长，包含了很多常识性甚至是宝宝巴士的内容，主要是为了照顾英语能力有限的人。</p>
 <p>下一篇，主要讲解Edit界面的Action，主要是一些基础行为。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
+        <tag>Web Front-End</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
+<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
+<span id="more"></span>
+
+<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
+<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
+<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
+<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
+<hr>
+<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
+<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
+<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
+<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
+<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
+
+<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
+<hr>
+<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
+
+<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
+<hr>
+<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
+<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
+
+<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
+<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+
+<hr>
+<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
+<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
+<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
+<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
+<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
+
+<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
+<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
+<hr>
+<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+
+<hr>
+<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+
+<hr>
+<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
+<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
+<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
+<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
+<p>就类似于这样。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+
+<hr>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
+<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<hr>
+<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
+<p>举个例子，就像这样：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+
+<hr>
+<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
+<p>类似于这种：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+
+<hr>
+<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+
+<p>一个Audio，播放音频，不阻塞。</p>
+<p>一个Timer，计时，阻塞。</p>
+<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<hr>
+<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
+<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
+<p>是否允许用户跳过看你自己。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+
+<hr>
+<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
+<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
+<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
+<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
+        <tag>Web Front-End</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</title>
+    <url>/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
+<p>本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。</p>
+<span id="more"></span>
+
+<p>要看这篇东西的话，最好是稍微掌握一点点JavaScript基础，一点点就可以了。当然如果零基础，我也尽可能举例子讲清楚（但愿如此吧）。</p>
+<p>由于Milovana EOS Editor基本只支持ES5，这严重影响了我的个人代码习惯（好吧，其实我也很菜），所以这个教程可能会写得很烂（搞得好像前面几篇不烂一样）。</p>
+<p>可以用Webpack、ESBuild等工具来写ES6，然后把相应的代码转换成ES5（例如通过Babel）。这能避免折磨和代码习惯的改变。（其实代码量没那么大就是了）</p>
+<p>EOS Editor的IntelliSense会对不少实际上能运行的代码报错，不用担心。<strong>写上去就是了，能不能跑自己试一下就行了。如果卡住加载不进去，就是不行（例如用了ES6特性什么的）。</strong></p>
+<hr>
+<h2 id="进阶行为"><a href="#进阶行为" class="headerlink" title="进阶行为"></a>进阶行为</h2><p>之前是怕劝退一些初学者（好吧，1和2两篇教程的介绍语言风格其实已经十分劝退），所以没有介绍一些比较复杂的行为，那么在这篇教程中，介绍一些之前遗漏的行为。</p>
+<hr>
+<h3 id="Disable"><a href="#Disable" class="headerlink" title="Disable"></a>Disable</h3><p><strong>Disable（禁用）</strong>某个页面，意味着它无法被随机跳转的Goto Action定位。也就是说，被Disable的页面将<strong>无法</strong>通过<strong>随机跳转</strong>的方式进入。</p>
+<p>举个例子来说明一下。</p>
+<p>这个案例包括三个Page，一个start，一个testPage1，一个testPage2。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableStartPage.png" class="" title="disableStartPage">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableTestPage1.png" class="" title="disableTestPage1">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableTestPage2.png" class="" title="disableTestPage2">
+
+<p>在start中，先通过Disable行为禁用testPage1。而后的一个Goto是跳转到<code>testPage*</code>，它理论上是定位到两个页面——testPage1和testPage2。但由于testPage1被禁用，所以最终只可能跳转到testPage2，出现的交互是Hello, testPage2!</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableResult.png" class="" title="disableResult">
+
+<p>这个功能可以用来做一些隐藏结局，冒险解谜之类的东西。</p>
+<p>当然，这个页面名同样是可以指定范围——<code>testPage*</code>这样。那这样就是把testPage*这一组页面全部禁用了。</p>
+<hr>
+<h3 id="Enable"><a href="#Enable" class="headerlink" title="Enable"></a>Enable</h3><p><strong>Enable（启用）</strong>就是反过来，把一些已经被禁用的页面重新启用，这样就可以随机跳转过去了。</p>
+<p>页面本身默认就是Enabled状态，不用刻意去开启一遍。</p>
+<hr>
+<h3 id="Prompt"><a href="#Prompt" class="headerlink" title="Prompt"></a>Prompt</h3><p><strong>Prompt</strong>是一个交互动作，其实它很简单，弹出一个交互，让用户输入一个值，然后存储在一个变量当中。</p>
+<p>它类似于这种，当然这是ES5，ES6就用let了：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> usrAge = <span class="title function_">prompt</span>(<span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>Prompt行为的设置界面非常简单，就一个Variable，里面填的就是变量名。</p>
+<p>一般是小驼峰（lowerCamelCase）命名法，注意规范。</p>
+<p>（当然你要用UpperCamelCase或者snake_case也完全可以，当我没说）</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/promptEdit.png" class="" title="promptEdit">
+
+<p>这里举个例子来演示一下Prompt行为的作用。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/promptTest.png" class="" title="promptTest">
+
+<p>在这个示例中，先是一个Say行为——<code>Please input your age</code>，提示用户输入年龄，然后是一个Prompt，把用户输入的年龄存储在usrAge这个变量中。最后是一个Say（这里稍微用了点Eval，后面会讲），把用户刚才输入的年龄显示出来。</p>
+<p>测试一下，看看效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/promptTestResult.png" class="" title="promptTestResult">
+
+<p>符合预期。总之效果就是这样。</p>
+<p>这东西可以用来做usrName，usrAge，之类的，也可以用来比对什么的。总之作用很多，可以增加交互性。</p>
+<hr>
+<h3 id="If"><a href="#If" class="headerlink" title="If"></a>If</h3><p>这个，学过点编程的应该是再熟悉不过了吧。没事，就算是没接触过，也可以讲讲。没什么难度。</p>
+<p><strong>If</strong>，条件判断，分支。就是，先写一个条件，如果符合，那么怎么怎么做，如果不符合，那就另外如何如何做。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifEdit.png" class="" title="ifEdit">
+
+<p>它的编辑界面由三部分组成——<code>Condition</code>, <code>Then</code>和<code>Else</code>。</p>
+<p><strong>Condition</strong>是判断条件。</p>
+<p><strong>Then</strong>是条件为真（符合条件）时执行的行为。</p>
+<p><strong>Else</strong>是条件为假（不符合条件）时执行的行为。</p>
+<p>讲得可能有点抽象啊，举个例子来说明一下。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTest.png" class="" title="ifTest">
+
+<p>这个例子可以看懂吧，上来一个Say，问用户1+1等于几。然后Prompt，用户填入答案。</p>
+<p>接下来这个If，判断用户输入。</p>
+<p>（注意这个<strong>EOS Editor的Prompt默认是把用户输入作为字符串（String）处理的</strong>）</p>
+<p>如果用户输入的是字符串”2”，那么回答正确，执行Then的Action。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTestTrue.png" class="" title="ifTestTrue">
+
+<p>如果用户输入的不是字符串”2”，那么回答错误，执行Else的Action。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTestFalse.png" class="" title="ifTestFalse">
+
+<p>希望这个示例足够清楚，可以把这个概念说明白。</p>
+<hr>
+<h2 id="基础行为与Eval"><a href="#基础行为与Eval" class="headerlink" title="基础行为与Eval"></a>基础行为与Eval</h2><p>有几个基础行为有Eval界面，之前是怕太复杂，跳过去了没讲，今天讲讲。</p>
+<hr>
+<h3 id="Say"><a href="#Say" class="headerlink" title="Say"></a>Say</h3><p>Say是可以在中间插入<strong>Eval Tag</strong>，可以理解为变量名，或者是一些数值之类的东西。</p>
+<p>还是举两个例子来讲吧。</p>
+<p>第一个例子，输入用户名：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1.png" class="" title="sayEvalTag1">
+
+<p>一上来，一个Say提示用户输入用户名，然后一个Prompt，把用户输入的字符串存在usrName这个变量里面。</p>
+<p>最后这个Say，类似于一个字符串拼接：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;Hello, &quot;</span> + usrName</span><br></pre></td></tr></table></figure>
+
+<p>它把用户刚才输入的用户名拼接到这个字符串里面打印出来。</p>
+<p>看看效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1Result.png" class="" title="sayEvalTag1Result">
+
+
+
+<p>第二个例子，显示时间：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2.png" class="" title="sayEvalTag2">
+
+<p>看一下输出结果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2Result.png" class="" title="sayEvalTag2Result">
+
+<p>也可以用<code>getFullYear()</code>, <code>getMonth()</code>, <code>getDate()</code>这种方法来调取一些具体的时间。</p>
+<p>总之，这个功能可以把一些参数展示出来。包括显示好感度等等，看设计者怎么用了。</p>
+<hr>
+<h3 id="Goto"><a href="#Goto" class="headerlink" title="Goto"></a>Goto</h3><p>Goto可以内置一些JavaScript语句，这其中可以写一些复杂的逻辑，最终决定跳转到哪个页面。</p>
+<p>跳转的语句就很简单，一个字符串就行了。比如说你要跳转到<code>testPage1</code>，那就写：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;testPage1&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>举个例子来说明一下这种写法：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalEdit.png" class="" title="gotoEvalEdit">
+
+<p>在这个例子中，Say提示询问用户想要去哪个页面。</p>
+<p>如果用户回答”1”，那么Goto就跳转到testPage1，否则跳转到testPage2。</p>
+<p>测试一下运行效果，是符合预期的：</p>
+<p>输入”1”，跳转到testPage1。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1.png" class="" title="gotoEvalPage1">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1Result.png" class="" title="gotoEvalPage1Result">
+
+<p>输入”2”或者什么别的，跳转到testPage2。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2.png" class="" title="gotoEvalPage2">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2Result.png" class="" title="gotoEvalPage2Result">
+
+
+
+<p>这个用法能用来做什么呢？有人说和之前If不是一样吗？确实。但是也不一定局限于If。你可以在里面写Switch Case，写随机数，写数学计算……总之很多，看你自己。</p>
+<hr>
+<h3 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h3><p>Timer同样是可以内置一些JavaScript语句，这可以产生一些随机性，或者是按照一些具体情况来计算出计时器时长。</p>
+<p>在Eval当中，Timer接受的时间单位是<strong>毫秒（ms）</strong>。</p>
+<p>比如说，你想要让一个计时器的时长设定为5秒，那就这么写：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">5000</span>;</span><br></pre></td></tr></table></figure>
+
+<p>还是一样，举个具体的例子来说明这个用法。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEval.png" class="" title="timerEval">
+
+<p>在这个示例中，先是弹出一个Say，提示用户输入计时器的时长，单位是秒。然后是一个Prompt，读取时长。</p>
+<p>最后是一个简单的数学计算，从用户输入（这是一个字符串）提取出整数部分，乘以1000，换算成毫秒，作为计时器的时长。</p>
+<p>来看看运行效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEvalResult.png" class="" title="timerEvalResult">
+
+<p>可以看到，用户输入60，随后产生了一个1分钟的计时器。这个行为是符合预期的。</p>
+<p>那，这个例子也就是说明一下用法而已，至于你要怎么得到计时器的时长，那完全是自己决定的。随机数？根据之前的互动参数来算？设置If-Else或者Switch-Case的几个分级？都可以。</p>
+<hr>
+<h2 id="Init-Script"><a href="#Init-Script" class="headerlink" title="Init Script"></a>Init Script</h2><p><strong>Init Script</strong>里面可以写点JavaScript代码，Webtease加载的时候就执行这部分代码。</p>
+<p>在UI的Options-Init Script这里。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/initScript.png" class="" title="initScript">
+
+<p>这块地方可以写点变量定义，函数定义什么的，可以节省后面的工作量。</p>
+<p>如果打不开，就说明用了不支持的JavaScript特性。还是老问题——这EOS Editor只支持到ES5。实在不行就在本地写点东西然后用Webpack、ESBuild这种工具打包成ES5代码复制粘贴上去吧。</p>
+<p>Init Script里面的东西，后面写的时候也还是没有IntelliSense的。注意一下，可能会出现拼写错误什么的。</p>
+<p>还是举点例子来讲一下吧。</p>
+<hr>
+<h3 id="生成随机整数函数的例子"><a href="#生成随机整数函数的例子" class="headerlink" title="生成随机整数函数的例子"></a>生成随机整数函数的例子</h3><p>比如说，要在Init Script里面写一个生成随机整数的函数，之后要用：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getRandomInt</span>(<span class="params">min, max</span>)&#123;</span><br><span class="line">    min = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(min);			<span class="comment">// 最小值向上取整</span></span><br><span class="line">    max = <span class="title class_">Math</span>.<span class="title function_">floor</span>(max);		 <span class="comment">// 最大值向下取整</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">floor</span>((<span class="title class_">Math</span>.<span class="title function_">random</span>() * (max - min + <span class="number">1</span>)) + min);		</span><br><span class="line">    <span class="comment">// 对0-1之间的随机值放大(max-min+1)倍，加上最小值后向下取整</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>随后在Say的Eval Tag中调用这个函数，比如说生成一个在0-10之间的随机整数。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">getRandomInt</span>(<span class="number">0</span>, <span class="number">10</span>);	<span class="comment">// 调用函数，最小值为0，最大值为10</span></span><br></pre></td></tr></table></figure>
+
+<p>如图所示：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/getRandomInt.png" class="" title="getRandomInt">
+
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/getRandomIntCall.png" class="" title="getRandomIntCall">
+
+<p>运行结果如下图所示：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/getRandomIntResult.png" class="" title="getRandomIntResult">
+
+<p>总之，类似地。可以在Init Script中写一些函数，提高代码重用性。</p>
+<p>毕竟在Eval甚至是Eval Tag里面，照理是不应该写太多代码的。</p>
+<hr>
+<h3 id="定义类的例子"><a href="#定义类的例子" class="headerlink" title="定义类的例子"></a>定义类的例子</h3><p>比如说，要在Init Script里面定义类，以便之后创建对象。</p>
+<p>那，由于这是ES5，就按照ES5的写法来好了，构造函数。当然，ES6的class语法糖用惯了可以看看Webpack和ESBuild。</p>
+<p>比如说要定义一个对象，Player，它有三个属性——HP, MP, ATK。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Player</span>(<span class="params">hp, mp, atk</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hp</span> = hp;				   <span class="comment">// 生命值</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">mp</span> = mp;				 <span class="comment">// 能量值</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">atk</span> = atk;				   <span class="comment">// 攻击力</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Player</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getInfo</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;HP: &quot;</span> + <span class="variable language_">this</span>.<span class="property">hp</span> + <span class="string">&quot;, MP: &quot;</span> + <span class="variable language_">this</span>.<span class="property">mp</span> + <span class="string">&quot;, ATK: &quot;</span> + <span class="variable language_">this</span>.<span class="property">atk</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Eval Action中可以调用构造函数创建对象：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> playerAlice = <span class="keyword">new</span> <span class="title class_">Player</span>(<span class="number">100</span>, <span class="number">80</span> ,<span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+
+<p>而后在Say Action的Eval Tag中，可以调用原型函数<code>getInfo()</code>来查看角色的属性信息：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">playerAlice.<span class="title function_">getInfo</span>()</span><br></pre></td></tr></table></figure>
+
+<p>上图片：</p>
+<p>定义构造函数和原型函数：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/constructFunction.png" class="" title="constructFunction">
+
+<p>创建对象：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/evalCall.png" class="" title="evalCall">
+
+<p>调用<code>getInfo()</code>获取信息：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayCall.png" class="" title="sayCall">
+
+<p>测试界面输出结果，符合预期：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/classResult.png" class="" title="classResult">
+
+<p>当然，功能远不止这么点。希望各位读者自行发挥想象力。</p>
+<hr>
+<h2 id="teaseStorage"><a href="#teaseStorage" class="headerlink" title="teaseStorage"></a>teaseStorage</h2><p><strong>teaseStorage</strong>是一个可选功能，类似于JavaScript的localStorage。</p>
+<p>要用这个功能的话，在Options-Storage这个界面打开。</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/enableTeaseStorage.png" class="" title="enableTeaseStorage">
+
+<p>空间不大，变量名不能太长，省着点用。</p>
+<p>在teaseStorage中，数据以键值对的形式存在。主要的操作有设置、读取。</p>
+<p>设置数值：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">setItem</span>(<span class="string">&quot;playCount&quot;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>读取数值，不存在则返回null：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> playCount = teaseStorage.<span class="title function_">getItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>移除数值：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">removeItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>查看长度：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var storageLength = teaseStorage.length;</span><br></pre></td></tr></table></figure>
+
+<p>查询键名：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> keyName = teaseStorage.<span class="title function_">key</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+
+<p>清空全部内容：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">clear</span>();</span><br></pre></td></tr></table></figure>
+
+<p>这么说可能稍微有点抽象吧，举个具体的例子来说。</p>
+<p>就比如说，要启用一个功能，统计玩家到底玩了几次这个Webtease：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> playCount = teaseStorage.<span class="title function_">getItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (playCount == <span class="literal">null</span>) &#123;</span><br><span class="line">    playCount = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">playCount++;</span><br><span class="line"></span><br><span class="line">teaseStorage.<span class="title function_">setItem</span>(<span class="string">&quot;playCount&quot;</span>, playCount);</span><br></pre></td></tr></table></figure>
+
+<p>会报错的，<strong>你别管EOS那个报错，这报错简直是乱来。能跑就是能跑，别慌。</strong></p>
+<p>这个例子中，先创建一个变量用来存储玩家的游玩次数。从teaseStorage中尝试读取。</p>
+<p>读不出来的话赋0+1，读出来的话就正常+1。最后写回。</p>
+<p>（代码习惯稀烂）</p>
+<p>测试运行效果：</p>
+<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/playCount.png" class="" title="playCount">
+
+<p>可以用来存储一些长期保存的键值对，比如说游玩次数，关卡进度，好感度什么的。这样在start里面再做个分支跳转，可以对一个较长的webtease保存游玩进度什么的（不过真的有人会分好几次玩吗？）</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文差不多简单介绍了一下之前第二篇行为和机制没有涉及到的一些东西，主要都是JavaScript相关的东西。</p>
+<p>这些内容能够帮助制作出来的文游更具交互性。</p>
+<p>当然，作者本人的水平很次，代码习惯也很烂。有问题还请指出。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
@@ -1421,354 +1769,6 @@
       </tags>
   </entry>
   <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
-<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
-<span id="more"></span>
-
-<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
-<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
-<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
-<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
-<hr>
-<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
-<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
-<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
-<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
-<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
-
-<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
-<hr>
-<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
-
-<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
-<hr>
-<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
-<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
-
-<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
-<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
-
-<hr>
-<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
-<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
-<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
-<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
-<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
-
-<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
-<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
-<hr>
-<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
-
-<hr>
-<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
-
-<hr>
-<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
-<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
-<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
-<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
-<p>就类似于这样。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
-
-<hr>
-<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
-<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
-<hr>
-<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
-<p>举个例子，就像这样：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
-
-<hr>
-<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
-<p>类似于这种：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
-
-<hr>
-<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
-
-<p>一个Audio，播放音频，不阻塞。</p>
-<p>一个Timer，计时，阻塞。</p>
-<p>一个Eval，通过一行JS代码停止播放音频。</p>
-<hr>
-<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
-<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
-<p>是否允许用户跳过看你自己。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
-
-<hr>
-<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
-<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
-<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
-
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
-<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>Interactive Fiction</tag>
-        <tag>Web Front-End</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</title>
-    <url>/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Milovana EOS Editor可以借助JavaScript来实现更具交互性的文游制作。</p>
-<p>本文主要补充介绍之前没有讲的行为类型，功能类型，并通过少量案例介绍JavaScript在Milovana EOS Editor中的效果。</p>
-<span id="more"></span>
-
-<p>要看这篇东西的话，最好是稍微掌握一点点JavaScript基础，一点点就可以了。当然如果零基础，我也尽可能举例子讲清楚（但愿如此吧）。</p>
-<p>由于Milovana EOS Editor基本只支持ES5，这严重影响了我的个人代码习惯（好吧，其实我也很菜），所以这个教程可能会写得很烂（搞得好像前面几篇不烂一样）。</p>
-<p>可以用Webpack、ESBuild等工具来写ES6，然后把相应的代码转换成ES5（例如通过Babel）。这能避免折磨和代码习惯的改变。（其实代码量没那么大就是了）</p>
-<p>EOS Editor的IntelliSense会对不少实际上能运行的代码报错，不用担心。<strong>写上去就是了，能不能跑自己试一下就行了。如果卡住加载不进去，就是不行（例如用了ES6特性什么的）。</strong></p>
-<hr>
-<h2 id="进阶行为"><a href="#进阶行为" class="headerlink" title="进阶行为"></a>进阶行为</h2><p>之前是怕劝退一些初学者（好吧，1和2两篇教程的介绍语言风格其实已经十分劝退），所以没有介绍一些比较复杂的行为，那么在这篇教程中，介绍一些之前遗漏的行为。</p>
-<hr>
-<h3 id="Disable"><a href="#Disable" class="headerlink" title="Disable"></a>Disable</h3><p><strong>Disable（禁用）</strong>某个页面，意味着它无法被随机跳转的Goto Action定位。也就是说，被Disable的页面将<strong>无法</strong>通过<strong>随机跳转</strong>的方式进入。</p>
-<p>举个例子来说明一下。</p>
-<p>这个案例包括三个Page，一个start，一个testPage1，一个testPage2。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableStartPage.png" class="" title="disableStartPage">
-
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableTestPage1.png" class="" title="disableTestPage1">
-
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableTestPage2.png" class="" title="disableTestPage2">
-
-<p>在start中，先通过Disable行为禁用testPage1。而后的一个Goto是跳转到<code>testPage*</code>，它理论上是定位到两个页面——testPage1和testPage2。但由于testPage1被禁用，所以最终只可能跳转到testPage2，出现的交互是Hello, testPage2!</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/disableResult.png" class="" title="disableResult">
-
-<p>这个功能可以用来做一些隐藏结局，冒险解谜之类的东西。</p>
-<p>当然，这个页面名同样是可以指定范围——<code>testPage*</code>这样。那这样就是把testPage*这一组页面全部禁用了。</p>
-<hr>
-<h3 id="Enable"><a href="#Enable" class="headerlink" title="Enable"></a>Enable</h3><p><strong>Enable（启用）</strong>就是反过来，把一些已经被禁用的页面重新启用，这样就可以随机跳转过去了。</p>
-<p>页面本身默认就是Enabled状态，不用刻意去开启一遍。</p>
-<hr>
-<h3 id="Prompt"><a href="#Prompt" class="headerlink" title="Prompt"></a>Prompt</h3><p><strong>Prompt</strong>是一个交互动作，其实它很简单，弹出一个交互，让用户输入一个值，然后存储在一个变量当中。</p>
-<p>它类似于这种，当然这是ES5，ES6就用let了：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> usrAge = <span class="title function_">prompt</span>(<span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>Prompt行为的设置界面非常简单，就一个Variable，里面填的就是变量名。</p>
-<p>一般是小驼峰（lowerCamelCase）命名法，注意规范。</p>
-<p>（当然你要用UpperCamelCase或者snake_case也完全可以，当我没说）</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/promptEdit.png" class="" title="promptEdit">
-
-<p>这里举个例子来演示一下Prompt行为的作用。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/promptTest.png" class="" title="promptTest">
-
-<p>在这个示例中，先是一个Say行为——<code>Please input your age</code>，提示用户输入年龄，然后是一个Prompt，把用户输入的年龄存储在usrAge这个变量中。最后是一个Say（这里稍微用了点Eval，后面会讲），把用户刚才输入的年龄显示出来。</p>
-<p>测试一下，看看效果：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/promptTestResult.png" class="" title="promptTestResult">
-
-<p>符合预期。总之效果就是这样。</p>
-<p>这东西可以用来做usrName，usrAge，之类的，也可以用来比对什么的。总之作用很多，可以增加交互性。</p>
-<hr>
-<h3 id="If"><a href="#If" class="headerlink" title="If"></a>If</h3><p>这个，学过点编程的应该是再熟悉不过了吧。没事，就算是没接触过，也可以讲讲。没什么难度。</p>
-<p><strong>If</strong>，条件判断，分支。就是，先写一个条件，如果符合，那么怎么怎么做，如果不符合，那就另外如何如何做。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifEdit.png" class="" title="ifEdit">
-
-<p>它的编辑界面由三部分组成——<code>Condition</code>, <code>Then</code>和<code>Else</code>。</p>
-<p><strong>Condition</strong>是判断条件。</p>
-<p><strong>Then</strong>是条件为真（符合条件）时执行的行为。</p>
-<p><strong>Else</strong>是条件为假（不符合条件）时执行的行为。</p>
-<p>讲得可能有点抽象啊，举个例子来说明一下。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTest.png" class="" title="ifTest">
-
-<p>这个例子可以看懂吧，上来一个Say，问用户1+1等于几。然后Prompt，用户填入答案。</p>
-<p>接下来这个If，判断用户输入。</p>
-<p>（注意这个<strong>EOS Editor的Prompt默认是把用户输入作为字符串（String）处理的</strong>）</p>
-<p>如果用户输入的是字符串”2”，那么回答正确，执行Then的Action。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTestTrue.png" class="" title="ifTestTrue">
-
-<p>如果用户输入的不是字符串”2”，那么回答错误，执行Else的Action。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/ifTestFalse.png" class="" title="ifTestFalse">
-
-<p>希望这个示例足够清楚，可以把这个概念说明白。</p>
-<hr>
-<h2 id="基础行为与Eval"><a href="#基础行为与Eval" class="headerlink" title="基础行为与Eval"></a>基础行为与Eval</h2><p>有几个基础行为有Eval界面，之前是怕太复杂，跳过去了没讲，今天讲讲。</p>
-<hr>
-<h3 id="Say"><a href="#Say" class="headerlink" title="Say"></a>Say</h3><p>Say是可以在中间插入<strong>Eval Tag</strong>，可以理解为变量名，或者是一些数值之类的东西。</p>
-<p>还是举两个例子来讲吧。</p>
-<p>第一个例子，输入用户名：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1.png" class="" title="sayEvalTag1">
-
-<p>一上来，一个Say提示用户输入用户名，然后一个Prompt，把用户输入的字符串存在usrName这个变量里面。</p>
-<p>最后这个Say，类似于一个字符串拼接：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;Hello, &quot;</span> + usrName</span><br></pre></td></tr></table></figure>
-
-<p>它把用户刚才输入的用户名拼接到这个字符串里面打印出来。</p>
-<p>看看效果：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag1Result.png" class="" title="sayEvalTag1Result">
-
-
-
-<p>第二个例子，显示时间：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2.png" class="" title="sayEvalTag2">
-
-<p>看一下输出结果：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayEvalTag2Result.png" class="" title="sayEvalTag2Result">
-
-<p>也可以用<code>getFullYear()</code>, <code>getMonth()</code>, <code>getDate()</code>这种方法来调取一些具体的时间。</p>
-<p>总之，这个功能可以把一些参数展示出来。包括显示好感度等等，看设计者怎么用了。</p>
-<hr>
-<h3 id="Goto"><a href="#Goto" class="headerlink" title="Goto"></a>Goto</h3><p>Goto可以内置一些JavaScript语句，这其中可以写一些复杂的逻辑，最终决定跳转到哪个页面。</p>
-<p>跳转的语句就很简单，一个字符串就行了。比如说你要跳转到<code>testPage1</code>，那就写：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;testPage1&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>举个例子来说明一下这种写法：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalEdit.png" class="" title="gotoEvalEdit">
-
-<p>在这个例子中，Say提示询问用户想要去哪个页面。</p>
-<p>如果用户回答”1”，那么Goto就跳转到testPage1，否则跳转到testPage2。</p>
-<p>测试一下运行效果，是符合预期的：</p>
-<p>输入”1”，跳转到testPage1。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1.png" class="" title="gotoEvalPage1">
-
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage1Result.png" class="" title="gotoEvalPage1Result">
-
-<p>输入”2”或者什么别的，跳转到testPage2。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2.png" class="" title="gotoEvalPage2">
-
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/gotoEvalPage2Result.png" class="" title="gotoEvalPage2Result">
-
-
-
-<p>这个用法能用来做什么呢？有人说和之前If不是一样吗？确实。但是也不一定局限于If。你可以在里面写Switch Case，写随机数，写数学计算……总之很多，看你自己。</p>
-<hr>
-<h3 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h3><p>Timer同样是可以内置一些JavaScript语句，这可以产生一些随机性，或者是按照一些具体情况来计算出计时器时长。</p>
-<p>在Eval当中，Timer接受的时间单位是<strong>毫秒（ms）</strong>。</p>
-<p>比如说，你想要让一个计时器的时长设定为5秒，那就这么写：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="number">5000</span>;</span><br></pre></td></tr></table></figure>
-
-<p>还是一样，举个具体的例子来说明这个用法。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEval.png" class="" title="timerEval">
-
-<p>在这个示例中，先是弹出一个Say，提示用户输入计时器的时长，单位是秒。然后是一个Prompt，读取时长。</p>
-<p>最后是一个简单的数学计算，从用户输入（这是一个字符串）提取出整数部分，乘以1000，换算成毫秒，作为计时器的时长。</p>
-<p>来看看运行效果：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/timerEvalResult.png" class="" title="timerEvalResult">
-
-<p>可以看到，用户输入60，随后产生了一个1分钟的计时器。这个行为是符合预期的。</p>
-<p>那，这个例子也就是说明一下用法而已，至于你要怎么得到计时器的时长，那完全是自己决定的。随机数？根据之前的互动参数来算？设置If-Else或者Switch-Case的几个分级？都可以。</p>
-<hr>
-<h2 id="Init-Script"><a href="#Init-Script" class="headerlink" title="Init Script"></a>Init Script</h2><p><strong>Init Script</strong>里面可以写点JavaScript代码，Webtease加载的时候就执行这部分代码。</p>
-<p>在UI的Options-Init Script这里。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/initScript.png" class="" title="initScript">
-
-<p>这块地方可以写点变量定义，函数定义什么的，可以节省后面的工作量。</p>
-<p>如果打不开，就说明用了不支持的JavaScript特性。还是老问题——这EOS Editor只支持到ES5。实在不行就在本地写点东西然后用Webpack、ESBuild这种工具打包成ES5代码复制粘贴上去吧。</p>
-<p>Init Script里面的东西，后面写的时候也还是没有IntelliSense的。注意一下，可能会出现拼写错误什么的。</p>
-<p>还是举点例子来讲一下吧。</p>
-<hr>
-<h3 id="生成随机整数函数的例子"><a href="#生成随机整数函数的例子" class="headerlink" title="生成随机整数函数的例子"></a>生成随机整数函数的例子</h3><p>比如说，要在Init Script里面写一个生成随机整数的函数，之后要用：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">getRandomInt</span>(<span class="params">min, max</span>)&#123;</span><br><span class="line">    min = <span class="title class_">Math</span>.<span class="title function_">ceil</span>(min);			<span class="comment">// 最小值向上取整</span></span><br><span class="line">    max = <span class="title class_">Math</span>.<span class="title function_">floor</span>(max);		 <span class="comment">// 最大值向下取整</span></span><br><span class="line">    <span class="keyword">return</span> <span class="title class_">Math</span>.<span class="title function_">floor</span>((<span class="title class_">Math</span>.<span class="title function_">random</span>() * (max - min + <span class="number">1</span>)) + min);		</span><br><span class="line">    <span class="comment">// 对0-1之间的随机值放大(max-min+1)倍，加上最小值后向下取整</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>随后在Say的Eval Tag中调用这个函数，比如说生成一个在0-10之间的随机整数。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">getRandomInt</span>(<span class="number">0</span>, <span class="number">10</span>);	<span class="comment">// 调用函数，最小值为0，最大值为10</span></span><br></pre></td></tr></table></figure>
-
-<p>如图所示：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/getRandomInt.png" class="" title="getRandomInt">
-
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/getRandomIntCall.png" class="" title="getRandomIntCall">
-
-<p>运行结果如下图所示：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/getRandomIntResult.png" class="" title="getRandomIntResult">
-
-<p>总之，类似地。可以在Init Script中写一些函数，提高代码重用性。</p>
-<p>毕竟在Eval甚至是Eval Tag里面，照理是不应该写太多代码的。</p>
-<hr>
-<h3 id="定义类的例子"><a href="#定义类的例子" class="headerlink" title="定义类的例子"></a>定义类的例子</h3><p>比如说，要在Init Script里面定义类，以便之后创建对象。</p>
-<p>那，由于这是ES5，就按照ES5的写法来好了，构造函数。当然，ES6的class语法糖用惯了可以看看Webpack和ESBuild。</p>
-<p>比如说要定义一个对象，Player，它有三个属性——HP, MP, ATK。</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Player</span>(<span class="params">hp, mp, atk</span>)&#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">hp</span> = hp;				   <span class="comment">// 生命值</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">mp</span> = mp;				 <span class="comment">// 能量值</span></span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">atk</span> = atk;				   <span class="comment">// 攻击力</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Player</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">getInfo</span> = <span class="keyword">function</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;HP: &quot;</span> + <span class="variable language_">this</span>.<span class="property">hp</span> + <span class="string">&quot;, MP: &quot;</span> + <span class="variable language_">this</span>.<span class="property">mp</span> + <span class="string">&quot;, ATK: &quot;</span> + <span class="variable language_">this</span>.<span class="property">atk</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在Eval Action中可以调用构造函数创建对象：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> playerAlice = <span class="keyword">new</span> <span class="title class_">Player</span>(<span class="number">100</span>, <span class="number">80</span> ,<span class="number">20</span>);</span><br></pre></td></tr></table></figure>
-
-<p>而后在Say Action的Eval Tag中，可以调用原型函数<code>getInfo()</code>来查看角色的属性信息：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">playerAlice.<span class="title function_">getInfo</span>()</span><br></pre></td></tr></table></figure>
-
-<p>上图片：</p>
-<p>定义构造函数和原型函数：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/constructFunction.png" class="" title="constructFunction">
-
-<p>创建对象：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/evalCall.png" class="" title="evalCall">
-
-<p>调用<code>getInfo()</code>获取信息：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/sayCall.png" class="" title="sayCall">
-
-<p>测试界面输出结果，符合预期：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/classResult.png" class="" title="classResult">
-
-<p>当然，功能远不止这么点。希望各位读者自行发挥想象力。</p>
-<hr>
-<h2 id="teaseStorage"><a href="#teaseStorage" class="headerlink" title="teaseStorage"></a>teaseStorage</h2><p><strong>teaseStorage</strong>是一个可选功能，类似于JavaScript的localStorage。</p>
-<p>要用这个功能的话，在Options-Storage这个界面打开。</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/enableTeaseStorage.png" class="" title="enableTeaseStorage">
-
-<p>空间不大，变量名不能太长，省着点用。</p>
-<p>在teaseStorage中，数据以键值对的形式存在。主要的操作有设置、读取。</p>
-<p>设置数值：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">setItem</span>(<span class="string">&quot;playCount&quot;</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<p>读取数值，不存在则返回null：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> playCount = teaseStorage.<span class="title function_">getItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>移除数值：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">removeItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<p>查看长度：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">var storageLength = teaseStorage.length;</span><br></pre></td></tr></table></figure>
-
-<p>查询键名：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> keyName = teaseStorage.<span class="title function_">key</span>(<span class="number">0</span>);</span><br></pre></td></tr></table></figure>
-
-<p>清空全部内容：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">teaseStorage.<span class="title function_">clear</span>();</span><br></pre></td></tr></table></figure>
-
-<p>这么说可能稍微有点抽象吧，举个具体的例子来说。</p>
-<p>就比如说，要启用一个功能，统计玩家到底玩了几次这个Webtease：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> playCount = teaseStorage.<span class="title function_">getItem</span>(<span class="string">&quot;playCount&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (playCount == <span class="literal">null</span>) &#123;</span><br><span class="line">    playCount = <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">playCount++;</span><br><span class="line"></span><br><span class="line">teaseStorage.<span class="title function_">setItem</span>(<span class="string">&quot;playCount&quot;</span>, playCount);</span><br></pre></td></tr></table></figure>
-
-<p>会报错的，<strong>你别管EOS那个报错，这报错简直是乱来。能跑就是能跑，别慌。</strong></p>
-<p>这个例子中，先创建一个变量用来存储玩家的游玩次数。从teaseStorage中尝试读取。</p>
-<p>读不出来的话赋0+1，读出来的话就正常+1。最后写回。</p>
-<p>（代码习惯稀烂）</p>
-<p>测试运行效果：</p>
-<img src="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/playCount.png" class="" title="playCount">
-
-<p>可以用来存储一些长期保存的键值对，比如说游玩次数，关卡进度，好感度什么的。这样在start里面再做个分支跳转，可以对一个较长的webtease保存游玩进度什么的（不过真的有人会分好几次玩吗？）</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文差不多简单介绍了一下之前第二篇行为和机制没有涉及到的一些东西，主要都是JavaScript相关的东西。</p>
-<p>这些内容能够帮助制作出来的文游更具交互性。</p>
-<p>当然，作者本人的水平很次，代码习惯也很烂。有问题还请指出。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>Interactive Fiction</tag>
-        <tag>Web Front-End</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
     <url>/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>常规VPS在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装BBR来有效提升带宽。</p>
@@ -1794,32 +1794,6 @@
         <tag>Network</tag>
         <tag>Circumvention</tag>
         <tag>Proxy</tag>
-        <tag>VPS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>免费领取一台IBM LinuxOne服务器</title>
-    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
-<span id="more"></span>
-
-<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
-<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
-
-<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
-<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
-<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
-<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
-<p><strong>CPU</strong>: 2v CPU</p>
-<p><strong>RAM</strong>: 4GB</p>
-<p><strong>SSD</strong>: 50GB</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
         <tag>VPS</tag>
       </tags>
   </entry>
@@ -1877,110 +1851,29 @@
       </tags>
   </entry>
   <entry>
-    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
-    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
-<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
+    <title>免费领取一台IBM LinuxOne服务器</title>
+    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
 <span id="more"></span>
 
-<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
+<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
 
-<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
-<p>一般而言npm也是会一并安装的</p>
-<p>装好了以后确认一下有没有成功安装：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
-<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后，确认一下Hexo的版本信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
-<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
-
-<p>使用Hexo初始化博客文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
-
-<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
-<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
-
-<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
-<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
-
-<p>可以重复生成时使用的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
-<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
-<p>直接拉到底，进行修改：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-
-<p>修改完成后保存，可以退出</p>
-<p>使用npm安装Hexo的Git部署工具：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
-
-<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
-<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
-<p>创建新博文：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>更新本地博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
-<p>尝试查看本地博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
+<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
+<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
+<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
+<p><strong>CPU</strong>: 2v CPU</p>
+<p><strong>RAM</strong>: 4GB</p>
+<p><strong>SSD</strong>: 50GB</p>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Web Front-End</category>
+        <category>Linux</category>
       </categories>
       <tags>
-        <tag>Web Front-End</tag>
-        <tag>Node.js</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Qt Creator中使用OpenSSL</title>
-    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
-<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
-<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
-<hr>
-<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
-<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
-<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
-        <tag>Qt</tag>
+        <tag>Linux</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
   <entry>
@@ -2141,6 +2034,113 @@
         <tag>Linux</tag>
         <tag>VPS</tag>
         <tag>MineCraft</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Qt Creator中使用OpenSSL</title>
+    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
+<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
+<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<hr>
+<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
+<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
+<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
+        <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
+    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
+<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
+<span id="more"></span>
+
+<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
+<p>一般而言npm也是会一并安装的</p>
+<p>装好了以后确认一下有没有成功安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，确认一下Hexo的版本信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
+<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
+
+<p>使用Hexo初始化博客文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+
+<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
+<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
+
+<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
+<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+
+<p>可以重复生成时使用的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
+<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
+<p>直接拉到底，进行修改：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完成后保存，可以退出</p>
+<p>使用npm安装Hexo的Git部署工具：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
+
+<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
+<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
+<p>创建新博文：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>更新本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>尝试查看本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>Web Front-End</tag>
+        <tag>Node.js</tag>
       </tags>
   </entry>
   <entry>
@@ -2562,102 +2562,6 @@
       </tags>
   </entry>
   <entry>
-    <title>基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建</title>
-    <url>/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。</p>
-<p>随后发现，主要还是Twine 2 + SugarCube 2这种形式，最终部署在Vercel上。</p>
-<span id="more"></span>
-
-<p>放两个我看到的作品吧。虽然我不是很喜欢这个主题和玩法，我是直接拿ClickRun过的。</p>
-<p>（连点1000次到底是什么魔鬼啊喂，这真的还算能是交互性吗？这是虐待吧？是的吧！M男，很神奇吧？）</p>
-<p>但，这个互动文游的形式，我觉得还不错：</p>
-<p><a href="https://disan-kekes-projects-c4b9b073.vercel.app/">为魔女妹妹打工的小游戏 By @xuemingjiai</a></p>
-<p><a href="https://moyud.vercel.app/">可喵大人的推特 By @winkyneverlose</a></p>
-<p>不知道相比于Milovana Webtease，各位读者是更喜欢哪一种呢？</p>
-<hr>
-<h2 id="Twine-简介"><a href="#Twine-简介" class="headerlink" title="Twine 简介"></a>Twine 简介</h2><p>Twine是一个开源的交互式故事生成器。</p>
-<p>项目地址：</p>
-<p><a href="https://github.com/klembot/twinejs">klembot&#x2F;twinejs: Twine, a tool for telling interactive, nonlinear stories (github.com)</a></p>
-<p>官方网站：</p>
-<p><a href="https://twinery.org/">Twine &#x2F; An open-source tool for telling interactive, nonlinear stories (twinery.org)</a></p>
-<p>英文教程：</p>
-<p><a href="https://twinery.org/cookbook">Twine Cookbook</a></p>
-<hr>
-<h2 id="SugarCube-简介"><a href="#SugarCube-简介" class="headerlink" title="SugarCube 简介"></a>SugarCube 简介</h2><p>SugarCube是Twine 2默认支持的一种故事格式：</p>
-<p>官方网站：</p>
-<p><a href="https://www.motoslave.net/sugarcube/2/">SugarCube (motoslave.net)</a></p>
-<p>英文文档：</p>
-<p><a href="https://www.motoslave.net/sugarcube/2/docs/">SugarCube v2 Documentation (motoslave.net)</a></p>
-<hr>
-<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><p>这个环境搭建很容易，不需要注册账户。</p>
-<p>主要有两种，Web UI和本地应用，可以自己根据需要选择。</p>
-<hr>
-<h3 id="Web-UI"><a href="#Web-UI" class="headerlink" title="Web UI"></a>Web UI</h3><p>Twine的Web UI：</p>
-<p><a href="https://twinery.org/2/#/">Twine Web (twinery.org)</a></p>
-<p>在顶部菜单栏找到<strong>Twine</strong>，点击<strong>故事格式</strong>选项，单击<strong>SugarCube</strong>，然后单击菜单栏的一个五角星图标——<strong>设为默认格式</strong>。（<strong>可以不设置</strong>，反正默认的<strong>Harlowe</strong>也不错）</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineSetSugarCube.png" class="" title="twineSetSugarCube">
-
-<p>完成。</p>
-<hr>
-<h3 id="本地应用"><a href="#本地应用" class="headerlink" title="本地应用"></a>本地应用</h3><p>在Twine的GitHub发行页面找到自己要下载的版本：</p>
-<p><a href="https://github.com/klembot/twinejs/releases">Releases · klembot&#x2F;twinejs (github.com)</a></p>
-<p>根据自己的系统实际情况下载安装即可。</p>
-<p>设置故事格式的方式类似。</p>
-<p>在顶部菜单栏找到<strong>Twine</strong>，点击<strong>故事格式</strong>选项，单击<strong>SugarCube</strong>，然后单击菜单栏的一个五角星图标——<strong>设为默认格式</strong>。（<strong>可以不设置</strong>，反正默认的<strong>Harlowe</strong>也不错）</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineLocalSetSugarCube.png" class="" title="twineLocalSetSugarCube">
-
-<p>完成。</p>
-<hr>
-<h2 id="部署环境搭建"><a href="#部署环境搭建" class="headerlink" title="部署环境搭建"></a>部署环境搭建</h2><p>其实现在还远远没有到部署的那一步，但是可以先准备一些东西。</p>
-<p>如果说，是要部署到Vercel上的话，大概需要——</p>
-<p><strong>安装Node.js，安装Vercel CLI，注册GitHub，注册Vercel</strong>。</p>
-<hr>
-<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><p>访问Node.js的官方网站：</p>
-<p><a href="https://nodejs.org/">Node.js ——在任何地方运行JavaScript</a></p>
-<p>一般来说安装个LTS版本就可以了，当然也可以选择下最新版。后续就是正常的软件安装流程了。</p>
-<p>为了验证Node.js安装完成后的情况，可以Win+R输入cmd打开命令行，输入以下命令进行检查：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-
-<p>理论上应该返回一个版本号，例如v21.3.0。</p>
-<p>顺便检查一下npm的安装情况：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<p>理论上也是应该返回一个版本号，例如10.8.1。</p>
-<p>这两步没有问题了，Node.js安装完毕。</p>
-<hr>
-<h3 id="安装Vercel-CLI工具"><a href="#安装Vercel-CLI工具" class="headerlink" title="安装Vercel CLI工具"></a>安装Vercel CLI工具</h3><p>在命令行输入：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g vercel</span><br></pre></td></tr></table></figure>
-
-<p>如果说人在国内，网络卡顿下载不了，npm报错超时，建议是给npm换源：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm config set registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
-
-<p>再尝试一下：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g vercel</span><br></pre></td></tr></table></figure>
-
-<p>应该就可以了。</p>
-<hr>
-<h3 id="注册GitHub"><a href="#注册GitHub" class="headerlink" title="注册GitHub"></a>注册GitHub</h3><p>这个不用多讲了吧。</p>
-<p><a href="https://github.com/">GitHub.com</a></p>
-<hr>
-<h3 id="注册Vercel"><a href="#注册Vercel" class="headerlink" title="注册Vercel"></a>注册Vercel</h3><p>可以直接用GitHub授权登录的。</p>
-<p><a href="https://vercel.com/">Vercel.com</a></p>
-<p>至此，基本的部署环境已经准备完毕。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文列举了两个Twine 2 + SugarCube 2的文游作品，介绍了Twine和SugarCube，以及开发环境、部署环境的搭建。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>Interactive Fiction</tag>
-        <tag>Web Front-End</tag>
-        <tag>HTML</tag>
-        <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>基于Twine-SugarCube的互动文游制作（2）Twine初识UI</title>
     <url>/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文尝试介绍一下Twine的UI界面。篇幅冗长，废话很多。</p>
@@ -2932,38 +2836,6 @@
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
-    <url>/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。</p>
-<p>这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h2><hr>
-<h3 id="示例：Markdown"><a href="#示例：Markdown" class="headerlink" title="示例：Markdown"></a>示例：Markdown</h3><p>建议是在VSCode里面增加一个Reg插件。</p>
-<p>新建一个文本文件，把后缀名改成.reg，例如<code>addMd.reg</code></p>
-<p>用文本编辑器之类的东西打开，把内容改成这样：</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md</span>]</span><br><span class="line">@=<span class="string">&quot;markdown&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\markdown</span>]</span><br><span class="line">@=<span class="string">&quot;Markdown file&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>保存，双击运行，点击「是」，即可。</p>
-<p>可能不会立刻生效，重启一下就可以了。</p>
-<hr>
-<h3 id="示例：C"><a href="#示例：C" class="headerlink" title="示例：C++"></a>示例：C++</h3><p>同样，只要改一下Reg文件的内容：</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp</span>]</span><br><span class="line">@=<span class="string">&quot;cppfile&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\cppfile</span>]</span><br><span class="line">@=<span class="string">&quot;C++ Source File&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>保存，双击运行，即可。其它的以此类推</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了如何通过简单的防法，为Windows右键菜单新建文件提供更多选择。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
@@ -3282,6 +3154,134 @@
       </tags>
   </entry>
   <entry>
+    <title>基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建</title>
+    <url>/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。</p>
+<p>随后发现，主要还是Twine 2 + SugarCube 2这种形式，最终部署在Vercel上。</p>
+<span id="more"></span>
+
+<p>放两个我看到的作品吧。虽然我不是很喜欢这个主题和玩法，我是直接拿ClickRun过的。</p>
+<p>（连点1000次到底是什么魔鬼啊喂，这真的还算能是交互性吗？这是虐待吧？是的吧！M男，很神奇吧？）</p>
+<p>但，这个互动文游的形式，我觉得还不错：</p>
+<p><a href="https://disan-kekes-projects-c4b9b073.vercel.app/">为魔女妹妹打工的小游戏 By @xuemingjiai</a></p>
+<p><a href="https://moyud.vercel.app/">可喵大人的推特 By @winkyneverlose</a></p>
+<p>不知道相比于Milovana Webtease，各位读者是更喜欢哪一种呢？</p>
+<hr>
+<h2 id="Twine-简介"><a href="#Twine-简介" class="headerlink" title="Twine 简介"></a>Twine 简介</h2><p>Twine是一个开源的交互式故事生成器。</p>
+<p>项目地址：</p>
+<p><a href="https://github.com/klembot/twinejs">klembot&#x2F;twinejs: Twine, a tool for telling interactive, nonlinear stories (github.com)</a></p>
+<p>官方网站：</p>
+<p><a href="https://twinery.org/">Twine &#x2F; An open-source tool for telling interactive, nonlinear stories (twinery.org)</a></p>
+<p>英文教程：</p>
+<p><a href="https://twinery.org/cookbook">Twine Cookbook</a></p>
+<hr>
+<h2 id="SugarCube-简介"><a href="#SugarCube-简介" class="headerlink" title="SugarCube 简介"></a>SugarCube 简介</h2><p>SugarCube是Twine 2默认支持的一种故事格式：</p>
+<p>官方网站：</p>
+<p><a href="https://www.motoslave.net/sugarcube/2/">SugarCube (motoslave.net)</a></p>
+<p>英文文档：</p>
+<p><a href="https://www.motoslave.net/sugarcube/2/docs/">SugarCube v2 Documentation (motoslave.net)</a></p>
+<hr>
+<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><p>这个环境搭建很容易，不需要注册账户。</p>
+<p>主要有两种，Web UI和本地应用，可以自己根据需要选择。</p>
+<hr>
+<h3 id="Web-UI"><a href="#Web-UI" class="headerlink" title="Web UI"></a>Web UI</h3><p>Twine的Web UI：</p>
+<p><a href="https://twinery.org/2/#/">Twine Web (twinery.org)</a></p>
+<p>在顶部菜单栏找到<strong>Twine</strong>，点击<strong>故事格式</strong>选项，单击<strong>SugarCube</strong>，然后单击菜单栏的一个五角星图标——<strong>设为默认格式</strong>。（<strong>可以不设置</strong>，反正默认的<strong>Harlowe</strong>也不错）</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineSetSugarCube.png" class="" title="twineSetSugarCube">
+
+<p>完成。</p>
+<hr>
+<h3 id="本地应用"><a href="#本地应用" class="headerlink" title="本地应用"></a>本地应用</h3><p>在Twine的GitHub发行页面找到自己要下载的版本：</p>
+<p><a href="https://github.com/klembot/twinejs/releases">Releases · klembot&#x2F;twinejs (github.com)</a></p>
+<p>根据自己的系统实际情况下载安装即可。</p>
+<p>设置故事格式的方式类似。</p>
+<p>在顶部菜单栏找到<strong>Twine</strong>，点击<strong>故事格式</strong>选项，单击<strong>SugarCube</strong>，然后单击菜单栏的一个五角星图标——<strong>设为默认格式</strong>。（<strong>可以不设置</strong>，反正默认的<strong>Harlowe</strong>也不错）</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineLocalSetSugarCube.png" class="" title="twineLocalSetSugarCube">
+
+<p>完成。</p>
+<hr>
+<h2 id="部署环境搭建"><a href="#部署环境搭建" class="headerlink" title="部署环境搭建"></a>部署环境搭建</h2><p>其实现在还远远没有到部署的那一步，但是可以先准备一些东西。</p>
+<p>如果说，是要部署到Vercel上的话，大概需要——</p>
+<p><strong>安装Node.js，安装Vercel CLI，注册GitHub，注册Vercel</strong>。</p>
+<hr>
+<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><p>访问Node.js的官方网站：</p>
+<p><a href="https://nodejs.org/">Node.js ——在任何地方运行JavaScript</a></p>
+<p>一般来说安装个LTS版本就可以了，当然也可以选择下最新版。后续就是正常的软件安装流程了。</p>
+<p>为了验证Node.js安装完成后的情况，可以Win+R输入cmd打开命令行，输入以下命令进行检查：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<p>理论上应该返回一个版本号，例如v21.3.0。</p>
+<p>顺便检查一下npm的安装情况：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<p>理论上也是应该返回一个版本号，例如10.8.1。</p>
+<p>这两步没有问题了，Node.js安装完毕。</p>
+<hr>
+<h3 id="安装Vercel-CLI工具"><a href="#安装Vercel-CLI工具" class="headerlink" title="安装Vercel CLI工具"></a>安装Vercel CLI工具</h3><p>在命令行输入：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g vercel</span><br></pre></td></tr></table></figure>
+
+<p>如果说人在国内，网络卡顿下载不了，npm报错超时，建议是给npm换源：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm config set registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
+
+<p>再尝试一下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install -g vercel</span><br></pre></td></tr></table></figure>
+
+<p>应该就可以了。</p>
+<hr>
+<h3 id="注册GitHub"><a href="#注册GitHub" class="headerlink" title="注册GitHub"></a>注册GitHub</h3><p>这个不用多讲了吧。</p>
+<p><a href="https://github.com/">GitHub.com</a></p>
+<hr>
+<h3 id="注册Vercel"><a href="#注册Vercel" class="headerlink" title="注册Vercel"></a>注册Vercel</h3><p>可以直接用GitHub授权登录的。</p>
+<p><a href="https://vercel.com/">Vercel.com</a></p>
+<p>至此，基本的部署环境已经准备完毕。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文列举了两个Twine 2 + SugarCube 2的文游作品，介绍了Twine和SugarCube，以及开发环境、部署环境的搭建。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
+        <tag>Web Front-End</tag>
+        <tag>HTML</tag>
+        <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
+    <url>/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。</p>
+<p>这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h2><hr>
+<h3 id="示例：Markdown"><a href="#示例：Markdown" class="headerlink" title="示例：Markdown"></a>示例：Markdown</h3><p>建议是在VSCode里面增加一个Reg插件。</p>
+<p>新建一个文本文件，把后缀名改成.reg，例如<code>addMd.reg</code></p>
+<p>用文本编辑器之类的东西打开，把内容改成这样：</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md</span>]</span><br><span class="line">@=<span class="string">&quot;markdown&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\markdown</span>]</span><br><span class="line">@=<span class="string">&quot;Markdown file&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>保存，双击运行，点击「是」，即可。</p>
+<p>可能不会立刻生效，重启一下就可以了。</p>
+<hr>
+<h3 id="示例：C"><a href="#示例：C" class="headerlink" title="示例：C++"></a>示例：C++</h3><p>同样，只要改一下Reg文件的内容：</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp</span>]</span><br><span class="line">@=<span class="string">&quot;cppfile&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\cppfile</span>]</span><br><span class="line">@=<span class="string">&quot;C++ Source File&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>保存，双击运行，即可。其它的以此类推</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了如何通过简单的防法，为Windows右键菜单新建文件提供更多选择。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>简单的Cloudflare Warp使用方法</title>
     <url>/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。</p>
@@ -3357,32 +3357,6 @@
         <tag>OpenSSL</tag>
         <tag>Crypto</tag>
         <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
-    <url>/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</url>
-    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ChatGPT之前封锁了很多大机房的IP段，这导致Vultr、Digital Ocean等常用的VPS供应商机房访问OpenAI的服务会被屏蔽。</p>
-<p>本文介绍如何简单地配置CloudFlare Warp进行出站流量转发，以绕过OpenAI的屏蔽策略，访问OpenAI的服务。</p>
-<span id="more"></span>
-
-<h3 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h3><p>非常简单，只需要一行命令行：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -fsSL git.io/warp.sh) d</span><br></pre></td></tr></table></figure>
-
-<p>部署已完成，所有出站流量都走CloudFlare Warp。可能会引入些许延迟和轻微降速，但是几乎无感。</p>
-<p>喜欢的可以去给脚本的作者点个Star：<a href="https://github.com/P3TERX/warp.sh">P3TERX&#x2F;warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)</a></p>
-<p>更详细的文档在作者的文档当中也已经说明。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>Network</tag>
-        <tag>Circumvention</tag>
-        <tag>Proxy</tag>
-        <tag>VPS</tag>
       </tags>
   </entry>
   <entry>
@@ -3529,6 +3503,32 @@
       <tags>
         <tag>Crypto</tag>
         <tag>Cyber Security</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>通过简单的CloudFlare Warp让VPS解锁ChatGPT</title>
+    <url>/2023/10/18/%E9%80%9A%E8%BF%87%E7%AE%80%E5%8D%95%E7%9A%84CloudFlare-Warp%E8%AE%A9VPS%E8%A7%A3%E9%94%81ChatGPT/</url>
+    <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>ChatGPT之前封锁了很多大机房的IP段，这导致Vultr、Digital Ocean等常用的VPS供应商机房访问OpenAI的服务会被屏蔽。</p>
+<p>本文介绍如何简单地配置CloudFlare Warp进行出站流量转发，以绕过OpenAI的屏蔽策略，访问OpenAI的服务。</p>
+<span id="more"></span>
+
+<h3 id="部署过程"><a href="#部署过程" class="headerlink" title="部署过程"></a>部署过程</h3><p>非常简单，只需要一行命令行：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">bash &lt;(curl -fsSL git.io/warp.sh) d</span><br></pre></td></tr></table></figure>
+
+<p>部署已完成，所有出站流量都走CloudFlare Warp。可能会引入些许延迟和轻微降速，但是几乎无感。</p>
+<p>喜欢的可以去给脚本的作者点个Star：<a href="https://github.com/P3TERX/warp.sh">P3TERX&#x2F;warp.sh: Cloudflare WARP Installer | WARP 一键安装脚本 (github.com)</a></p>
+<p>更详细的文档在作者的文档当中也已经说明。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Network</tag>
+        <tag>Circumvention</tag>
+        <tag>Proxy</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
 </search>
