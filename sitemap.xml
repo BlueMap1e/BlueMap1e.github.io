@@ -329,6 +329,13 @@
   </url>
   
   <url>
+    <loc>https://bluemap1e.github.io/tags/Network/</loc>
+    <lastmod>2024-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://bluemap1e.github.io/tags/JavaScript/</loc>
     <lastmod>2024-11-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -357,13 +364,6 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/Network/</loc>
-    <lastmod>2024-11-12</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://bluemap1e.github.io/tags/Proxy/</loc>
     <lastmod>2024-11-12</lastmod>
     <changefreq>weekly</changefreq>
@@ -378,14 +378,14 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/MineCraft/</loc>
+    <loc>https://bluemap1e.github.io/tags/Node-js/</loc>
     <lastmod>2024-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/Node-js/</loc>
+    <loc>https://bluemap1e.github.io/tags/MineCraft/</loc>
     <lastmod>2024-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
