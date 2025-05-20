@@ -486,6 +486,133 @@
       </tags>
   </entry>
   <entry>
+    <title>OpenSSL CLI 散列函数 个人使用经验</title>
+    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
+
+<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
+<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
+<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
+<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
+<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
+<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
+<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
+<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
+<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
+<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
+<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
+<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
+<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
+<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
+<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
+<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
+<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
+<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
+<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
+<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
+<hr>
+<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
+
+<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
+<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它们的输出一样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
+
+<p>可以尝试把它输出到文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
+<p>例如，这是默认的SHAKE-128：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它的输出为128位：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
+<p>例如，将输出调节为24字节（192位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
+
+<p>将输出调节为32字节（256位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
+
+<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</title>
     <url>/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/</url>
     <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong>EOS Editor</strong>是<strong>Milovana</strong>的一个Web UI，可以用于制作简单的互动小游戏。</p>
@@ -685,239 +812,6 @@
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了注册Milovana的过程，以及简单介绍了一下左侧侧边栏UI的功能。</p>
 <p>可能略显冗长，包含了很多常识性甚至是宝宝巴士的内容，主要是为了照顾英语能力有限的人。</p>
 <p>下一篇，主要讲解Edit界面的Action，主要是一些基础行为。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>Interactive Fiction</tag>
-        <tag>Web Front-End</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>OpenSSL CLI 散列函数 个人使用经验</title>
-    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
-
-<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
-
-<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
-<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
-<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
-<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
-<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
-<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
-<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
-<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
-<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
-<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
-<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
-<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
-<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
-<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
-<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
-<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
-<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
-<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
-<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
-<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
-<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
-<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
-<hr>
-<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
-
-<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
-
-<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
-<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
-
-<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>和</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>它们的输出一样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
-
-<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
-
-<p>可以尝试把它输出到文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
-
-<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
-<p>例如，这是默认的SHAKE-128：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>它的输出为128位：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
-<p>例如，将输出调节为24字节（192位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
-
-<p>将输出调节为32字节（256位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
-
-<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
-<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
-<span id="more"></span>
-
-<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
-<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
-<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
-<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
-<hr>
-<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
-<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
-<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
-<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
-<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
-
-<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
-<hr>
-<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
-
-<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
-<hr>
-<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
-<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
-
-<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
-<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
-
-<hr>
-<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
-<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
-<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
-<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
-<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
-
-<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
-<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
-<hr>
-<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
-
-<hr>
-<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
-
-<hr>
-<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
-<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
-<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
-<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
-<p>就类似于这样。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
-
-<hr>
-<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
-<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
-<hr>
-<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
-<p>举个例子，就像这样：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
-
-<hr>
-<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
-<p>类似于这种：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
-
-<hr>
-<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
-
-<p>一个Audio，播放音频，不阻塞。</p>
-<p>一个Timer，计时，阻塞。</p>
-<p>一个Eval，通过一行JS代码停止播放音频。</p>
-<hr>
-<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
-<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
-<p>是否允许用户跳过看你自己。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
-
-<hr>
-<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
-<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
-<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
-
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
-<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
@@ -1457,29 +1351,109 @@
       </tags>
   </entry>
   <entry>
-    <title>免费领取一台IBM LinuxOne服务器</title>
-    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
+<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
 <span id="more"></span>
 
-<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
-<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
+<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
+<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
+<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
+<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
+<hr>
+<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
+<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
+<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
+<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
+<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
 
-<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
-<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
-<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
-<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
-<p><strong>CPU</strong>: 2v CPU</p>
-<p><strong>RAM</strong>: 4GB</p>
-<p><strong>SSD</strong>: 50GB</p>
+<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
+<hr>
+<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
+
+<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
+<hr>
+<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
+<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
+
+<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
+<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+
+<hr>
+<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
+<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
+<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
+<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
+<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
+
+<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
+<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
+<hr>
+<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+
+<hr>
+<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+
+<hr>
+<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
+<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
+<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
+<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
+<p>就类似于这样。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+
+<hr>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
+<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<hr>
+<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
+<p>举个例子，就像这样：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+
+<hr>
+<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
+<p>类似于这种：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+
+<hr>
+<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+
+<p>一个Audio，播放音频，不阻塞。</p>
+<p>一个Timer，计时，阻塞。</p>
+<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<hr>
+<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
+<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
+<p>是否允许用户跳过看你自己。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+
+<hr>
+<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
+<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
+<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
+<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Linux</category>
+        <category>Web Front-End</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
-        <tag>VPS</tag>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
+        <tag>Web Front-End</tag>
       </tags>
   </entry>
   <entry>
@@ -1725,83 +1699,6 @@
       </tags>
   </entry>
   <entry>
-    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
-    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
-<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
-<span id="more"></span>
-
-<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
-
-<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
-<p>一般而言npm也是会一并安装的</p>
-<p>装好了以后确认一下有没有成功安装：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
-<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
-
-<p>安装完成后，确认一下Hexo的版本信息：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
-<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
-
-<p>使用Hexo初始化博客文件夹：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
-
-<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
-
-<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
-<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
-
-<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
-<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
-
-<p>可以重复生成时使用的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
-<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
-<p>直接拉到底，进行修改：</p>
-<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-
-<p>修改完成后保存，可以退出</p>
-<p>使用npm安装Hexo的Git部署工具：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
-
-<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
-<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
-<p>创建新博文：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>更新本地博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
-
-<p>尝试查看本地博客：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
-
-<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>Web Front-End</tag>
-        <tag>Node.js</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
     <url>/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>常规VPS在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装BBR来有效提升带宽。</p>
@@ -1824,10 +1721,36 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>VPS</tag>
         <tag>Circumvention</tag>
         <tag>Network</tag>
         <tag>Proxy</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>免费领取一台IBM LinuxOne服务器</title>
+    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
+<span id="more"></span>
+
+<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
+<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
+
+<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
+<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
+<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
+<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
+<p><strong>CPU</strong>: 2v CPU</p>
+<p><strong>RAM</strong>: 4GB</p>
+<p><strong>SSD</strong>: 50GB</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
   <entry>
@@ -1877,40 +1800,10 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>VPS</tag>
         <tag>Circumvention</tag>
         <tag>Network</tag>
         <tag>Proxy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Qt Creator中使用OpenSSL</title>
-    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
-<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
-<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
-<hr>
-<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
-<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
-<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
-        <tag>Qt</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
   <entry>
@@ -2071,6 +1964,113 @@
         <tag>Linux</tag>
         <tag>VPS</tag>
         <tag>MineCraft</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Qt Creator中使用OpenSSL</title>
+    <url>/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在折腾Qt，刚好可以做一些加解密的桌面应用来玩。因此就尝试在Qt Creator中集成OpenSSL。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS</strong>: Windows 10&#x2F;11</p>
+<p><strong>IDE</strong>: Qt Creator 11.0.3 (Open Source)	下载链接：<a href="https://www.qt.io/download-qt-installer-oss?hsCtaTracking=99d9dd4f-5681-48d2-b096-470725510d34%7C074ddad0-fdef-4e53-8aa8-5e8a876d6ab4">Download Qt OSS: Get Qt Online Installer</a></p>
+<p><strong>OpenSSL</strong>: OpenSSL 3.1.2 Win64		 下载链接：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<hr>
+<h2 id="QMake"><a href="#QMake" class="headerlink" title="QMake"></a>QMake</h2><p>QMake集成OpenSSL非常简单。</p>
+<p>新建Qt项目时选择QMake，然后进入项目的<code>.pro</code>文件，添加这两行：</p>
+<p>（PS：把示例中的路径修改为你自己的OpenSSL安装路径）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INCLUDEPATH += D:\Lib\OpenSSL-Win64\include</span><br><span class="line">LIBS += -L&quot;D:\Lib\OpenSSL-Win64\lib&quot; -lssl -lcrypto</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="CMake"><a href="#CMake" class="headerlink" title="CMake"></a>CMake</h2><p>未完待续……</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
+        <tag>Qt</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在GitHub Pages上使用Hexo搭建简单的个人博客</title>
+    <url>/2023/10/18/%E5%9C%A8Github%20Pages%E4%B8%8A%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一个简单的操作流程，自己也失败了很多次，不过好歹是成功了，记一下</p>
+<p>个人使用的搭建本地环境就是Windows 10，macOS据说差不多。</p>
+<span id="more"></span>
+
+<h2 id="Node-js环境配置"><a href="#Node-js环境配置" class="headerlink" title="Node.js环境配置"></a>Node.js环境配置</h2><p>首先看看有没有安装Node.js：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+
+<p>如果没有的话安装Node.js 18+，18-话ShokaX不能运行：<a href="https://nodejs.org/en">Node.js (nodejs.org)</a></p>
+<p>一般而言npm也是会一并安装的</p>
+<p>装好了以后确认一下有没有成功安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node -v</span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确地显示版本信息，那么安装成功，Node.js环境配置完成</p>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>通过npm包管理工具安装Hexo：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br></pre></td></tr></table></figure>
+
+<p>安装完成后，确认一下Hexo的版本信息：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+
+<p>如果能够正确显示版本信息，安装成功，Hexo下载安装完成。</p>
+<h2 id="部署本地Hexo页面"><a href="#部署本地Hexo页面" class="headerlink" title="部署本地Hexo页面"></a>部署本地Hexo页面</h2><p>去文件资源管理器里面随便选个位置，创建一个新文件夹，然后在CLI把目录切换到这个文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> C:\Users\Your_Account\Your_Blog_Files	<span class="comment">#注意把路径改成自己电脑上的文件路径</span></span><br></pre></td></tr></table></figure>
+
+<p>使用Hexo初始化博客文件夹：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init</span><br></pre></td></tr></table></figure>
+
+<p>博客文件夹初始化完成，现在已经可以尝试生成页面：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g		<span class="comment">#hexo generate的缩写</span></span><br><span class="line">hexo s		<span class="comment">#hexo server的缩写</span></span><br></pre></td></tr></table></figure>
+
+<p>如果没有报错，此时打开浏览器输入<a href="localhost:4000">localhost:4000</a>或 <a href="127.0.0.1:4000">127.0.0.1:4000</a>应该已经可以展示一个最基本的Hexo博客页面</p>
+<p>如果想要创建一篇新的博文，可以使用Hexo的new命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;Your_First_Blog_Post&quot;</span>		<span class="comment">#hexo new的缩写 把标题改成自己喜欢的标题</span></span><br></pre></td></tr></table></figure>
+
+<p>然后可以通过VSCode来尝试打开文章的Markdown文件，或者你可以用更加专业的编辑器，直接在文件资源管理器中打开。<br>这部分可以随意设置，记得Ctrl+S保存。</p>
+<p>设置好文章的内容之后，如果你想要更新本地的博客，可以先尝试清理之前的博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br></pre></td></tr></table></figure>
+
+<p>可以重复生成时使用的命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo g</span><br><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="部署Github-Pages"><a href="#部署Github-Pages" class="headerlink" title="部署Github Pages"></a>部署Github Pages</h2><p>打开你的Github 创建一个新的仓库，命名为 <a href="username.github.io">username.github.io</a>，此处的username改成你自己的Github用户名</p>
+<p>在本地的博客文件夹下，找到<code>_config.yml</code>，用一个文本编辑器打开它，VSCode，Notepad等等都可以。</p>
+<p>直接拉到底，进行修改：</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">type:</span> <span class="string">&#x27;git&#x27;</span></span><br><span class="line"><span class="attr">repo:</span> <span class="string">https://github.com/Username/BUsername.github.io.git</span></span><br><span class="line"><span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+
+<p>修改完成后保存，可以退出</p>
+<p>使用npm安装Hexo的Git部署工具：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
+
+<p>一般而言就可以成功。如果出错，请检查你的配置文件<code>_config.yml</code>，或检查你的网络情况。如果实在不行，可以尝试清空博客文件夹进行重试。</p>
+<h2 id="更新博文"><a href="#更新博文" class="headerlink" title="更新博文"></a>更新博文</h2><p>想要创建新的博文，就在CLI中继续使用命令新建文章，然后使用各种方便的Markdown编辑工具，如Typora，VSCode等进行编辑。</p>
+<p>创建新博文：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo n <span class="string">&quot;new_post_example&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>更新本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo clean</span><br><span class="line">hexo g</span><br></pre></td></tr></table></figure>
+
+<p>尝试查看本地博客：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo s</span><br></pre></td></tr></table></figure>
+
+<p>然后在浏览器中输入 <a href="localhost:4000">localhost:4000</a> 或 <a href="127.0.0.1:4000">127.0.0.1:4000 </a> 进行预览，觉得样式满意了之后，可以同步到Github Pages（网页端）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>Web Front-End</tag>
+        <tag>Node.js</tag>
       </tags>
   </entry>
   <entry>
@@ -2243,10 +2243,102 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>VPS</tag>
         <tag>Circumvention</tag>
         <tag>Network</tag>
         <tag>Proxy</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Visual Studio 2022中配置Crypto++开发环境</title>
+    <url>/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Crypto++</code>是一个轻量、开源、受欢迎的<code>C++</code>密码学库，采用了OOP的程序设计思想，总体比较契合<code>C++</code>的程序设计风格。</p>
+<p>本文主要介绍如何在Visual Studio 2022中配置<code>Crypto++</code>的开发环境。本文作者是个菜逼，失败了很多次，因此可能存在很多纰漏。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS:</strong> Windows 10&#x2F;11</p>
+<p><strong>IDE:</strong> Visual Studio 2022 (C++ SDK)</p>
+<p><strong>C++ 编译器:</strong> MSVC</p>
+<p><strong>Crypto++版本:</strong> Crypto++ 8.9.0</p>
+<hr>
+<h2 id="下载并解压Crypto"><a href="#下载并解压Crypto" class="headerlink" title="下载并解压Crypto++"></a>下载并解压Crypto++</h2><p>在<code>Crypto++</code>的官方网站可以下载<code>Crypto++</code>，选择自己想要使用的版本即可：</p>
+<p><a href="https://www.cryptopp.com/#download">Crypto++ Library 8.9 | Free C++ Class Library of Cryptographic Schemes (cryptopp.com)</a></p>
+<p>下载后，把<code>Crypto++</code>的压缩包解压到自己想要存放Crypto++的文件夹，这里要注意，压缩包没有内层文件夹，因此最好不要解压<code>D:\Download</code>之类的目录下，否则容易造成混乱。</p>
+<hr>
+<h2 id="编译Crypto"><a href="#编译Crypto" class="headerlink" title="编译Crypto++"></a>编译Crypto++</h2><hr>
+<h3 id="打开项目"><a href="#打开项目" class="headerlink" title="打开项目"></a>打开项目</h3><p>进入<code>Crypto++</code>解压后的文件夹，找到<code>cryptest.sln</code>这个文件，双击用Visual Studio打开它。</p>
+<hr>
+<h3 id="Debug模式编译"><a href="#Debug模式编译" class="headerlink" title="Debug模式编译"></a>Debug模式编译</h3><p>注意生成选项，对于64位系统建议选择x64。先选择Debug模式。</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Options-1.png" class="" title="Options-1">
+
+<p>在右侧的项目文件夹找到<code>cryptlib</code>，右键单击，生成：</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Cryptlib.png" class="" title="Cryptlib">
+
+<p>Visual Studio会尝试编译<code>cryptlib</code>，这个过程需要一点时间，可以在下方的控制台看到进度。</p>
+<hr>
+<h3 id="Release模式编译"><a href="#Release模式编译" class="headerlink" title="Release模式编译"></a>Release模式编译</h3><p>切换到Release模式。</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Options-2.png" class="" title="Options-2">
+
+<p>在右侧的项目文件夹找到<code>cryptlib</code>，右键单击，生成。</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Cryptlib.png" class="" title="Cryptlib">
+
+<p>Visual Studio会尝试编译<code>cryptlib</code>，这个过程需要一点时间，可以在下方的控制台看到进度。</p>
+<hr>
+<h3 id="编译完成"><a href="#编译完成" class="headerlink" title="编译完成"></a>编译完成</h3><p>到这一步，编译已经完成了。</p>
+<hr>
+<h2 id="配置Visual-Studio"><a href="#配置Visual-Studio" class="headerlink" title="配置Visual Studio"></a>配置Visual Studio</h2><h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>可以新建一个项目用来测试，打开Visual Studio，创建新项目，控制台应用。</p>
+<p>你可以先把这些代码复制到源文件中，以便测试：</p>
+<p>（代码来源：<a href="https://www.cryptopp.com/wiki/Advanced_Encryption_Standard">Advanced Encryption Standard - Crypto++ Wiki (cryptopp.com)</a>）</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cryptlib.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;rijndael.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;modes.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;files.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;osrng.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hex.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> CryptoPP;</span><br><span class="line"></span><br><span class="line">    AutoSeededRandomPool prng;</span><br><span class="line">    <span class="function">HexEncoder <span class="title">encoder</span><span class="params">(<span class="keyword">new</span> FileSink(std::cout))</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">SecByteBlock <span class="title">key</span><span class="params">(AES::DEFAULT_KEYLENGTH)</span></span>;</span><br><span class="line">    <span class="function">SecByteBlock <span class="title">iv</span><span class="params">(AES::BLOCKSIZE)</span></span>;</span><br><span class="line"></span><br><span class="line">    prng.<span class="built_in">GenerateBlock</span>(key, key.<span class="built_in">size</span>());</span><br><span class="line">    prng.<span class="built_in">GenerateBlock</span>(iv, iv.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">    std::string plain = <span class="string">&quot;CBC Mode Test&quot;</span>;</span><br><span class="line">    std::string cipher, recovered;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;plain text: &quot;</span> &lt;&lt; plain &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*********************************\</span></span><br><span class="line"><span class="comment">    \*********************************/</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        CBC_Mode&lt; AES &gt;::Encryption e;</span><br><span class="line">        e.<span class="built_in">SetKeyWithIV</span>(key, key.<span class="built_in">size</span>(), iv);</span><br><span class="line"></span><br><span class="line">        <span class="function">StringSource <span class="title">s</span><span class="params">(plain, <span class="literal">true</span>, </span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">new</span> StreamTransformationFilter(e,</span></span></span><br><span class="line"><span class="params"><span class="function">                <span class="keyword">new</span> StringSink(cipher)</span></span></span><br><span class="line"><span class="params"><span class="function">            ) <span class="comment">// StreamTransformationFilter</span></span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span>; <span class="comment">// StringSource</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">catch</span>(<span class="type">const</span> Exception&amp; e)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*********************************\</span></span><br><span class="line"><span class="comment">    \*********************************/</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;key: &quot;</span>;</span><br><span class="line">    encoder.<span class="built_in">Put</span>(key, key.<span class="built_in">size</span>());</span><br><span class="line">    encoder.<span class="built_in">MessageEnd</span>();</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;iv: &quot;</span>;</span><br><span class="line">    encoder.<span class="built_in">Put</span>(iv, iv.<span class="built_in">size</span>());</span><br><span class="line">    encoder.<span class="built_in">MessageEnd</span>();</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;cipher text: &quot;</span>;</span><br><span class="line">    encoder.<span class="built_in">Put</span>((<span class="type">const</span> byte*)&amp;cipher[<span class="number">0</span>], cipher.<span class="built_in">size</span>());</span><br><span class="line">    encoder.<span class="built_in">MessageEnd</span>();</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*********************************\</span></span><br><span class="line"><span class="comment">    \*********************************/</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        CBC_Mode&lt; AES &gt;::Decryption d;</span><br><span class="line">        d.<span class="built_in">SetKeyWithIV</span>(key, key.<span class="built_in">size</span>(), iv);</span><br><span class="line"></span><br><span class="line">        <span class="function">StringSource <span class="title">s</span><span class="params">(cipher, <span class="literal">true</span>, </span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">new</span> StreamTransformationFilter(d,</span></span></span><br><span class="line"><span class="params"><span class="function">                <span class="keyword">new</span> StringSink(recovered)</span></span></span><br><span class="line"><span class="params"><span class="function">            ) <span class="comment">// StreamTransformationFilter</span></span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span>; <span class="comment">// StringSource</span></span><br><span class="line"></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;recovered text: &quot;</span> &lt;&lt; recovered &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">catch</span>(<span class="type">const</span> Exception&amp; e)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="配置VC-参数"><a href="#配置VC-参数" class="headerlink" title="配置VC++参数"></a>配置VC++参数</h3><hr>
+<h4 id="进入属性配置"><a href="#进入属性配置" class="headerlink" title="进入属性配置"></a>进入属性配置</h4><p>在右侧的项目文件夹找到项目，右键，单击<code>属性</code></p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Properties.png" class="">
+
+<hr>
+<h4 id="配置包含文件目录"><a href="#配置包含文件目录" class="headerlink" title="配置包含文件目录"></a>配置包含文件目录</h4><p>找到<code>VC++目录</code> - <code>包含目录</code> - <code>编辑</code>：</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/IncludePath.png" class="" title="Include-Path">
+
+<p>单击<code>新行</code>：</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Insert.png" class="" title="Insert">
+
+<p>点击省略号图标，定位到自己存放Crypto++文件的目录：</p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Locate.png" class="" title="Locate">
+
+<p>点确定，此时如果配置的路径正确，源文件中包含的库文件报错应该已经消除。</p>
+<p>但是此时运行程序还是会报错，这是因为没有包含<code>Crypto++</code>的静态链接库。</p>
+<hr>
+<h4 id="配置静态链接库"><a href="#配置静态链接库" class="headerlink" title="配置静态链接库"></a>配置静态链接库</h4><p>在<code>属性</code>当中找到<code>链接器</code> - <code>附加库目录</code> - <code>编辑</code></p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/IncludeLib.png" class="" title="IncludeLib">
+
+<p>添加新行，定向到之前编译生成的输出静态链接库目录，例如<code>D:\Lib\Cryptopp\Cryptopp\x64\Output\Debug</code>，当然这个路径要换成你自己的。</p>
+<p>然后找到<code>链接器</code> - <code>输入</code> - <code>附加依赖项</code> - <code>编辑</code></p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/AdditionalDependency.png" class="" title="Additional-Dependency">
+
+<p>填写一条<code>cryptlib.lib</code>，确定。</p>
+<p>此时还是不能够运行，因为调试模式还需要修改一下。</p>
+<hr>
+<h4 id="Debug模式修改调试运行库"><a href="#Debug模式修改调试运行库" class="headerlink" title="Debug模式修改调试运行库"></a>Debug模式修改调试运行库</h4><p>在<code>属性</code>中找到<code>C/C++</code> - <code>所有选项</code> - <code>运行库</code> </p>
+<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/MTd.png" class="" title="MTd">
+
+<p>把运行库改成 <strong>&#x2F;MTd 多线程调试</strong>。</p>
+<hr>
+<h3 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h3><p>启动Windows本地调试器，此时示例代码应该可以正确运行了，它的输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">plain <span class="selector-tag">text</span>: CBC Mode Test</span><br><span class="line">key: <span class="number">862</span>E4E435EE5AA798D2A654FAC00D66A</span><br><span class="line">iv: <span class="number">9090</span>D44CABA3EF20A3E21D19DEBBA6A0</span><br><span class="line">cipher text: <span class="number">7</span>CB66B9B9E767CBEA744309C423742D0</span><br><span class="line">recovered text: CBC Mode Test</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Visual Studio的<code>Crypto++</code>开发环境配置完毕。</p>
+<p>Release模式的思路是一样的，只要把运行库改成 <strong>&#x2F;MT 多线程</strong> 即可。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>Crypto</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -2482,283 +2574,6 @@
 <p>至此，基本的部署环境已经准备完毕。</p>
 <hr>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文列举了两个Twine 2 + SugarCube 2的文游作品，介绍了Twine和SugarCube，以及开发环境、部署环境的搭建。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Web Front-End</category>
-      </categories>
-      <tags>
-        <tag>JavaScript</tag>
-        <tag>Interactive Fiction</tag>
-        <tag>Web Front-End</tag>
-        <tag>HTML</tag>
-        <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>基于Twine-SugarCube的互动文游制作（2）Twine初识UI</title>
-    <url>/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文尝试介绍一下Twine的UI界面。篇幅冗长，废话很多。</p>
-<p>其实只要有一点计算机和前端的基础知识，稍微上手操作一下UI就懂了，不用看这种东西。</p>
-<span id="more"></span>
-
-<p>首先是惯例：Twine的官方教程，在这：</p>
-<p><a href="https://twinery.org/cookbook">Twine Cookbook</a></p>
-<p>一般而言，只要打开浏览器翻译，看官方教程比看我这篇破玩意强得多。</p>
-<p>那么对于有一定英语基础的读者而言，更是如此。大部分人读到这里已经可以划走了。</p>
-<p>另外，要看懂其中一部分，需要有一点点前端开发基础，就只要一点点。HTML、CSS、JavaScript都最好懂一点，其他方面暂时不用。</p>
-<hr>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>本文章以<strong>Twine Local + SugarCube</strong>为例。</p>
-<p>读者完全可以选择<strong>Twine Web</strong>和别的故事框架。当然，注意一下，Twine Web的故事存储在<strong>浏览器</strong>中，注意不要一波清缓存或者垃圾清理把作品清没了，最好还是导出到HTML备份一下。</p>
-<p>本文应该不会涉及SugarCube的过多特性，基本上还是Twine的一些基本特性。</p>
-<hr>
-<h2 id="故事管理UI简介"><a href="#故事管理UI简介" class="headerlink" title="故事管理UI简介"></a>故事管理UI简介</h2><p>打开Twine，可以看到主界面的UI是这样。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineUIMain.png" class="" title="twineUIMain">
-
-<p>介绍一下，这些其实是常识性的东西，不耐烦的读者可以直接跳过。</p>
-<p>最上面一栏的Twine，Edit这些，基本不用管它，Web UI也没有这种东西。可以点开稍微看一下快捷键方案。</p>
-<hr>
-<h3 id="故事"><a href="#故事" class="headerlink" title="故事"></a>故事</h3><p>在故事界面，可以管理已经创建的故事。这个就类似于生产力软件的Files，EOS Editor的Teases这种界面。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineUIStory.png" class="" title="twineUIStory">
-
-<hr>
-<h4 id="新建"><a href="#新建" class="headerlink" title="新建"></a>新建</h4><p><strong>新建</strong>会创建一个新的故事，输入故事的名称即可。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineNewStory.png" class="" title="twineNewStory">
-
-<hr>
-<h4 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h4><p>在选中一个故事后，<strong>编辑</strong>将会进入它的片段编辑页面。双击也可以达到同样的效果。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineEditStory.png" class="" title="twineEditStory">
-
-<hr>
-<h4 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h4><p>在选中一个故事后，<strong>标签</strong>功能可以给故事增加标签，用来分类和管理。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTaggingStory.png" class="" title="twineTaggingStory">
-
-<p>在故事选项卡上，选中标签，在下拉菜单可以修改颜色和移除标签。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineStoryTagsEdit.png" class="" title="twineStoryTagsEdit">
-
-<hr>
-<h4 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h4><p>在选中一个故事后，<strong>重命名</strong>功能可以修改故事的名称。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineRenameStory.png" class="" title="twineRenameStory">
-
-<hr>
-<h4 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h4><p>在选中一个故事后，<strong>复制</strong>功能将会创建一个与它相同的副本。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDuplicateStory.png" class="" title="twineDuplicateStory">
-
-<hr>
-<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p>在选中一个故事后，<strong>删除</strong>功能会把它放进回收站，需要<strong>二次确认</strong>。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDeleteStory.png" class="" title="twineDeleteStory">
-
-<hr>
-<h3 id="库"><a href="#库" class="headerlink" title="库"></a>库</h3><p>主要是对现有的故事进行管理，标签、导入、存档什么的。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLib.png" class="" title="twineLib">
-
-<hr>
-<h4 id="故事标签"><a href="#故事标签" class="headerlink" title="故事标签"></a>故事标签</h4><p>点击后出现一个右下角弹窗，可以管理现有的故事标签，包括重命名、修改颜色等操作。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLibTags.png" class="" title="twineLibTags">
-
-<hr>
-<h4 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h4><p>点击后出现一个右下角弹窗，可以从现有故事的HTML文件中导入故事用于编辑（前提是你能拿到）。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLibImport.png" class="" title="twineLibImport">
-
-<hr>
-<h4 id="档案"><a href="#档案" class="headerlink" title="档案"></a>档案</h4><p>点击后出现文件管理器页面，给现有的故事进行存档。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLibArchive.png" class="" title="twineLibArchive">
-
-<hr>
-<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>主要是用于Debug，测试运行，校对文本，导出文件等。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuild.png" class="" title="twineBuild">
-
-<hr>
-<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>其实就是在Debug模式尝试运行故事。可以跟踪变量，跳转片段什么的。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildDebug.png" class="" title="twineBuildDebug">
-
-<hr>
-<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>尝试真的运行故事，这次是玩家视角，没有跳转片段之类的东西了。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildRun.png" class="" title="twineBuildRun">
-
-<hr>
-<h4 id="校对"><a href="#校对" class="headerlink" title="校对"></a>校对</h4><p>把故事的文本呈现出来，集中校对内容和错别字。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildProofread.png" class="" title="twineBuildProofread">
-
-<hr>
-<h4 id="发布到文件"><a href="#发布到文件" class="headerlink" title="发布到文件"></a>发布到文件</h4><p>把故事导出为HTML文件格式，常见的发布手段。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildReleaseHTML.png" class="" title="twineBuildReleaseHTML">
-
-<hr>
-<h4 id="导出为Twee"><a href="#导出为Twee" class="headerlink" title="导出为Twee"></a>导出为Twee</h4><p>把故事导出为Twee文件格式，只有精简的内容，特别适合修改故事内容、进行版本控制等。</p>
-<p>可以理解为，这玩意是你写的Twine故事的源代码。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildExportTwee.png" class="" title="twineBuildExportTwee">
-
-<hr>
-<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h3><p>调整现有故事的查看方式。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineView.png" class="" title="twineView">
-
-<hr>
-<h4 id="排序方式"><a href="#排序方式" class="headerlink" title="排序方式"></a>排序方式</h4><p>调整现有故事的查看排序方式。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineViewOrder.png" class="" title="twineViewOrder">
-
-<p><strong>名称</strong>是按照<strong>字典序顺序</strong>排列，不区分大小写。</p>
-<p><strong>时间</strong>是按照故事的<strong>最后一次修改时间</strong>排列，最后修改的在前面。</p>
-<hr>
-<h4 id="显示标签"><a href="#显示标签" class="headerlink" title="显示标签"></a>显示标签</h4><p>根据标签过滤本地的故事。包含被勾选标签的故事被展示，不包含的被隐藏。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineViewShowTags.png" class="" title="twineViewShowTags">
-
-<hr>
-<h3 id="Twine"><a href="#Twine" class="headerlink" title="Twine"></a>Twine</h3><p>一些全局设置，关于，之类的东西。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwine.png" class="" title="twineTwine">
-
-<hr>
-<h4 id="偏好"><a href="#偏好" class="headerlink" title="偏好"></a>偏好</h4><p>编辑器偏好，主题风格一类的东西。根据自己的需要调整。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwinePreference.png" class="" title="twineTwinePreference">
-
-<hr>
-<h4 id="故事格式"><a href="#故事格式" class="headerlink" title="故事格式"></a>故事格式</h4><p>故事格式选择，会影响一些偏高级的内容，如果是简单互动方面的话，区别不大。看需求选择。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwineStoryFormat.png" class="" title="twineTwineStoryFormat">
-
-<hr>
-<h4 id="关于Twine"><a href="#关于Twine" class="headerlink" title="关于Twine"></a>关于Twine</h4><p>Twine的一些介绍内容。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwineAbout.png" class="" title="twineTwineAbout">
-
-<hr>
-<h4 id="反馈Bug"><a href="#反馈Bug" class="headerlink" title="反馈Bug"></a>反馈Bug</h4><p>反馈Bug的渠道，会跳转到网页，其实就是去GitHub的仓库下面提Issue。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwineReportABug.png" class="" title="twineTwineReportABug">
-
-<hr>
-<h2 id="片段编辑UI简介"><a href="#片段编辑UI简介" class="headerlink" title="片段编辑UI简介"></a>片段编辑UI简介</h2><p>（这部分对于技术用户而言应该也是废话，是显而易见的内容）</p>
-<p>在故事管理界面<strong>双击</strong>某个故事，或者在选择某个故事后点击<strong>编辑</strong>，就会进入到片段编辑的UI。这其实就是片段视图（Passage View）。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEdit.png" class="" title="twinePassageEdit">
-
-<p>片段编辑界面是整个故事的核心工作区。<strong>故事（Story）主要是由片段（Passage）构成的</strong>。</p>
-<p>这是一个网格状的平面UI，它可以让你清楚地观察到故事的支线、循环等结构，从而创作出复杂的非线性故事。</p>
-<p><strong>左键</strong>是选中，<strong>拖动左键</strong>是框选，<strong>拖动右键</strong>是拖拽移动视角。</p>
-<p>接下来讲讲具体的按钮作用。</p>
-<hr>
-<h3 id="新建-1"><a href="#新建-1" class="headerlink" title="新建"></a>新建</h3><p><strong>新建</strong>，顾名思义，点击后直接创建一个新的片段（Passage）。</p>
-<p>（其实一般的主线线性结构可以不用新建按钮，直接写Twine链接，Ctrl+S，连接的片段就自动创建了）</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageNew.png" class="" title="twinePassageNew">
-
-<hr>
-<h3 id="编辑-1"><a href="#编辑-1" class="headerlink" title="编辑"></a>编辑</h3><p><strong>编辑</strong>，对选中的片段打开编辑窗口。双击某个片段效果一样。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditArea.png" class="" title="twinePassageEditArea">
-
-<p><strong>编辑</strong>可能是制作过程中最常用的窗口之一了，详细介绍一下。</p>
-<hr>
-<h4 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h4><p>点击回退一步。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditUndo.png" class="" title="twinePassageEditUndo">
-
-<hr>
-<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><p>点击前进一步</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditRedo.png" class="" title="twinePassageEditRedo">
-
-<hr>
-<h4 id="标签-1"><a href="#标签-1" class="headerlink" title="标签"></a>标签</h4><p>点击为该段落打上标签，用于定位、查看、管理等。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditTags.png" class="" title="twinePassageEditTags">
-
-<p>生成的标签可以在片段编辑页面中手动关闭。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageRemoveTags.png" class="" title="twinePassageRemoveTags">
-
-<hr>
-<h4 id="尺寸"><a href="#尺寸" class="headerlink" title="尺寸"></a>尺寸</h4><p>调整该段落在编辑面板上的显示大小，这个主要是帮助可视化和整理试图用的，并不是影响它的Web布局。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditSize.png" class="" title="twinePassageEditSize">
-
-<p>小型 - 1x1。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/smallPassage.png" class="" title="smallPassage">
-
-<p>大型 - 2x2。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/largePassage.png" class="" title="largePassage">
-
-<p>竖条 - 1x2。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/columnPassage.png" class="" title="columnPassage">
-
-<p>横条 - 2x1。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/rowPassage.png" class="" title="rowPassage">
-
-<hr>
-<h4 id="重命名-1"><a href="#重命名-1" class="headerlink" title="重命名"></a>重命名</h4><p>重命名当前片段。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditRename.png" class="" title="twinePassageEditRename">
-
-<hr>
-<h4 id="从这里开始测试"><a href="#从这里开始测试" class="headerlink" title="从这里开始测试"></a>从这里开始测试</h4><p>选择当前片段作为入口，进入Debug模式运行故事。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditStartDebugHere.png" class="" title="twinePassageEditStartDebugHere">
-
-<hr>
-<h3 id="重命名-2"><a href="#重命名-2" class="headerlink" title="重命名"></a>重命名</h3><p>重命名当前片段。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageRename.png" class="" title="twinePassageRename">
-
-<hr>
-<h3 id="删除-1"><a href="#删除-1" class="headerlink" title="删除"></a>删除</h3><p>删除当前片段。不能删除最后的一个片段。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageDelete.png" class="" title="twinePassageDelete">
-
-<hr>
-<h3 id="从这里开始测试-1"><a href="#从这里开始测试-1" class="headerlink" title="从这里开始测试"></a>从这里开始测试</h3><p>选择当前片段作为入口，进入Debug模式运行故事。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditStartDebugHere.png" class="" title="twinePassageEditStartDebugHere">
-
-<hr>
-<h3 id="从这里开始故事"><a href="#从这里开始故事" class="headerlink" title="从这里开始故事"></a>从这里开始故事</h3><p>选择当前片段，作为整个故事的起点。并不是进入Run模式，不要混淆了。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageStartHere.png" class="" title="twinePassageStartHere">
-
-<p>故事起点片段会有一个明显的图标标记——一个绿色的火箭标志，这意味着故事将从这里开始。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageStartIcon.png" class="" title="twinePassageStartIcon">
-
-<hr>
-<h3 id="跳转到"><a href="#跳转到" class="headerlink" title="跳转到"></a>跳转到</h3><p>其实这就是一个搜索栏功能，可以理解为VSCode的Ctrl+F。可以用来搜索片段的标题、内容，并用于定位片段。</p>
-<p>整个故事结构复杂的时候会比较有用。当然，保持良好的命名习惯是很重要的。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageJumpTo.png" class="" title="twinePassageJumpTo">
-
-<hr>
-<h3 id="全选"><a href="#全选" class="headerlink" title="全选"></a>全选</h3><p>字面意思，全选所有片段。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageSelectAll.png" class="" title="twinePassageSelectAll">
-
-<hr>
-<h2 id="片段视图下的故事菜单"><a href="#片段视图下的故事菜单" class="headerlink" title="片段视图下的故事菜单"></a>片段视图下的故事菜单</h2><p>可以注意到的一点是，在片段视图下，故事菜单的内容发生了显著变化，这和之前故事视图下是完全不同的。</p>
-<p>这里有一些重要的功能，还是不得不提一下。有这方面基础的读者，这一章对你来说应该也是废话。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineEditModeStory.png" class="" title="twineEditModeStory">
-
-<hr>
-<h3 id="查找替换"><a href="#查找替换" class="headerlink" title="查找替换"></a>查找替换</h3><p>可以用于一次性替换片段中的某一段文字，类似于VSCode中的Ctrl+F2。</p>
-<p>第一个符合匹配的片段会被黄色标记。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineF2.png" class="" title="twineF2">
-
-<hr>
-<h3 id="重命名-3"><a href="#重命名-3" class="headerlink" title="重命名"></a>重命名</h3><p>重命名整个故事，和之前那个是一样的。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineEditModeStoryRename.png" class="" title="twineEditModeStoryRename">
-
-<hr>
-<h3 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h3><p>展示故事的细节信息。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDetails.png" class="" title="twineDetails">
-
-<p>它会生成这样一个窗口，可以查看编辑时间、IFID、故事格式等信息。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDetailsWindow.png" class="" title="twineDetailsWindow">
-
-<p>在<strong>故事格式</strong>一栏，可以手动修改当前故事的格式。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineChangeFormat.png" class="" title="twineChangeFormat">
-
-<p>这个操作最好是前期去动，否则后期要改的东西可能就比较多了。</p>
-<hr>
-<h3 id="片段标签"><a href="#片段标签" class="headerlink" title="片段标签"></a>片段标签</h3><p>展示所有的片段标签。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageTags.png" class="" title="twinePassageTags">
-
-<p>在生成的窗口中，可以对目前已有的标签进行管理，包括重命名和重设颜色。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageTagsWindow.png" class="" title="twinePassageTagsWindow">
-
-<hr>
-<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h3><p>写一段JavaScript代码，它会在故事初始化的时候执行。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineJavaScript.png" class="" title="twineJavaScript">
-
-<p>可以直接在这个窗口编辑JavaScript代码，但是不太建议这么做。虽然高亮确实是有的，但是和VSCode、WebStorm这种环境是没法比的，写起来会比较的难受。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineJavaScriptEdit.png" class="" title="twineJavaScriptEdit">
-
-<hr>
-<h3 id="样式表"><a href="#样式表" class="headerlink" title="样式表"></a>样式表</h3><p>写一段CSS代码，应用到故事页面中。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineCSS.png" class="" title="twineCSS">
-
-<p>类似地，可以直接在这个窗口编辑CSS代码，但也不太舒服。和专业的前端IDE是没得比。建议是写好之后复制粘贴进来。</p>
-<p>感觉，主要的写法还是写一堆类选择器的样式备用。</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineCSSEdit.png" class="" title="twineCSSEdit">
-
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本来是想把一些基础的写法也给写进去的，结果发现介绍UI的篇幅收不住了，于是就此打住。</p>
-<p>本文背离了用简单几句话讲清楚UI的初衷，写了一堆废话。但我自认为这可能对于一些不太熟悉基本技术工具和UI界面的读者有些帮助。总之，文章我是不满意的，但就先这样吧。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
@@ -3088,134 +2903,312 @@
       </tags>
   </entry>
   <entry>
-    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
-    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
-<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
+    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
+    <url>/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。</p>
+<p>这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。</p>
 <span id="more"></span>
 
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
-<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
-<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
-<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
-<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
-<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h2><hr>
+<h3 id="示例：Markdown"><a href="#示例：Markdown" class="headerlink" title="示例：Markdown"></a>示例：Markdown</h3><p>建议是在VSCode里面增加一个Reg插件。</p>
+<p>新建一个文本文件，把后缀名改成.reg，例如<code>addMd.reg</code></p>
+<p>用文本编辑器之类的东西打开，把内容改成这样：</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md</span>]</span><br><span class="line">@=<span class="string">&quot;markdown&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\markdown</span>]</span><br><span class="line">@=<span class="string">&quot;Markdown file&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p>如果安装成功，就会返回一个版本信息，例如：</p>
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
+<p>保存，双击运行，点击「是」，即可。</p>
+<p>可能不会立刻生效，重启一下就可以了。</p>
+<hr>
+<h3 id="示例：C"><a href="#示例：C" class="headerlink" title="示例：C++"></a>示例：C++</h3><p>同样，只要改一下Reg文件的内容：</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp</span>]</span><br><span class="line">@=<span class="string">&quot;cppfile&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\cppfile</span>]</span><br><span class="line">@=<span class="string">&quot;C++ Source File&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果正常运行，这个程序输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
-
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
+<p>保存，双击运行，即可。其它的以此类推</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了如何通过简单的防法，为Windows右键菜单新建文件提供更多选择。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Crypto</category>
+        <category>Windows</category>
       </categories>
       <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
+        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
-    <title>在Visual Studio 2022中配置Crypto++开发环境</title>
-    <url>/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Crypto++</code>是一个轻量、开源、受欢迎的<code>C++</code>密码学库，采用了OOP的程序设计思想，总体比较契合<code>C++</code>的程序设计风格。</p>
-<p>本文主要介绍如何在Visual Studio 2022中配置<code>Crypto++</code>的开发环境。本文作者是个菜逼，失败了很多次，因此可能存在很多纰漏。</p>
+    <title>基于Twine-SugarCube的互动文游制作（2）Twine初识UI</title>
+    <url>/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文尝试介绍一下Twine的UI界面。篇幅冗长，废话很多。</p>
+<p>其实只要有一点计算机和前端的基础知识，稍微上手操作一下UI就懂了，不用看这种东西。</p>
 <span id="more"></span>
 
+<p>首先是惯例：Twine的官方教程，在这：</p>
+<p><a href="https://twinery.org/cookbook">Twine Cookbook</a></p>
+<p>一般而言，只要打开浏览器翻译，看官方教程比看我这篇破玩意强得多。</p>
+<p>那么对于有一定英语基础的读者而言，更是如此。大部分人读到这里已经可以划走了。</p>
+<p>另外，要看懂其中一部分，需要有一点点前端开发基础，就只要一点点。HTML、CSS、JavaScript都最好懂一点，其他方面暂时不用。</p>
 <hr>
-<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p><strong>OS:</strong> Windows 10&#x2F;11</p>
-<p><strong>IDE:</strong> Visual Studio 2022 (C++ SDK)</p>
-<p><strong>C++ 编译器:</strong> MSVC</p>
-<p><strong>Crypto++版本:</strong> Crypto++ 8.9.0</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>本文章以<strong>Twine Local + SugarCube</strong>为例。</p>
+<p>读者完全可以选择<strong>Twine Web</strong>和别的故事框架。当然，注意一下，Twine Web的故事存储在<strong>浏览器</strong>中，注意不要一波清缓存或者垃圾清理把作品清没了，最好还是导出到HTML备份一下。</p>
+<p>本文应该不会涉及SugarCube的过多特性，基本上还是Twine的一些基本特性。</p>
 <hr>
-<h2 id="下载并解压Crypto"><a href="#下载并解压Crypto" class="headerlink" title="下载并解压Crypto++"></a>下载并解压Crypto++</h2><p>在<code>Crypto++</code>的官方网站可以下载<code>Crypto++</code>，选择自己想要使用的版本即可：</p>
-<p><a href="https://www.cryptopp.com/#download">Crypto++ Library 8.9 | Free C++ Class Library of Cryptographic Schemes (cryptopp.com)</a></p>
-<p>下载后，把<code>Crypto++</code>的压缩包解压到自己想要存放Crypto++的文件夹，这里要注意，压缩包没有内层文件夹，因此最好不要解压<code>D:\Download</code>之类的目录下，否则容易造成混乱。</p>
-<hr>
-<h2 id="编译Crypto"><a href="#编译Crypto" class="headerlink" title="编译Crypto++"></a>编译Crypto++</h2><hr>
-<h3 id="打开项目"><a href="#打开项目" class="headerlink" title="打开项目"></a>打开项目</h3><p>进入<code>Crypto++</code>解压后的文件夹，找到<code>cryptest.sln</code>这个文件，双击用Visual Studio打开它。</p>
-<hr>
-<h3 id="Debug模式编译"><a href="#Debug模式编译" class="headerlink" title="Debug模式编译"></a>Debug模式编译</h3><p>注意生成选项，对于64位系统建议选择x64。先选择Debug模式。</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Options-1.png" class="" title="Options-1">
+<h2 id="故事管理UI简介"><a href="#故事管理UI简介" class="headerlink" title="故事管理UI简介"></a>故事管理UI简介</h2><p>打开Twine，可以看到主界面的UI是这样。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineUIMain.png" class="" title="twineUIMain">
 
-<p>在右侧的项目文件夹找到<code>cryptlib</code>，右键单击，生成：</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Cryptlib.png" class="" title="Cryptlib">
-
-<p>Visual Studio会尝试编译<code>cryptlib</code>，这个过程需要一点时间，可以在下方的控制台看到进度。</p>
+<p>介绍一下，这些其实是常识性的东西，不耐烦的读者可以直接跳过。</p>
+<p>最上面一栏的Twine，Edit这些，基本不用管它，Web UI也没有这种东西。可以点开稍微看一下快捷键方案。</p>
 <hr>
-<h3 id="Release模式编译"><a href="#Release模式编译" class="headerlink" title="Release模式编译"></a>Release模式编译</h3><p>切换到Release模式。</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Options-2.png" class="" title="Options-2">
-
-<p>在右侧的项目文件夹找到<code>cryptlib</code>，右键单击，生成。</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Cryptlib.png" class="" title="Cryptlib">
-
-<p>Visual Studio会尝试编译<code>cryptlib</code>，这个过程需要一点时间，可以在下方的控制台看到进度。</p>
-<hr>
-<h3 id="编译完成"><a href="#编译完成" class="headerlink" title="编译完成"></a>编译完成</h3><p>到这一步，编译已经完成了。</p>
-<hr>
-<h2 id="配置Visual-Studio"><a href="#配置Visual-Studio" class="headerlink" title="配置Visual Studio"></a>配置Visual Studio</h2><h3 id="新建项目"><a href="#新建项目" class="headerlink" title="新建项目"></a>新建项目</h3><p>可以新建一个项目用来测试，打开Visual Studio，创建新项目，控制台应用。</p>
-<p>你可以先把这些代码复制到源文件中，以便测试：</p>
-<p>（代码来源：<a href="https://www.cryptopp.com/wiki/Advanced_Encryption_Standard">Advanced Encryption Standard - Crypto++ Wiki (cryptopp.com)</a>）</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cryptlib.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;rijndael.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;modes.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;files.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;osrng.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;hex.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> CryptoPP;</span><br><span class="line"></span><br><span class="line">    AutoSeededRandomPool prng;</span><br><span class="line">    <span class="function">HexEncoder <span class="title">encoder</span><span class="params">(<span class="keyword">new</span> FileSink(std::cout))</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">SecByteBlock <span class="title">key</span><span class="params">(AES::DEFAULT_KEYLENGTH)</span></span>;</span><br><span class="line">    <span class="function">SecByteBlock <span class="title">iv</span><span class="params">(AES::BLOCKSIZE)</span></span>;</span><br><span class="line"></span><br><span class="line">    prng.<span class="built_in">GenerateBlock</span>(key, key.<span class="built_in">size</span>());</span><br><span class="line">    prng.<span class="built_in">GenerateBlock</span>(iv, iv.<span class="built_in">size</span>());</span><br><span class="line"></span><br><span class="line">    std::string plain = <span class="string">&quot;CBC Mode Test&quot;</span>;</span><br><span class="line">    std::string cipher, recovered;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;plain text: &quot;</span> &lt;&lt; plain &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*********************************\</span></span><br><span class="line"><span class="comment">    \*********************************/</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        CBC_Mode&lt; AES &gt;::Encryption e;</span><br><span class="line">        e.<span class="built_in">SetKeyWithIV</span>(key, key.<span class="built_in">size</span>(), iv);</span><br><span class="line"></span><br><span class="line">        <span class="function">StringSource <span class="title">s</span><span class="params">(plain, <span class="literal">true</span>, </span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">new</span> StreamTransformationFilter(e,</span></span></span><br><span class="line"><span class="params"><span class="function">                <span class="keyword">new</span> StringSink(cipher)</span></span></span><br><span class="line"><span class="params"><span class="function">            ) <span class="comment">// StreamTransformationFilter</span></span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span>; <span class="comment">// StringSource</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">catch</span>(<span class="type">const</span> Exception&amp; e)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*********************************\</span></span><br><span class="line"><span class="comment">    \*********************************/</span></span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;key: &quot;</span>;</span><br><span class="line">    encoder.<span class="built_in">Put</span>(key, key.<span class="built_in">size</span>());</span><br><span class="line">    encoder.<span class="built_in">MessageEnd</span>();</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;iv: &quot;</span>;</span><br><span class="line">    encoder.<span class="built_in">Put</span>(iv, iv.<span class="built_in">size</span>());</span><br><span class="line">    encoder.<span class="built_in">MessageEnd</span>();</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;cipher text: &quot;</span>;</span><br><span class="line">    encoder.<span class="built_in">Put</span>((<span class="type">const</span> byte*)&amp;cipher[<span class="number">0</span>], cipher.<span class="built_in">size</span>());</span><br><span class="line">    encoder.<span class="built_in">MessageEnd</span>();</span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/*********************************\</span></span><br><span class="line"><span class="comment">    \*********************************/</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span></span><br><span class="line">    &#123;</span><br><span class="line">        CBC_Mode&lt; AES &gt;::Decryption d;</span><br><span class="line">        d.<span class="built_in">SetKeyWithIV</span>(key, key.<span class="built_in">size</span>(), iv);</span><br><span class="line"></span><br><span class="line">        <span class="function">StringSource <span class="title">s</span><span class="params">(cipher, <span class="literal">true</span>, </span></span></span><br><span class="line"><span class="params"><span class="function">            <span class="keyword">new</span> StreamTransformationFilter(d,</span></span></span><br><span class="line"><span class="params"><span class="function">                <span class="keyword">new</span> StringSink(recovered)</span></span></span><br><span class="line"><span class="params"><span class="function">            ) <span class="comment">// StreamTransformationFilter</span></span></span></span><br><span class="line"><span class="params"><span class="function">        )</span></span>; <span class="comment">// StringSource</span></span><br><span class="line"></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;recovered text: &quot;</span> &lt;&lt; recovered &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">catch</span>(<span class="type">const</span> Exception&amp; e)</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; std::endl;</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="故事"><a href="#故事" class="headerlink" title="故事"></a>故事</h3><p>在故事界面，可以管理已经创建的故事。这个就类似于生产力软件的Files，EOS Editor的Teases这种界面。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineUIStory.png" class="" title="twineUIStory">
 
 <hr>
-<h3 id="配置VC-参数"><a href="#配置VC-参数" class="headerlink" title="配置VC++参数"></a>配置VC++参数</h3><hr>
-<h4 id="进入属性配置"><a href="#进入属性配置" class="headerlink" title="进入属性配置"></a>进入属性配置</h4><p>在右侧的项目文件夹找到项目，右键，单击<code>属性</code></p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Properties.png" class="">
+<h4 id="新建"><a href="#新建" class="headerlink" title="新建"></a>新建</h4><p><strong>新建</strong>会创建一个新的故事，输入故事的名称即可。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineNewStory.png" class="" title="twineNewStory">
 
 <hr>
-<h4 id="配置包含文件目录"><a href="#配置包含文件目录" class="headerlink" title="配置包含文件目录"></a>配置包含文件目录</h4><p>找到<code>VC++目录</code> - <code>包含目录</code> - <code>编辑</code>：</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/IncludePath.png" class="" title="Include-Path">
-
-<p>单击<code>新行</code>：</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Insert.png" class="" title="Insert">
-
-<p>点击省略号图标，定位到自己存放Crypto++文件的目录：</p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/Locate.png" class="" title="Locate">
-
-<p>点确定，此时如果配置的路径正确，源文件中包含的库文件报错应该已经消除。</p>
-<p>但是此时运行程序还是会报错，这是因为没有包含<code>Crypto++</code>的静态链接库。</p>
-<hr>
-<h4 id="配置静态链接库"><a href="#配置静态链接库" class="headerlink" title="配置静态链接库"></a>配置静态链接库</h4><p>在<code>属性</code>当中找到<code>链接器</code> - <code>附加库目录</code> - <code>编辑</code></p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/IncludeLib.png" class="" title="IncludeLib">
-
-<p>添加新行，定向到之前编译生成的输出静态链接库目录，例如<code>D:\Lib\Cryptopp\Cryptopp\x64\Output\Debug</code>，当然这个路径要换成你自己的。</p>
-<p>然后找到<code>链接器</code> - <code>输入</code> - <code>附加依赖项</code> - <code>编辑</code></p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/AdditionalDependency.png" class="" title="Additional-Dependency">
-
-<p>填写一条<code>cryptlib.lib</code>，确定。</p>
-<p>此时还是不能够运行，因为调试模式还需要修改一下。</p>
-<hr>
-<h4 id="Debug模式修改调试运行库"><a href="#Debug模式修改调试运行库" class="headerlink" title="Debug模式修改调试运行库"></a>Debug模式修改调试运行库</h4><p>在<code>属性</code>中找到<code>C/C++</code> - <code>所有选项</code> - <code>运行库</code> </p>
-<img src="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/MTd.png" class="" title="MTd">
-
-<p>把运行库改成 <strong>&#x2F;MTd 多线程调试</strong>。</p>
-<hr>
-<h3 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h3><p>启动Windows本地调试器，此时示例代码应该可以正确运行了，它的输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">plain <span class="selector-tag">text</span>: CBC Mode Test</span><br><span class="line">key: <span class="number">862</span>E4E435EE5AA798D2A654FAC00D66A</span><br><span class="line">iv: <span class="number">9090</span>D44CABA3EF20A3E21D19DEBBA6A0</span><br><span class="line">cipher text: <span class="number">7</span>CB66B9B9E767CBEA744309C423742D0</span><br><span class="line">recovered text: CBC Mode Test</span><br></pre></td></tr></table></figure>
+<h4 id="编辑"><a href="#编辑" class="headerlink" title="编辑"></a>编辑</h4><p>在选中一个故事后，<strong>编辑</strong>将会进入它的片段编辑页面。双击也可以达到同样的效果。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineEditStory.png" class="" title="twineEditStory">
 
 <hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Visual Studio的<code>Crypto++</code>开发环境配置完毕。</p>
-<p>Release模式的思路是一样的，只要把运行库改成 <strong>&#x2F;MT 多线程</strong> 即可。</p>
+<h4 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h4><p>在选中一个故事后，<strong>标签</strong>功能可以给故事增加标签，用来分类和管理。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTaggingStory.png" class="" title="twineTaggingStory">
+
+<p>在故事选项卡上，选中标签，在下拉菜单可以修改颜色和移除标签。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineStoryTagsEdit.png" class="" title="twineStoryTagsEdit">
+
+<hr>
+<h4 id="重命名"><a href="#重命名" class="headerlink" title="重命名"></a>重命名</h4><p>在选中一个故事后，<strong>重命名</strong>功能可以修改故事的名称。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineRenameStory.png" class="" title="twineRenameStory">
+
+<hr>
+<h4 id="复制"><a href="#复制" class="headerlink" title="复制"></a>复制</h4><p>在选中一个故事后，<strong>复制</strong>功能将会创建一个与它相同的副本。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDuplicateStory.png" class="" title="twineDuplicateStory">
+
+<hr>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p>在选中一个故事后，<strong>删除</strong>功能会把它放进回收站，需要<strong>二次确认</strong>。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDeleteStory.png" class="" title="twineDeleteStory">
+
+<hr>
+<h3 id="库"><a href="#库" class="headerlink" title="库"></a>库</h3><p>主要是对现有的故事进行管理，标签、导入、存档什么的。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLib.png" class="" title="twineLib">
+
+<hr>
+<h4 id="故事标签"><a href="#故事标签" class="headerlink" title="故事标签"></a>故事标签</h4><p>点击后出现一个右下角弹窗，可以管理现有的故事标签，包括重命名、修改颜色等操作。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLibTags.png" class="" title="twineLibTags">
+
+<hr>
+<h4 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h4><p>点击后出现一个右下角弹窗，可以从现有故事的HTML文件中导入故事用于编辑（前提是你能拿到）。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLibImport.png" class="" title="twineLibImport">
+
+<hr>
+<h4 id="档案"><a href="#档案" class="headerlink" title="档案"></a>档案</h4><p>点击后出现文件管理器页面，给现有的故事进行存档。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineLibArchive.png" class="" title="twineLibArchive">
+
+<hr>
+<h3 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h3><p>主要是用于Debug，测试运行，校对文本，导出文件等。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuild.png" class="" title="twineBuild">
+
+<hr>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>其实就是在Debug模式尝试运行故事。可以跟踪变量，跳转片段什么的。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildDebug.png" class="" title="twineBuildDebug">
+
+<hr>
+<h4 id="运行"><a href="#运行" class="headerlink" title="运行"></a>运行</h4><p>尝试真的运行故事，这次是玩家视角，没有跳转片段之类的东西了。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildRun.png" class="" title="twineBuildRun">
+
+<hr>
+<h4 id="校对"><a href="#校对" class="headerlink" title="校对"></a>校对</h4><p>把故事的文本呈现出来，集中校对内容和错别字。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildProofread.png" class="" title="twineBuildProofread">
+
+<hr>
+<h4 id="发布到文件"><a href="#发布到文件" class="headerlink" title="发布到文件"></a>发布到文件</h4><p>把故事导出为HTML文件格式，常见的发布手段。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildReleaseHTML.png" class="" title="twineBuildReleaseHTML">
+
+<hr>
+<h4 id="导出为Twee"><a href="#导出为Twee" class="headerlink" title="导出为Twee"></a>导出为Twee</h4><p>把故事导出为Twee文件格式，只有精简的内容，特别适合修改故事内容、进行版本控制等。</p>
+<p>可以理解为，这玩意是你写的Twine故事的源代码。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineBuildExportTwee.png" class="" title="twineBuildExportTwee">
+
+<hr>
+<h3 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h3><p>调整现有故事的查看方式。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineView.png" class="" title="twineView">
+
+<hr>
+<h4 id="排序方式"><a href="#排序方式" class="headerlink" title="排序方式"></a>排序方式</h4><p>调整现有故事的查看排序方式。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineViewOrder.png" class="" title="twineViewOrder">
+
+<p><strong>名称</strong>是按照<strong>字典序顺序</strong>排列，不区分大小写。</p>
+<p><strong>时间</strong>是按照故事的<strong>最后一次修改时间</strong>排列，最后修改的在前面。</p>
+<hr>
+<h4 id="显示标签"><a href="#显示标签" class="headerlink" title="显示标签"></a>显示标签</h4><p>根据标签过滤本地的故事。包含被勾选标签的故事被展示，不包含的被隐藏。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineViewShowTags.png" class="" title="twineViewShowTags">
+
+<hr>
+<h3 id="Twine"><a href="#Twine" class="headerlink" title="Twine"></a>Twine</h3><p>一些全局设置，关于，之类的东西。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwine.png" class="" title="twineTwine">
+
+<hr>
+<h4 id="偏好"><a href="#偏好" class="headerlink" title="偏好"></a>偏好</h4><p>编辑器偏好，主题风格一类的东西。根据自己的需要调整。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwinePreference.png" class="" title="twineTwinePreference">
+
+<hr>
+<h4 id="故事格式"><a href="#故事格式" class="headerlink" title="故事格式"></a>故事格式</h4><p>故事格式选择，会影响一些偏高级的内容，如果是简单互动方面的话，区别不大。看需求选择。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwineStoryFormat.png" class="" title="twineTwineStoryFormat">
+
+<hr>
+<h4 id="关于Twine"><a href="#关于Twine" class="headerlink" title="关于Twine"></a>关于Twine</h4><p>Twine的一些介绍内容。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwineAbout.png" class="" title="twineTwineAbout">
+
+<hr>
+<h4 id="反馈Bug"><a href="#反馈Bug" class="headerlink" title="反馈Bug"></a>反馈Bug</h4><p>反馈Bug的渠道，会跳转到网页，其实就是去GitHub的仓库下面提Issue。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineTwineReportABug.png" class="" title="twineTwineReportABug">
+
+<hr>
+<h2 id="片段编辑UI简介"><a href="#片段编辑UI简介" class="headerlink" title="片段编辑UI简介"></a>片段编辑UI简介</h2><p>（这部分对于技术用户而言应该也是废话，是显而易见的内容）</p>
+<p>在故事管理界面<strong>双击</strong>某个故事，或者在选择某个故事后点击<strong>编辑</strong>，就会进入到片段编辑的UI。这其实就是片段视图（Passage View）。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEdit.png" class="" title="twinePassageEdit">
+
+<p>片段编辑界面是整个故事的核心工作区。<strong>故事（Story）主要是由片段（Passage）构成的</strong>。</p>
+<p>这是一个网格状的平面UI，它可以让你清楚地观察到故事的支线、循环等结构，从而创作出复杂的非线性故事。</p>
+<p><strong>左键</strong>是选中，<strong>拖动左键</strong>是框选，<strong>拖动右键</strong>是拖拽移动视角。</p>
+<p>接下来讲讲具体的按钮作用。</p>
+<hr>
+<h3 id="新建-1"><a href="#新建-1" class="headerlink" title="新建"></a>新建</h3><p><strong>新建</strong>，顾名思义，点击后直接创建一个新的片段（Passage）。</p>
+<p>（其实一般的主线线性结构可以不用新建按钮，直接写Twine链接，Ctrl+S，连接的片段就自动创建了）</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageNew.png" class="" title="twinePassageNew">
+
+<hr>
+<h3 id="编辑-1"><a href="#编辑-1" class="headerlink" title="编辑"></a>编辑</h3><p><strong>编辑</strong>，对选中的片段打开编辑窗口。双击某个片段效果一样。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditArea.png" class="" title="twinePassageEditArea">
+
+<p><strong>编辑</strong>可能是制作过程中最常用的窗口之一了，详细介绍一下。</p>
+<hr>
+<h4 id="撤销"><a href="#撤销" class="headerlink" title="撤销"></a>撤销</h4><p>点击回退一步。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditUndo.png" class="" title="twinePassageEditUndo">
+
+<hr>
+<h4 id="恢复"><a href="#恢复" class="headerlink" title="恢复"></a>恢复</h4><p>点击前进一步</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditRedo.png" class="" title="twinePassageEditRedo">
+
+<hr>
+<h4 id="标签-1"><a href="#标签-1" class="headerlink" title="标签"></a>标签</h4><p>点击为该段落打上标签，用于定位、查看、管理等。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditTags.png" class="" title="twinePassageEditTags">
+
+<p>生成的标签可以在片段编辑页面中手动关闭。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageRemoveTags.png" class="" title="twinePassageRemoveTags">
+
+<hr>
+<h4 id="尺寸"><a href="#尺寸" class="headerlink" title="尺寸"></a>尺寸</h4><p>调整该段落在编辑面板上的显示大小，这个主要是帮助可视化和整理试图用的，并不是影响它的Web布局。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditSize.png" class="" title="twinePassageEditSize">
+
+<p>小型 - 1x1。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/smallPassage.png" class="" title="smallPassage">
+
+<p>大型 - 2x2。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/largePassage.png" class="" title="largePassage">
+
+<p>竖条 - 1x2。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/columnPassage.png" class="" title="columnPassage">
+
+<p>横条 - 2x1。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/rowPassage.png" class="" title="rowPassage">
+
+<hr>
+<h4 id="重命名-1"><a href="#重命名-1" class="headerlink" title="重命名"></a>重命名</h4><p>重命名当前片段。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditRename.png" class="" title="twinePassageEditRename">
+
+<hr>
+<h4 id="从这里开始测试"><a href="#从这里开始测试" class="headerlink" title="从这里开始测试"></a>从这里开始测试</h4><p>选择当前片段作为入口，进入Debug模式运行故事。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditStartDebugHere.png" class="" title="twinePassageEditStartDebugHere">
+
+<hr>
+<h3 id="重命名-2"><a href="#重命名-2" class="headerlink" title="重命名"></a>重命名</h3><p>重命名当前片段。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageRename.png" class="" title="twinePassageRename">
+
+<hr>
+<h3 id="删除-1"><a href="#删除-1" class="headerlink" title="删除"></a>删除</h3><p>删除当前片段。不能删除最后的一个片段。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageDelete.png" class="" title="twinePassageDelete">
+
+<hr>
+<h3 id="从这里开始测试-1"><a href="#从这里开始测试-1" class="headerlink" title="从这里开始测试"></a>从这里开始测试</h3><p>选择当前片段作为入口，进入Debug模式运行故事。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageEditStartDebugHere.png" class="" title="twinePassageEditStartDebugHere">
+
+<hr>
+<h3 id="从这里开始故事"><a href="#从这里开始故事" class="headerlink" title="从这里开始故事"></a>从这里开始故事</h3><p>选择当前片段，作为整个故事的起点。并不是进入Run模式，不要混淆了。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageStartHere.png" class="" title="twinePassageStartHere">
+
+<p>故事起点片段会有一个明显的图标标记——一个绿色的火箭标志，这意味着故事将从这里开始。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageStartIcon.png" class="" title="twinePassageStartIcon">
+
+<hr>
+<h3 id="跳转到"><a href="#跳转到" class="headerlink" title="跳转到"></a>跳转到</h3><p>其实这就是一个搜索栏功能，可以理解为VSCode的Ctrl+F。可以用来搜索片段的标题、内容，并用于定位片段。</p>
+<p>整个故事结构复杂的时候会比较有用。当然，保持良好的命名习惯是很重要的。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageJumpTo.png" class="" title="twinePassageJumpTo">
+
+<hr>
+<h3 id="全选"><a href="#全选" class="headerlink" title="全选"></a>全选</h3><p>字面意思，全选所有片段。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageSelectAll.png" class="" title="twinePassageSelectAll">
+
+<hr>
+<h2 id="片段视图下的故事菜单"><a href="#片段视图下的故事菜单" class="headerlink" title="片段视图下的故事菜单"></a>片段视图下的故事菜单</h2><p>可以注意到的一点是，在片段视图下，故事菜单的内容发生了显著变化，这和之前故事视图下是完全不同的。</p>
+<p>这里有一些重要的功能，还是不得不提一下。有这方面基础的读者，这一章对你来说应该也是废话。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineEditModeStory.png" class="" title="twineEditModeStory">
+
+<hr>
+<h3 id="查找替换"><a href="#查找替换" class="headerlink" title="查找替换"></a>查找替换</h3><p>可以用于一次性替换片段中的某一段文字，类似于VSCode中的Ctrl+F2。</p>
+<p>第一个符合匹配的片段会被黄色标记。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineF2.png" class="" title="twineF2">
+
+<hr>
+<h3 id="重命名-3"><a href="#重命名-3" class="headerlink" title="重命名"></a>重命名</h3><p>重命名整个故事，和之前那个是一样的。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineEditModeStoryRename.png" class="" title="twineEditModeStoryRename">
+
+<hr>
+<h3 id="细节"><a href="#细节" class="headerlink" title="细节"></a>细节</h3><p>展示故事的细节信息。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDetails.png" class="" title="twineDetails">
+
+<p>它会生成这样一个窗口，可以查看编辑时间、IFID、故事格式等信息。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineDetailsWindow.png" class="" title="twineDetailsWindow">
+
+<p>在<strong>故事格式</strong>一栏，可以手动修改当前故事的格式。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineChangeFormat.png" class="" title="twineChangeFormat">
+
+<p>这个操作最好是前期去动，否则后期要改的东西可能就比较多了。</p>
+<hr>
+<h3 id="片段标签"><a href="#片段标签" class="headerlink" title="片段标签"></a>片段标签</h3><p>展示所有的片段标签。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageTags.png" class="" title="twinePassageTags">
+
+<p>在生成的窗口中，可以对目前已有的标签进行管理，包括重命名和重设颜色。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twinePassageTagsWindow.png" class="" title="twinePassageTagsWindow">
+
+<hr>
+<h3 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h3><p>写一段JavaScript代码，它会在故事初始化的时候执行。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineJavaScript.png" class="" title="twineJavaScript">
+
+<p>可以直接在这个窗口编辑JavaScript代码，但是不太建议这么做。虽然高亮确实是有的，但是和VSCode、WebStorm这种环境是没法比的，写起来会比较的难受。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineJavaScriptEdit.png" class="" title="twineJavaScriptEdit">
+
+<hr>
+<h3 id="样式表"><a href="#样式表" class="headerlink" title="样式表"></a>样式表</h3><p>写一段CSS代码，应用到故事页面中。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineCSS.png" class="" title="twineCSS">
+
+<p>类似地，可以直接在这个窗口编辑CSS代码，但也不太舒服。和专业的前端IDE是没得比。建议是写好之后复制粘贴进来。</p>
+<p>感觉，主要的写法还是写一堆类选择器的样式备用。</p>
+<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/twineCSSEdit.png" class="" title="twineCSSEdit">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本来是想把一些基础的写法也给写进去的，结果发现介绍UI的篇幅收不住了，于是就此打住。</p>
+<p>本文背离了用简单几句话讲清楚UI的初衷，写了一堆废话。但我自认为这可能对于一些不太熟悉基本技术工具和UI界面的读者有些帮助。总之，文章我是不满意的，但就先这样吧。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Crypto</category>
+        <category>Web Front-End</category>
       </categories>
       <tags>
-        <tag>Crypto</tag>
-        <tag>C++</tag>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
+        <tag>Web Front-End</tag>
+        <tag>HTML</tag>
+        <tag>CSS</tag>
       </tags>
   </entry>
   <entry>
@@ -3258,149 +3251,42 @@
       </tags>
   </entry>
   <entry>
-    <title>轻微程度的隐私保护技巧</title>
-    <url>/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍一些入门程度的隐私保护技巧。作者也是<strong>门外汉</strong>，无法提供专业的建议。本文在内行看来应该是绝对纯属<strong>胡扯</strong>。</p>
-<p>这可能会稍微提高一点点防人肉能力，但不多，也许能防一些小白。但也就顶多只会<strong>稍微增加调查的成本</strong>而已。对于体系化的社工库团队而言，拿下<strong>普通人</strong>这种事基本上是<strong>轻而易举</strong>的，你通常防了也没用。</p>
+    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
+    <url>/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。</p>
+<p>本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。</p>
 <span id="more"></span>
 
-<p>其实，这也不绝对，一套合理的防护手段和身份隔离可以显著增加调查成本，至少是严重拖延调查的时间。但是，要做到真正意义上的滴水不漏是不可能的。</p>
-<p>本文不打算配图，不太好。可能，看起来会有点枯燥，抱歉。</p>
-<hr>
-<h2 id="减少信息检索机会"><a href="#减少信息检索机会" class="headerlink" title="减少信息检索机会"></a>减少信息检索机会</h2><p>信息检索是调查一个人的基本手段，它是<strong>合法</strong>的。</p>
-<p>普通网民也可以通过信息检索挖掘出一个人的部分个人信息来。</p>
-<p>其主要利用的问题在于——利用不同平台之间互相搜索的关系来放大某一条线索。</p>
-<hr>
-<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><p>举个例子，拿到一条QQ号，普通人可以怎么查？</p>
-<p>一个常见的做法是直接在<strong>微信</strong>上搜索这个QQ号。如果没有关闭微信的QQ号搜索功能的话，微信号会被确认。</p>
-<p>而常见的微信号格式（偷懒的话）可能会包含手机号、姓名首字母缩写、生日、QQ主号等关键信息。这很容易暴露更多信息。</p>
-<p>另一个常见的做法就是直接在<strong>搜索引擎</strong>上搜索这个QQ号。</p>
-<p>此时可以如何拓宽线索呢？例如之前在某个贴吧交流的时候，你发帖留下了一个QQ号作为联系方式，没删。</p>
-<p>或者，你干脆是个文援什么的，在推特上把自己的QQ号一挂——<strong>门牌xxxxxxxxxx</strong>。那么，别人直接就搜出来了，推特账号。</p>
-<hr>
-<h3 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h3><h4 id="删除发言"><a href="#删除发言" class="headerlink" title="删除发言"></a>删除发言</h4><p>对自己曾经留下互联网足迹，但已经不常用的平台，注意检查一下有没有留过敏感信息，可以自搜一下。</p>
-<p>有的话，可以选择删掉。这会稍微增加一点调查的难度。</p>
-<h4 id="销号跑路"><a href="#销号跑路" class="headerlink" title="销号跑路"></a>销号跑路</h4><p>对于微博一类的数据泄露和开盒重灾区，如果曾经使用，但现在已经不用，或者是没必要用。建议在尽量删除自己的言论后<strong>销号跑路</strong>。</p>
-<p>这能减少攻击者利用微博上的信息、发帖和线索来进一步拓宽调查面，稍微增加难度和拖延时间。</p>
-<h4 id="使用小号-买号"><a href="#使用小号-买号" class="headerlink" title="使用小号 &#x2F; 买号"></a>使用小号 &#x2F; 买号</h4><p>使用QQ进行交流时，如果对方是陌生人，可以考虑使用小号。</p>
-<p>小号的捆绑信息和检索价值相对而言会更少一点，稍微增加调查难度。</p>
-<h4 id="混淆昵称-头像"><a href="#混淆昵称-头像" class="headerlink" title="混淆昵称 &#x2F; 头像"></a>混淆昵称 &#x2F; 头像</h4><p>如果你在意隐私保护，不要在一堆平台上使用十分类似或者干脆是完全一样的昵称和头像。尤其是昵称和ID，这个是容易被检索锁定的。</p>
-<p>为了追求个性，可以稍微增加一点变化。但<strong>最好不要</strong>在昵称、ID当中添加自己的个人真实信息，例如<strong>生日</strong>，<strong>姓名缩写</strong>，<strong>出生年份</strong>等。</p>
-<h4 id="注意隐私设置"><a href="#注意隐私设置" class="headerlink" title="注意隐私设置"></a>注意隐私设置</h4><p>在有必要和自己能接受的范围内，尽可能地隐藏自己的个人信息，减少平台间关联。多隐藏一点，查的难度就多一分，不过也就是一分。</p>
-<p>尤其应该避免直接泄露的包括<strong>手机号</strong>，<strong>真实姓名</strong>，<strong>身份证号</strong>。这三者如果直接泄露，那么开盒将会是非常轻松的一件事情。</p>
-<h4 id="谨慎分享敏感信息"><a href="#谨慎分享敏感信息" class="headerlink" title="谨慎分享敏感信息"></a>谨慎分享敏感信息</h4><p>典型的包括<strong>录取通知书</strong>，<strong>机票</strong>，<strong>火车票</strong>等。不要以为对一些地方打码就能高枕无忧，不是这样的。虽然确实会好得多，但通常还是会暴露一些信息。</p>
-<p>最好还是，控制一下分享的欲望。想要分享的话，可以直接发给信任的朋友，而最好不要直接在帖子、推文、空间之类的地方往那一挂，也不删，长时间就挂在那。</p>
-<h4 id="谨慎分享摄影作品"><a href="#谨慎分享摄影作品" class="headerlink" title="谨慎分享摄影作品"></a>谨慎分享摄影作品</h4><p>不要以为图片定位很困难，不是这样的。</p>
-<h4 id="减少检索机会"><a href="#减少检索机会" class="headerlink" title="减少检索机会"></a>减少检索机会</h4><p>关闭<strong>微信的QQ号搜索，微信的手机号搜索，支付宝的手机号搜索，QQ的手机号搜索，Telegram的手机号展示</strong>，以及各种平台的<strong>通讯录功能</strong>。</p>
-<p>这会稍微增加一点调查难度。</p>
-<h4 id="使用强加密邮箱"><a href="#使用强加密邮箱" class="headerlink" title="使用强加密邮箱"></a>使用强加密邮箱</h4><p>强加密邮箱通常采用端到端加密技术，相对而言是更加可控，它的安全性通常是不可妥协的。</p>
-<p>但也有不方便的一点——主密钥丢失以后，通常还挺难恢复的，可能直接炸了。注意一下。</p>
-<p>推荐两个：</p>
-<p><a href="https://protonmail.com/">ProtonMail (protonmail.com)</a></p>
-<p><a href="https://mail.riseup.net/">RiseUpMail (mail.riseup.net)</a></p>
-<hr>
-<h2 id="减少撞库机会"><a href="#减少撞库机会" class="headerlink" title="减少撞库机会"></a>减少撞库机会</h2><p>稍微解释一下什么是撞库。</p>
-<h3 id="撞库"><a href="#撞库" class="headerlink" title="撞库"></a>撞库</h3><p>比如说，攻击者通过某种手段获取了一条账密信息——<code>Bob@gmail.com</code>, <code>BobLoveAlice1314520</code>。</p>
-<p>他可以尝试，在不同的平台去利用这条账密信息尝试登录。有些平台会触发2FA（国内通常是手机，国外可以是手机、邮件、OTP等），这倒是还能防住，但是有些平台（特别是邮箱和一些小网站）是很容易直接账密登录的。</p>
-<p>一旦撞库成功一次，就可以获取大量的个人信息，直接用于检索，钓鱼，甚至可以说是结案了。</p>
-<p>这种攻击的可行性通常来自于用户的一种<strong>常见的坏习惯——在一堆平台使用几近相同甚至是完全相同的密码</strong>。</p>
-<h3 id="预防撞库"><a href="#预防撞库" class="headerlink" title="预防撞库"></a>预防撞库</h3><p>显然，在每个平台上使用完全不同的密码是很费劲的一件事，也不好记忆，不太方便。</p>
-<p>这里推荐几种稍微增加安全性的方式。</p>
-<h4 id="异地登录保护"><a href="#异地登录保护" class="headerlink" title="异地登录保护"></a>异地登录保护</h4><p>这东西很多平台都有，有的记得打开（当然很多是自带的）。可以稍微增加一点撞库难度。</p>
-<h4 id="稍微差异化的密码"><a href="#稍微差异化的密码" class="headerlink" title="稍微差异化的密码"></a>稍微差异化的密码</h4><p>如果你懒得用什么技术手段保管密码，又懒得记很复杂的密码，那就对每个平台的密码<strong>稍加差异化</strong>。</p>
-<p>这可以稍微增加撞库的成本，或许可以触发尝试次数警告，冻结账户，拖延时间甚至是挫败撞库什么的。</p>
-<h4 id="手机验证码2FA"><a href="#手机验证码2FA" class="headerlink" title="手机验证码2FA"></a>手机验证码2FA</h4><p>对于重要的平台，最好别嫌麻烦，加个<strong>手机验证码</strong>2FA是有助于防止撞库爆破这种情况的，特别是你密码习惯不太好的话。</p>
-<h4 id="邮件验证码2fA"><a href="#邮件验证码2fA" class="headerlink" title="邮件验证码2fA"></a>邮件验证码2fA</h4><p>这<strong>邮件验证码</strong>其实比手机稍弱一些，甚至有时候会帮倒忙（所以说邮件安全要注意的）。</p>
-<p>但其实，这个也看你的邮箱。至少，它也会给攻击者制造麻烦，并且会造成通知、警示的效果。</p>
-<h4 id="Authenticator-OTP应用"><a href="#Authenticator-OTP应用" class="headerlink" title="Authenticator &#x2F; OTP应用"></a>Authenticator &#x2F; OTP应用</h4><p><strong>Microsoft Authenticator</strong>， <strong>Google Authenticator</strong>之类的应用能根据一个PSK和时间戳生成一个动态变更的OTP。它让撞库攻击变得很困难——除非你的手机被入侵，或认证被某种方式绕过。</p>
-<h4 id="密钥管理应用"><a href="#密钥管理应用" class="headerlink" title="密钥管理应用"></a>密钥管理应用</h4><p><strong>1Pass</strong>，<strong>Bitwarden</strong>这样的应用只需要记忆一个主密钥，就可以自动化管理多平台账密，通常具有多端同步、自动填充、密钥生成等功能。</p>
-<p>如果你想要使用多平台不同的随机长密钥，这是很好的选择。这能显著增加撞库的难度。</p>
-<p>如果你的每个平台都使用了至少12字节的随机密钥，且互不相同，那么撞库的威胁对你而言是比较小的。</p>
-<h4 id="生物识别"><a href="#生物识别" class="headerlink" title="生物识别"></a>生物识别</h4><p>指纹、虹膜、掌纹（不推荐人脸和声音）是目前绕过成本较高的生物识别技术，采用这种方式进行登录可以免除管理密码的麻烦，也能增加撞库的困难。</p>
-<h4 id="硬件密钥"><a href="#硬件密钥" class="headerlink" title="硬件密钥"></a>硬件密钥</h4><p>硬件密钥显然是几乎无法绕过的，但也是很麻烦的。</p>
-<hr>
-<h2 id="注意支付手段"><a href="#注意支付手段" class="headerlink" title="注意支付手段"></a>注意支付手段</h2><p>支付手段可能会暴露你的一些个人信息。</p>
-<h3 id="微信和支付宝"><a href="#微信和支付宝" class="headerlink" title="微信和支付宝"></a>微信和支付宝</h3><p><strong>微信收款码</strong>和<strong>支付宝收款码</strong>会暴露你<strong>真实姓名的最后一个字</strong>。</p>
-<p>如果你想要避免这一点，请尝试使用<strong>赞赏码</strong>和<strong>口令红包</strong>。</p>
-<p><strong>支付宝账号被搜索确定</strong>将会暴露你的<strong>性别、部分手机号和真实姓名的最后一个字</strong>。</p>
-<h3 id="PayPal和虚拟信用卡"><a href="#PayPal和虚拟信用卡" class="headerlink" title="PayPal和虚拟信用卡"></a>PayPal和虚拟信用卡</h3><p>这种通常都要好一些，但我也不太了解，太菜了。</p>
-<h3 id="加密货币"><a href="#加密货币" class="headerlink" title="加密货币"></a>加密货币</h3><p>只要你不直接提现到人民币，加密货币一般不会出什么大事。用加密货币支付服务通常具有较高的匿名性，特别是对于一些开不了口，上不了台面，见不得光的交易而言。</p>
-<p>如果硬要提现，可以提现到境外的银行卡，信用卡，虚拟信用卡，再把钱转回来之类的。虽然吃点手续费，但是出事的概率更低。黑转灰，灰洗白。</p>
-<p>仅仅作为支付手段的话，USDT，USDC和TRX是很不错的。</p>
-<p>当然如果提现，最好找个靠谱的C2C商家，千万注意对方的身份和支付信息，如果和标注的不一致，请不要收款。如果收到黑钱，可能会被卷入很麻烦的事情。</p>
-<hr>
-<h2 id="快递信息"><a href="#快递信息" class="headerlink" title="快递信息"></a>快递信息</h2><p>这没什么好说的，数据泄露重灾区。最多要做的就是，注意自己销毁一下信息标签，还有就是填个化名吧。</p>
-<p>用个不常用的手机号也挺好的。</p>
-<hr>
-<h2 id="基本的网络安全防范意识"><a href="#基本的网络安全防范意识" class="headerlink" title="基本的网络安全防范意识"></a>基本的网络安全防范意识</h2><p>这个东西简直是……可能耳朵都要听出茧子来了吧？但还是稍微讲讲。</p>
-<h3 id="钓鱼链接"><a href="#钓鱼链接" class="headerlink" title="钓鱼链接"></a>钓鱼链接</h3><p>借贷、赌博、涉黄、钓鱼的短信、邮件链接不要乱点，看清楚再点。</p>
-<p>不要以为反正点进去不输信息就没事（当然你输信息就，对吧，不用看了），有时候会被定位之类的，情况复杂得很，注意一下。</p>
-<h3 id="深度伪造"><a href="#深度伪造" class="headerlink" title="深度伪造"></a>深度伪造</h3><p>音视频AI伪造很发达，总之熟人的一些请求也是需要找他们本人再三确认的，不要直接相信了。</p>
-<h3 id="虚拟身份证明"><a href="#虚拟身份证明" class="headerlink" title="虚拟身份证明"></a>虚拟身份证明</h3><p>用SMS代收发这种服务来绕过你不太信任的一些平台的注册。</p>
-<p><a href="https://sms-bus.com/">SMS Bus</a></p>
-<p><a href="https://sms-activate.io/">SMS Activate</a></p>
-<h3 id="底线意识"><a href="#底线意识" class="headerlink" title="底线意识"></a>底线意识</h3><p>不涉三就是不涉三，<strong>底线卡死</strong>，不要什么软磨硬泡的给个联系方式，给点什么信息，收个礼物什么的，甚至去搞线下。</p>
-<h3 id="不明物品"><a href="#不明物品" class="headerlink" title="不明物品"></a>不明物品</h3><p>比如说你是个V，收了一堆礼物，请务必<strong>仔细检查</strong>一下，到底有没有定位器、录音器、针孔摄像头一类的东西。网络上再怎么熟络，交情再怎么深的人，也不是完全可信的。</p>
-<hr>
-<h2 id="一些简单的自查手段"><a href="#一些简单的自查手段" class="headerlink" title="一些简单的自查手段"></a>一些简单的自查手段</h2><p>这些东西，可以用来自查。可以看看自己哪些账号信息泄露了，这样可以提前做防范，有个心理预期。</p>
-<p>可以尝试对自己进行几次调查看看，难度会不会很高。就用之前的那点，简单方法。</p>
-<p>当然，你也可以用这种东西去查别人。<strong>技术就在那里，看你怎么用了</strong>。</p>
-<p><a href="https://www.reg007.com/">REG007</a> —— 账号绑定关联等，仅用于自查</p>
-<p><a href="https://qb.heikebook.com/index">Q绑查询-HeikeBook</a> —— QQ数据泄露，LoL数据泄露等</p>
-<p><a href="https://haveibeenpwned.com/">Have I Been Pwned？</a> —— 一个简单的自查系统</p>
-<p><a href="https://privacy.aiuys.com/">Privacy | 个人数据泄漏检测 (aiuys.com)</a> —— 简单的查询系统，数据不少</p>
-<p><a href="https://ouotool.com/qq/direct">查隐藏QQ_QQ号码查询分析工具 (ouotool.com)</a> —— 隐藏QQ查询</p>
-<p><a href="https://qq.ip138.com/idsearch/">身份证查询 (ip138.com)</a> —— 身份证号信息分析工具</p>
-<p><a href="https://www.ip138.com/sj/">手机号归属地查询 (ip138.com)</a> —— 手机号信息分析工具</p>
-<p><a href="https://www.ip138.com/">IP地址查询 (ip138.com)</a> —— IP地址信息分析工具</p>
-<p><a href="https://qq.ip138.com/day/">万年历查询 (ip138.com)</a> —— 阴阳历转换 用于锁定生日等</p>
-<hr>
-<h2 id="社工库"><a href="#社工库" class="headerlink" title="社工库"></a>社工库</h2><p>简单解释一下社工库。</p>
-<h3 id="什么是社工库？"><a href="#什么是社工库？" class="headerlink" title="什么是社工库？"></a>什么是社工库？</h3><p>社工库是一个灰产&#x2F;黑产数据库，其中包含了大量来自于互联网数据泄露事件、隐私暴露事件、信息安全事件、内鬼泄露、数据贩卖等灰色、黑色链条输入的数据。个人信息在这种数据库上关联起来，用于检索和定位。</p>
-<p>其中最主要的信息泄露事件和领域包括：</p>
-<p><strong>新浪微博，腾讯QQ，顺丰快递，超星学习通，英雄联盟，网贷平台</strong>等。</p>
-<p>通常而言，以下几条信息是容易被关联在一起：</p>
-<p><strong>QQ号，微博号，LoL用户名，LoL大区，曾用密码MD5，真实姓名，手机号，身份证号，家庭住址，学号</strong>。</p>
-<p>社工库通常以<strong>Telegram Bot</strong>的方式提供服务。</p>
-<p>免费用一般是可以的，签到送额度。用户通常可以免费检索，但是额度不高。要想自由使用，通常要付费。</p>
-<p>付费通常会解锁一个较大的检索额度，并且会增加一些额外的模式，例如猎魔（类似于盲搜）——给出一定的范围，例如<strong>部分姓名，籍贯，出生日期范围&#x2F;生日，性别</strong>，随后社工库返还数十条记录，用于参考和大致锁定范围。</p>
-<p>最有效的手段是雇佣社工库的专业团队，对某个人进行调查。这个服务一般会比较贵，但绝大多数个人都可以被完全调查出来，包括<strong>个人真实信息，开房记录，借贷记录，征信体系，犯罪历史，三网定位</strong>等等。这里就可能会超出一般的信息检索范畴，会用到一些……内部的帮助。这个我也不是很清楚。</p>
-<h3 id="推荐几个社工库？"><a href="#推荐几个社工库？" class="headerlink" title="推荐几个社工库？"></a>推荐几个社工库？</h3><p>可以用来自查，也可以拿去查别人。</p>
-<p>总之，还是那句话，<strong>技术就在那里，看你怎么用了</strong>。</p>
-<p><a href="https://t.me/qbjSGKbot">情报局社工库</a></p>
-<p><a href="https://t.me/AJL01_bot">暗精灵社工库</a></p>
-<p><a href="https://t.me/DogeSGK_bot">狗狗社工库</a></p>
-<p><a href="https://t.me/Zonesgk_bot?start=TZUYZTTPQ">X-ray社工库</a></p>
-<p>这种东西，互联网上很多，可以自己去找。反正也是付费交易。你把钱付给他们，他们把你想要的东西交给你。</p>
-<p>Q：用社工库违法吗？A：<strong>没错，但不太好抓，一般睁一只眼闭一只眼，不要宣扬和传播。</strong></p>
-<p>Q：没有风险吗？A：<strong>有的，求别人办事最好说话客气点，少废话，直接给钱。还有不要用动漫头像。</strong></p>
-<p>Q：能查敏感人物吗？A：<strong>不一定，有的要加钱，有的干脆不能，建议是不要，反正一般也用不着。</strong></p>
-<hr>
-<h2 id="一些忠告"><a href="#一些忠告" class="headerlink" title="一些忠告"></a>一些忠告</h2><p>简单写写。</p>
-<h3 id="避免节奏"><a href="#避免节奏" class="headerlink" title="避免节奏"></a>避免节奏</h3><p>作为普通人，而非信息安全专家，想要保护自己免于网络暴力和开盒，最好的办法之一就是<strong>保持低调</strong>。</p>
-<p>少带节奏，少和别人起冲突。看了就行，自己心里有个判断，有个态度，可以了。</p>
-<p>喜欢说，可能会有人来找你麻烦，警察可能也会找你麻烦。</p>
-<p>少说点，没什么人会注意到你，警察也睁一只眼闭一只眼。</p>
-<p>不要以为就自己可以去开别人，别人同样也可以开你——<strong>网络暴力是相互的</strong>。</p>
-<p>不要以为代理或者VPN的开关打开了，就是谁也抓不到你。公安基本照抓不误，除非你人在国外。</p>
-<p>哪些事情，可能相对会比较危险？个人认为，<strong>饭圈，键政，对喷，乐子，VTuber，文援</strong>等。</p>
-<p>不是说不能做这些事情，当然是可以的，这是你自己的自由。就是要特别注意一些。</p>
-<h3 id="客气一些"><a href="#客气一些" class="headerlink" title="客气一些"></a>客气一些</h3><p>找社工库人工查人的时候最好态度好一点，简单明白说清楚自己的目的和需求，让你给钱就给钱，不要话多。</p>
-<p>就算自己被讹，或者对方查不出来，也是纯纯活该，直接认了。这种财产，<strong>法律是不保护的</strong>。</p>
-<p>不要以为自己一个TG，“匿名性”上来就可以为所欲为，人家查你，可能也是照查不误的。</p>
-<p>等下直接被盒，挂在人工频道上，那就好玩了。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了一些个人隐私保护、信息安全方面的内容。包括隐私保护手段，自查工具、建议行为准则等等。</p>
-<p>写得非常外行，内行肯定是见笑的，抱歉。</p>
-<p>本文到此结束。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><p>Visual Studio Code 1.62.3.0</p>
+<h2 id="搭建过程"><a href="#搭建过程" class="headerlink" title="搭建过程"></a>搭建过程</h2><h3 id="安装OpenSSL"><a href="#安装OpenSSL" class="headerlink" title="安装OpenSSL"></a>安装OpenSSL</h3><p>本文的作者是个懒狗，他决定使用一键安装包：<a href="https://slproweb.com/products/Win32OpenSSL.html">Win32&#x2F;Win64 OpenSSL Installer for Windows - Shining Light Productions (slproweb.com)</a></p>
+<p>在这个网页上找到自己想要安装的OpenSSL版本就可以了，然后下载.exe或.msi安装包，默认把选项全部勾选即可。</p>
+<h3 id="添加Path环境变量"><a href="#添加Path环境变量" class="headerlink" title="添加Path环境变量"></a>添加Path环境变量</h3><p>开始菜单-设置-系统-关于-高级系统设置-高级-环境变量（当然你也可以直接在开始菜单搜索）</p>
+<p>在系统变量中找到Path，增加一条，指向你的OpenSSL安装目录下的&#x2F;bin目录，例如：<code>D:\OpenSSL-Win64\bin</code></p>
+<p>确定，保存。此时打开CLI（Win+R，cmd），尝试检查一下OpenSSL是否安装成功：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">openssl version</span><br></pre></td></tr></table></figure>
+
+<p>如果安装成功，就会返回一个版本信息，例如：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">OpenSSL 3.1.3 19 Sep 2023 (Library: OpenSSL 3.1.3 19 Sep 2023)</span><br></pre></td></tr></table></figure>
+
+<h2 id="配置VSCode"><a href="#配置VSCode" class="headerlink" title="配置VSCode"></a>配置VSCode</h2><p>打开VSCode，找到Code Runner扩展，修改settings.json文件，增加这样的几条规则，并Ctrl+S保存，例子如下：<br>（可以修改自己想用的 C&#x2F;C++ 标准，例如<code>std=c++20</code>是<code>C++ 20</code>，那么你可以修改为<code>std=c++23</code>来改成<code>C++23</code>）<br>（请把示例中的安装目录修改为自己的OpenSSL文件夹下的\include目录和\lib目录）</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="attr">&quot;code-runner.executorMap&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line"></span><br><span class="line">        <span class="attr">&quot;cpp&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; g++ $fileName -o $fileNameWithoutExt -Wall -std=c++20 -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;c&quot;</span><span class="punctuation">:</span> <span class="string">&quot;cd $dir &amp;&amp; gcc $fileName -o $fileNameWithoutExt -Wall -I \&quot;D:\\OpenSSL-Win64\\include\&quot; -L \&quot;D:\\OpenSSL-Win64\\lib\&quot; -lssl -lcrypto &amp;&amp; $dir$fileNameWithoutExt&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;C_Cpp.default.includePath&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;D:\\OpenSSL-Win64\\include&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="punctuation">]</span><span class="punctuation">,</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="测试运行"><a href="#测试运行" class="headerlink" title="测试运行"></a>测试运行</h2><p>这里是一个非常简单的测试程序：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;openssl/aes.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;Hello, OpenSSL!&quot;</span> &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;AES Block Size is: &quot;</span> &lt;&lt; AES_BLOCK_SIZE &lt;&lt; <span class="string">&quot; Bytes&quot;</span> &lt;&lt; endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果正常运行，这个程序输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">Hello, OpenSSL!</span><br><span class="line">AES Block Size is: <span class="number">16</span> Bytes</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，VSCode C++ (Code Runner) + OpenSSL开发环境配置完毕，可以进行OpenSSL的C&#x2F;C++开发。</p>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Security</category>
+        <category>Crypto</category>
       </categories>
       <tags>
+        <tag>OpenSSL</tag>
         <tag>Crypto</tag>
-        <tag>Cyber Security</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -3423,42 +3309,10 @@
       </categories>
       <tags>
         <tag>Linux</tag>
-        <tag>VPS</tag>
         <tag>Circumvention</tag>
         <tag>Network</tag>
         <tag>Proxy</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
-    <url>/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。</p>
-<p>这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h2><hr>
-<h3 id="示例：Markdown"><a href="#示例：Markdown" class="headerlink" title="示例：Markdown"></a>示例：Markdown</h3><p>建议是在VSCode里面增加一个Reg插件。</p>
-<p>新建一个文本文件，把后缀名改成.reg，例如<code>addMd.reg</code></p>
-<p>用文本编辑器之类的东西打开，把内容改成这样：</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md</span>]</span><br><span class="line">@=<span class="string">&quot;markdown&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\markdown</span>]</span><br><span class="line">@=<span class="string">&quot;Markdown file&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>保存，双击运行，点击「是」，即可。</p>
-<p>可能不会立刻生效，重启一下就可以了。</p>
-<hr>
-<h3 id="示例：C"><a href="#示例：C" class="headerlink" title="示例：C++"></a>示例：C++</h3><p>同样，只要改一下Reg文件的内容：</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp</span>]</span><br><span class="line">@=<span class="string">&quot;cppfile&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\cppfile</span>]</span><br><span class="line">@=<span class="string">&quot;C++ Source File&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>保存，双击运行，即可。其它的以此类推</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了如何通过简单的防法，为Windows右键菜单新建文件提供更多选择。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
+        <tag>VPS</tag>
       </tags>
   </entry>
 </search>

@@ -179,30 +179,6 @@
   </entry>
   
   <entry>
-    <title>轻微程度的隐私保护技巧</title>
-    <link href="https://bluemap1e.github.io/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/"/>
-    <id>https://bluemap1e.github.io/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/</id>
-    <published>2024-09-24T13:09:53.000Z</published>
-    <updated>2024-09-30T09:22:46.079Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要介绍一些入门程度的隐私保护技巧。作者也是&lt;strong&gt;门外汉&lt;/strong&gt;，无法提供专业的建议。本文在内行看来应该是绝对纯属&lt;strong&gt;胡扯&lt;/strong&gt;。&lt;/p&gt;
-&lt;p&gt;这可能会稍微提高一点点防人肉能力，但不多，也许能防一些小白。但也就顶多只会&lt;strong&gt;稍微增加调查的成本&lt;/strong&gt;而已。对于体系化的社工库团队而言，拿下&lt;strong&gt;普通人&lt;/strong&gt;这种事基本上是&lt;strong&gt;轻而易举&lt;/strong&gt;的，你通常防了也没用。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Security" scheme="https://bluemap1e.github.io/categories/Tech/Security/"/>
-    
-    
-    <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
-    
-    <category term="Cyber Security" scheme="https://bluemap1e.github.io/tags/Cyber-Security/"/>
-    
-  </entry>
-  
-  <entry>
     <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
     <link href="https://bluemap1e.github.io/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/"/>
     <id>https://bluemap1e.github.io/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</id>
@@ -401,13 +377,13 @@
     
     <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
     <category term="Proxy" scheme="https://bluemap1e.github.io/tags/Proxy/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
@@ -535,6 +511,31 @@
     <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
     
     <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在Debian 12上搭建简单的MineCraft Forge服务器</title>
+    <link href="https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    <id>https://bluemap1e.github.io/2023/10/21/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84MineCraft-Forge%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
+    <published>2023-10-21T05:35:09.000Z</published>
+    <updated>2024-09-30T09:35:21.845Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;昨天看到了阿里云的经济型e服务器，感觉性价比挺不错的，因此尝试用来搭一台MineCraft服务器玩玩，这样用Curtain之类的模组挂机很方便。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="Linux" scheme="https://bluemap1e.github.io/categories/Tech/Linux/"/>
+    
+    
+    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
+    
+    <category term="MineCraft" scheme="https://bluemap1e.github.io/tags/MineCraft/"/>
     
   </entry>
   

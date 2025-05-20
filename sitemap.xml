@@ -218,15 +218,6 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/2024/09/24/%E8%BD%BB%E5%BE%AE%E7%A8%8B%E5%BA%A6%E7%9A%84%E9%9A%90%E7%A7%81%E4%BF%9D%E6%8A%A4%E6%8A%80%E5%B7%A7/</loc>
-    
-    <lastmod>2024-09-30</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://bluemap1e.github.io/support/index.html</loc>
     
     <lastmod>2024-09-27</lastmod>
@@ -341,20 +332,6 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
-    <lastmod>2025-05-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://bluemap1e.github.io/tags/Node-js/</loc>
-    <lastmod>2025-05-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://bluemap1e.github.io/tags/Circumvention/</loc>
     <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -376,6 +353,20 @@
   </url>
   
   <url>
+    <loc>https://bluemap1e.github.io/tags/VPS/</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://bluemap1e.github.io/tags/MineCraft/</loc>
+    <lastmod>2025-05-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://bluemap1e.github.io/tags/C/</loc>
     <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -390,7 +381,7 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/tags/MineCraft/</loc>
+    <loc>https://bluemap1e.github.io/tags/Node-js/</loc>
     <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -417,24 +408,10 @@
     <priority>0.2</priority>
   </url>
   
-  <url>
-    <loc>https://bluemap1e.github.io/tags/Cyber-Security/</loc>
-    <lastmod>2025-05-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
 
   
   <url>
     <loc>https://bluemap1e.github.io/categories/Tech/</loc>
-    <lastmod>2025-05-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Web-Front-End/</loc>
     <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -448,7 +425,7 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Linux/</loc>
+    <loc>https://bluemap1e.github.io/categories/Tech/Web-Front-End/</loc>
     <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -462,7 +439,7 @@
   </url>
   
   <url>
-    <loc>https://bluemap1e.github.io/categories/Tech/Security/</loc>
+    <loc>https://bluemap1e.github.io/categories/Tech/Linux/</loc>
     <lastmod>2025-05-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
