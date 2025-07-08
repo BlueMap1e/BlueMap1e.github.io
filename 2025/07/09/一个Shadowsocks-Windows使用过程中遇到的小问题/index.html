@@ -22,18 +22,23 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BlueMap1e&#39;s Blog">
-<meta property="og:url" content="https://bluemap1e.github.io/tags/C/index.html">
+  <meta name="description" content="前言在看网课的时候经常卡顿，感动很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最气人的是关掉代理就不卡了，因此开始排查问题。 最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个Shadowsocks-Windows使用过程中遇到的小问题">
+<meta property="og:url" content="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+<meta property="og:description" content="前言在看网课的时候经常卡顿，感动很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最气人的是关掉代理就不卡了，因此开始排查问题。 最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg">
+<meta property="article:published_time" content="2025-07-08T19:21:16.000Z">
+<meta property="article:modified_time" content="2025-07-08T19:43:50.274Z">
 <meta property="article:author" content="BlueMap1e">
-<meta property="article:tag" content="Web Front-End, Software Engineering, HTML, CSS, JavaScript, Vue.js, C++, Cyber Security">
+<meta property="article:tag" content="Proxy">
+<meta property="article:tag" content="Circumvention">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg">
 
-<link rel="canonical" href="https://bluemap1e.github.io/tags/C/">
+<link rel="canonical" href="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/">
 
 
 <script id="page-configurations">
@@ -41,12 +46,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Tag: C++ | BlueMap1e's Blog</title>
+  <title>一个Shadowsocks-Windows使用过程中遇到的小问题 | BlueMap1e's Blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
     <script>
@@ -221,97 +226,207 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一个Shadowsocks-Windows使用过程中遇到的小问题
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-07-09 03:21:16 / Modified: 03:43:50" itemprop="dateCreated datePublished" datetime="2025-07-09T03:21:16+08:00">2025-07-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Windows/" itemprop="url" rel="index"><span itemprop="name">Windows</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="一个Shadowsocks-Windows使用过程中遇到的小问题" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">C++
-          <small>Tag</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/09/一个Shadowsocks-Windows使用过程中遇到的小问题/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>346</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>2 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
-    </div>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看网课的时候经常卡顿，感动很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最气人的是关掉代理就不卡了，因此开始排查问题。</p>
+<p>最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。</p>
+<span id="more"></span>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<hr>
+<h2 id="问题场景"><a href="#问题场景" class="headerlink" title="问题场景"></a>问题场景</h2><p>以飞鱼绘的小鹅通页面为例，例如，前端页面的网址是这个：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app57xp9kxc1037<span class="selector-class">.xet-pc</span><span class="selector-class">.citv</span><span class="selector-class">.cn</span></span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-14T01:10:07+08:00"
-              content="2023-11-14">
-          11-14
-        </time>
-      </div>
+<p>自然，为了避免Shadowsocks走代理影响访问速度，将其写在pac.txt当中：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;@@||app57xp9kxc1037.xet-pc.citv.cn&quot;,</span><br></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/" itemprop="url">
-            <span itemprop="name">在Qt Creator中使用OpenSSL</span>
-          </a>
-      </div>
+<p>然而这只能解决前端页面加载速度的问题，并不能解决看视频卡顿的问题。</p>
+<p>这是因为，视频的源并不是前端页面的网址。</p>
+<hr>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>以Microsoft Edge浏览器为例，进入视频播放的界面，然后按下F12。</p>
+<img src="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg" class="" title="Edge-F12-Top-Bar">
 
-    </header>
-  </article>
+<p>选择”网络”，可以看到很多数据包，关注xhr类型。</p>
+<p>播放视频，选择其中数据包体积较大的，查看详情。</p>
+<p>添加其域名到PAC，例如：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;@@||xiaoeknow.com&quot;,</span><br><span class="line"><span class="string">&quot;@@||xed.plus&quot;</span>,</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-11T21:51:48+08:00"
-              content="2023-11-11">
-          11-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" itemprop="url">
-            <span itemprop="name">在Visual Studio 2022中配置Crypto++开发环境</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-01T17:28:21+08:00"
-              content="2023-11-01">
-          11-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" itemprop="url">
-            <span itemprop="name">简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<p>然后重启Shadowsocks，通常可解决问题。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>乱写的，自己也没完全搞清楚，但有效。</p>
+<p>博客好久没更新了，水一点东西（</p>
 
     </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\10\18\使用BBR一键安装脚本快速优化VPS网络性能\" rel="bookmark">使用BBR一键安装脚本快速优化VPS网络性能</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\11\在Debian 12上搭建简单的VMess + TCP服务器\" rel="bookmark">在Debian 12上搭建简单的VMess + TCP服务器</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\10\18\在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器\" rel="bookmark">在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\09\简单的Cloudflare Warp使用方法\" rel="bookmark">简单的Cloudflare Warp使用方法</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\10\18\通过简单的CloudFlare-Warp让VPS解锁ChatGPT\" rel="bookmark">通过简单的CloudFlare Warp让VPS解锁ChatGPT</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>如果你觉得文章写得还不错，可以赏作者一杯咖啡喝，或者一顿饭吃。感谢支持！THYzrcoMQf7d7wzGu1PvDraTef87abSv9V</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+      <div style="display: inline-block;">
+        <img src="/images/TronLink.png" alt="BlueMap1e TronLink">
+        <p>TronLink</p>
+      </div>
+
   </div>
-  
-  
-  
+</div>
 
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Proxy/" rel="tag"><i class="fa fa-tag"></i> Proxy</a>
+              <a href="/tags/Circumvention/" rel="tag"><i class="fa fa-tag"></i> Circumvention</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/" rel="prev" title="简单修改注册表来增加Windows右键菜单新建文件的种类">
+      <i class="fa fa-chevron-left"></i> 简单修改注册表来增加Windows右键菜单新建文件的种类
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -358,6 +473,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">问题场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -683,6 +799,26 @@ if (document.querySelectorAll('pre.mermaid').length) {
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/";
+    this.page.identifier = "2025/07/09/一个Shadowsocks-Windows使用过程中遇到的小问题/";
+    this.page.title = "一个Shadowsocks-Windows使用过程中遇到的小问题";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://BlueMap1e.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 </body>
