@@ -252,7 +252,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-08-29 11:27:17 / Modified: 14:26:22" itemprop="dateCreated datePublished" datetime="2025-08-29T11:27:17+08:00">2025-08-29</time>
+              <time title="Created: 2025-08-29 11:27:17 / Modified: 14:28:36" itemprop="dateCreated datePublished" datetime="2025-08-29T11:27:17+08:00">2025-08-29</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -295,7 +295,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>505</span>
+              <span>506</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -316,29 +316,14 @@
       
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。</p>
 <p>但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。</p>
-<hr>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>首先参考官方文档：<a target="_blank" rel="noopener" href="https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#configuration">YT-DLP Configuration - GitHuub</a></p>
-<p>以Windows操作系统为例，Win+R，<code>%Appdata%</code>，回车。</p>
-<p>寻找<code>yt-dlp</code>这个文件夹，如果它不存在，创建它，进入。新建文件<code>config.txt</code>。</p>
-<p>使用文本编辑器打开<code>config.txt</code>，可以开始修改默认配置，例如，这是我的个人配置：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</span><br><span class="line"></span><br><span class="line">-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</span><br><span class="line"></span><br><span class="line">--proxy 127.0.0.1:10808</span><br><span class="line"></span><br><span class="line">--write-thumbnail</span><br></pre></td></tr></table></figure>
-
-<p>简单解释：</p>
-<p><code>-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</code>：输出到<code>E:/VideoClip/Original/</code>目录下，保持默认命名。</p>
-<p><code>-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</code>：下载MP4格式的文件，优先采用1080P60，如果没有，回退到720P60，如果还没有，选择可选的最高画质。音频固定为最高质量音频。</p>
-<p><code>--proxy 127.0.0.1:10808</code>：代理走本地10808端口（v2rayN），如果是Clash for Windows，Clash Meta，Mihomo Party等工具，那么就是7890端口。如果是Shadowsocks，Hysteria 2等工具，那么就是1080端口。根据实际情况。</p>
-<p><code>--write-thumbnail</code>：下载封面。</p>
-<p>更多详细配置请参考帮助，不一一罗列。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yt-dlp --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<p>随后可以正常使用，且操作简单快捷，例如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yt-dlp [yourVideoURL]</span><br></pre></td></tr></table></figure>
-
-<p>不需要反复确认指令参数，稍微方便了一些。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文简单介绍了如何通过修改配置文件的方式修改YT-DLP的默认设置。</p>
-<p>更多详细信息请参考官方文档：<a target="_blank" rel="noopener" href="https://github.com/yt-dlp/yt-dlp">YT-DLP - GitHub</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -388,7 +373,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2025-08-29 14:15:20" itemprop="dateModified" datetime="2025-08-29T14:15:20+08:00">2025-08-29</time>
+                <time title="Modified: 2025-08-29 14:29:02" itemprop="dateModified" datetime="2025-08-29T14:29:02+08:00">2025-08-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -431,7 +416,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>501</span>
+              <span>502</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
@@ -453,23 +438,14 @@
           <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近重装了系统，觉得Windows 11默认的右键菜单方案很别扭，还是Windows 10的样式最舒适。因此找了找网上的方案，最后自己摸索出可用的方法。并不困难。</p>
 <p>修改注册表操作可能存在一定风险，如果担心风险，可以考虑备份，或者放弃修改。</p>
 <p>如果不想永久性修改，按下<code>Shift+右键</code>即可，可以呼出Windows 10风格的详细右键菜单。</p>
-<hr>
-<h2 id="调整为Windows-10经典菜单"><a href="#调整为Windows-10经典菜单" class="headerlink" title="调整为Windows 10经典菜单"></a>调整为Windows 10经典菜单</h2><p>很简单，只需要新建一个<code>.reg</code>文件，例如，<code>win10ClassicCtxMenu.reg</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">reg.exe add &quot;HKCU\Software\Classes\CLSID\&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;\InprocServer32&quot; /f /ve</span><br></pre></td></tr></table></figure>
-
-<p>保存后，双击执行它，确定。然后在任务管理器中找到文件资源管理器，重启它，或者直接重启电脑即可。</p>
-<hr>
-<h2 id="恢复为Windows-11新菜单"><a href="#恢复为Windows-11新菜单" class="headerlink" title="恢复为Windows 11新菜单"></a>恢复为Windows 11新菜单</h2><p>很简单，也同样只需要一个<code>.reg</code>文件，例如，<code>win11NewCtxMenu.reg</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[-HKEY_CURRENT_USER\Software\Classes\CLSID\&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;]</span><br></pre></td></tr></table></figure>
-
-<p>同样的操作，保存后，双击它。其实甚至都不用刷新文件资源管理器就生效了。</p>
-<hr>
-<h2 id="原理简介"><a href="#原理简介" class="headerlink" title="原理简介"></a>原理简介</h2><p>（信息来源于Google Gemini）</p>
-<p>微软在 Windows 11 中为文件资源管理器（Explorer）引入了新的上下文菜单（右键菜单）机制。它通过一个被称为 <code>CLSID</code>（Class ID）的特殊标识符来加载。<code>&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;</code> 就是用来控制这个新菜单的关键 ID。</p>
-<p>通过在注册表中为这个 ID 增加一个 <strong><code>InprocServer32</code></strong> 项并设置其为空值，我们实际上是在告诉系统：“不要加载与此 CLSID 关联的默认处理程序，请退回到旧版（经典版）的上下文菜单。” 这样就巧妙地绕过了 Windows 11 的新设计，让经典的 Windows 10 菜单得以重现。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Windows 11操作系统中用简单的注册表修改手段将右键菜单样式退回经典的Windows 10。</p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 

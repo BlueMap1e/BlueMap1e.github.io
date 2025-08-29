@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2025-08-29T06:26:22.896Z</updated>
+  <updated>2025-08-29T06:28:36.051Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,16 +21,11 @@
     <link href="https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/"/>
     <id>https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</id>
     <published>2025-08-29T03:27:17.000Z</published>
-    <updated>2025-08-29T06:26:22.896Z</updated>
+    <updated>2025-08-29T06:28:36.051Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</summary>
-        
-      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。&lt;/p&gt;
+&lt;p&gt;但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。&lt;/p&gt;</summary>
     
     
     
@@ -50,16 +45,12 @@
     <link href="https://bluemap1e.github.io/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/"/>
     <id>https://bluemap1e.github.io/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/</id>
     <published>2025-08-10T17:34:22.000Z</published>
-    <updated>2025-08-29T06:15:20.177Z</updated>
+    <updated>2025-08-29T06:29:02.248Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近重装了系统，觉得Windows 11默认的右键菜单方案很别扭，还是Windows</summary>
-        
-      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近重装了系统，觉得Windows 11默认的右键菜单方案很别扭，还是Windows 10的样式最舒适。因此找了找网上的方案，最后自己摸索出可用的方法。并不困难。&lt;/p&gt;
+&lt;p&gt;修改注册表操作可能存在一定风险，如果担心风险，可以考虑备份，或者放弃修改。&lt;/p&gt;
+&lt;p&gt;如果不想永久性修改，按下&lt;code&gt;Shift+右键&lt;/code&gt;即可，可以呼出Windows 10风格的详细右键菜单。&lt;/p&gt;</summary>
     
     
     
@@ -461,9 +452,9 @@
     
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
-    
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
+    
+    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   
