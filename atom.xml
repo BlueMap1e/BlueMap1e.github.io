@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2025-07-08T19:58:14.986Z</updated>
+  <updated>2025-08-29T06:26:22.896Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -15,6 +15,62 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>在Windows 11上修改YT-DLP的默认配置文件</title>
+    <link href="https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/"/>
+    <id>https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</id>
+    <published>2025-08-29T03:27:17.000Z</published>
+    <updated>2025-08-29T06:26:22.896Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/categories/Tech/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/tags/Windows/"/>
+    
+    <category term="Python" scheme="https://bluemap1e.github.io/tags/Python/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>在Windows 11中默认使用Windows 10右键菜单</title>
+    <link href="https://bluemap1e.github.io/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/"/>
+    <id>https://bluemap1e.github.io/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/</id>
+    <published>2025-08-10T17:34:22.000Z</published>
+    <updated>2025-08-29T06:15:20.177Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近重装了系统，觉得Windows 11默认的右键菜单方案很别扭，还是Windows</summary>
+        
+      
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/categories/Tech/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/tags/Windows/"/>
+    
+  </entry>
   
   <entry>
     <title>一个Shadowsocks-Windows使用过程中遇到的小问题</title>
@@ -405,9 +461,9 @@
     
     <category term="Circumvention" scheme="https://bluemap1e.github.io/tags/Circumvention/"/>
     
-    <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
-    
     <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
+    
+    <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
   </entry>
   
@@ -486,55 +542,6 @@
     <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
     
     <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>简单的VSCode C++ (Code Runner) + OpenSSL开发环境搭建</title>
-    <link href="https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
-    <id>https://bluemap1e.github.io/2023/11/01/%E7%AE%80%E5%8D%95%E7%9A%84VSCode%20C++%20(Code%20Runner)%20+%20OpenSSL%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
-    <published>2023-11-01T09:28:21.000Z</published>
-    <updated>2024-09-30T09:33:39.781Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;OpenSSL是一个强大的，使用C编写的开源密码学库。它具有高度可定制、功能强大、支持完善、TLS支持和CLI调用等多种优势。&lt;/p&gt;
-&lt;p&gt;本文主要介绍如何在Windows上使用VSCode C++ (Code Runner) 搭建OpenSSL开发环境。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Crypto" scheme="https://bluemap1e.github.io/categories/Tech/Crypto/"/>
-    
-    
-    <category term="OpenSSL" scheme="https://bluemap1e.github.io/tags/OpenSSL/"/>
-    
-    <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
-    
-    <category term="C++" scheme="https://bluemap1e.github.io/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>免费领取一台IBM LinuxOne服务器</title>
-    <link href="https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
-    <id>https://bluemap1e.github.io/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
-    <published>2023-10-22T00:17:39.000Z</published>
-    <updated>2024-09-26T03:21:35.244Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/categories/Tech/Linux/"/>
-    
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
-    
-    <category term="VPS" scheme="https://bluemap1e.github.io/tags/VPS/"/>
     
   </entry>
   

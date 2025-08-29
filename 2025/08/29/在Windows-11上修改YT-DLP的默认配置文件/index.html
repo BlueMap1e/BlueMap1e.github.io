@@ -22,18 +22,21 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
-<meta property="og:type" content="website">
-<meta property="og:title" content="BlueMap1e&#39;s Blog">
-<meta property="og:url" content="https://bluemap1e.github.io/categories/Tech/page/2/index.html">
+  <meta name="description" content="前言近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。 但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。  操作步骤首先参考官方文档：YT-DLP Configuration - GitHuub 以Windows操作系统为例，Win+R，%Appdata%，回车。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在Windows 11上修改YT-DLP的默认配置文件">
+<meta property="og:url" content="https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+<meta property="og:description" content="前言近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。 但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。  操作步骤首先参考官方文档：YT-DLP Configuration - GitHuub 以Windows操作系统为例，Win+R，%Appdata%，回车。">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-08-29T03:27:17.000Z">
+<meta property="article:modified_time" content="2025-08-29T06:26:22.896Z">
 <meta property="article:author" content="BlueMap1e">
-<meta property="article:tag" content="Web Front-End, Software Engineering, HTML, CSS, JavaScript, Vue.js, C++, Cyber Security">
+<meta property="article:tag" content="Windows">
+<meta property="article:tag" content="Python">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://bluemap1e.github.io/categories/Tech/page/2/">
+<link rel="canonical" href="https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
 
 
 <script id="page-configurations">
@@ -41,12 +44,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Category: Tech | BlueMap1e's Blog</title>
+  <title>在Windows 11上修改YT-DLP的默认配置文件 | BlueMap1e's Blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
     <script>
@@ -221,243 +224,195 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="BlueMap1e">
+      <meta itemprop="description" content="一个关于前端、日常、折腾和搞黄色的，不正经的博客。BlueMap1e@protonmail.com">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="BlueMap1e's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          在Windows 11上修改YT-DLP的默认配置文件
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-08-29 11:27:17 / Modified: 14:26:22" itemprop="dateCreated datePublished" datetime="2025-08-29T11:27:17+08:00">2025-08-29</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/Windows/" itemprop="url" rel="index"><span itemprop="name">Windows</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" class="post-meta-item leancloud_visitors" data-flag-title="在Windows 11上修改YT-DLP的默认配置文件" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">Tech
-          <small>Category</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Disqus: </span>
+    
+    <a title="disqus" href="/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/08/29/在Windows-11上修改YT-DLP的默认配置文件/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>505</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>3 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2024</span>
-    </div>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。</p>
+<p>但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。</p>
+<hr>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>首先参考官方文档：<a target="_blank" rel="noopener" href="https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#configuration">YT-DLP Configuration - GitHuub</a></p>
+<p>以Windows操作系统为例，Win+R，<code>%Appdata%</code>，回车。</p>
+<p>寻找<code>yt-dlp</code>这个文件夹，如果它不存在，创建它，进入。新建文件<code>config.txt</code>。</p>
+<p>使用文本编辑器打开<code>config.txt</code>，可以开始修改默认配置，例如，这是我的个人配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</span><br><span class="line"></span><br><span class="line">-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</span><br><span class="line"></span><br><span class="line">--proxy 127.0.0.1:10808</span><br><span class="line"></span><br><span class="line">--write-thumbnail</span><br></pre></td></tr></table></figure>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+<p>简单解释：</p>
+<p><code>-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</code>：输出到<code>E:/VideoClip/Original/</code>目录下，保持默认命名。</p>
+<p><code>-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</code>：下载MP4格式的文件，优先采用1080P60，如果没有，回退到720P60，如果还没有，选择可选的最高画质。音频固定为最高质量音频。</p>
+<p><code>--proxy 127.0.0.1:10808</code>：代理走本地10808端口（v2rayN），如果是Clash for Windows，Clash Meta，Mihomo Party等工具，那么就是7890端口。如果是Shadowsocks，Hysteria 2等工具，那么就是1080端口。根据实际情况。</p>
+<p><code>--write-thumbnail</code>：下载封面。</p>
+<p>更多详细配置请参考帮助，不一一罗列。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yt-dlp --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2024-09-19T21:16:22+08:00"
-              content="2024-09-19">
-          09-19
-        </time>
-      </div>
+<p>随后可以正常使用，且操作简单快捷，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yt-dlp [yourVideoURL]</span><br></pre></td></tr></table></figure>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%882%EF%BC%89%E5%9F%BA%E7%A1%80%E8%A1%8C%E4%B8%BA%E4%B8%8E%E6%9C%BA%E5%88%B6/" itemprop="url">
-            <span itemprop="name">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2024-09-19T11:51:11+08:00"
-              content="2024-09-19">
-          09-19
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2024/09/19/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%881%EF%BC%89%20%E8%B4%A6%E5%8F%B7%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%88%9D%E8%AF%86UI/" itemprop="url">
-            <span itemprop="name">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-    <div class="collection-year">
-      <span class="collection-header">2023</span>
-    </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-15T20:00:04+08:00"
-              content="2023-11-15">
-          11-15
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" itemprop="url">
-            <span itemprop="name">OpenSSL CLI 密钥对生成工具 个人使用经验</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-14T15:55:23+08:00"
-              content="2023-11-14">
-          11-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" itemprop="url">
-            <span itemprop="name">OpenSSL CLI 随机数生成器 个人使用经验</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-14T01:10:07+08:00"
-              content="2023-11-14">
-          11-14
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/14/%E5%9C%A8Qt-Creator%E4%B8%AD%E4%BD%BF%E7%94%A8OpenSSL/" itemprop="url">
-            <span itemprop="name">在Qt Creator中使用OpenSSL</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-11T21:51:48+08:00"
-              content="2023-11-11">
-          11-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" itemprop="url">
-            <span itemprop="name">在Visual Studio 2022中配置Crypto++开发环境</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-11T20:19:25+08:00"
-              content="2023-11-11">
-          11-11
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/11/%E5%9C%A8Debian%2012%E4%B8%8A%E6%90%AD%E5%BB%BA%E7%AE%80%E5%8D%95%E7%9A%84VMess%20+%20TCP%E6%9C%8D%E5%8A%A1%E5%99%A8/" itemprop="url">
-            <span itemprop="name">在Debian 12上搭建简单的VMess + TCP服务器</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-09T15:38:23+08:00"
-              content="2023-11-09">
-          11-09
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" itemprop="url">
-            <span itemprop="name">简单的Cloudflare Warp使用方法</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-08T16:33:53+08:00"
-              content="2023-11-08">
-          11-08
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" itemprop="url">
-            <span itemprop="name">OpenSSL CLI 对称加密算法 个人使用经验</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2023-11-06T00:34:17+08:00"
-              content="2023-11-06">
-          11-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/" itemprop="url">
-            <span itemprop="name">OpenSSL CLI 散列函数 个人使用经验</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+<p>不需要反复确认指令参数，稍微方便了一些。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文简单介绍了如何通过修改配置文件的方式修改YT-DLP的默认设置。</p>
+<p>更多详细信息请参考官方文档：<a target="_blank" rel="noopener" href="https://github.com/yt-dlp/yt-dlp">YT-DLP - GitHub</a></p>
 
     </div>
+
+    
+    
+    
+      
+  <div class="popular-posts-header">Related Posts</div>
+  <ul class="popular-posts">
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2025\08\11\在Windows-11中默认使用Windows-10右键菜单\" rel="bookmark">在Windows 11中默认使用Windows 10右键菜单</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\11\09\简单的Cloudflare Warp使用方法\" rel="bookmark">简单的Cloudflare Warp使用方法</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2024\11\01\简单修改注册表来增加Windows右键菜单新建文件的种类\" rel="bookmark">简单修改注册表来增加Windows右键菜单新建文件的种类</a></div>
+    </li>
+  </ul>
+
+        <div class="reward-container">
+  <div>如果你觉得文章写得还不错，可以赏作者一杯咖啡喝，或者一顿饭吃。感谢支持！THYzrcoMQf7d7wzGu1PvDraTef87abSv9V</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    Donate
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="BlueMap1e WeChat Pay">
+        <p>WeChat Pay</p>
+      </div>
+
   </div>
-  
-  
-  
+</div>
 
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/Windows/" rel="tag"><i class="fa fa-tag"></i> Windows</a>
+              <a href="/tags/Python/" rel="tag"><i class="fa fa-tag"></i> Python</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/" rel="prev" title="在Windows 11中默认使用Windows 10右键菜单">
+      <i class="fa fa-chevron-left"></i> 在Windows 11中默认使用Windows 10右键菜单
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
   
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/categories/Tech/"><i class="fa fa-angle-left" aria-label="Previous page"></i></a><a class="page-number" href="/categories/Tech/">1</a><span class="page-number current">2</span><a class="page-number" href="/categories/Tech/page/3/">3</a><a class="extend next" rel="next" href="/categories/Tech/page/3/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
+  
+  
 
 
 
           </div>
           
+    
+  <div class="comments">
+    <div id="disqus_thread">
+      <noscript>Please enable JavaScript to view the comments powered by Disqus.</noscript>
+    </div>
+  </div>
+  
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -504,6 +459,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="nav-number">2.</span> <span class="nav-text">操作步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -829,6 +785,26 @@ if (document.querySelectorAll('pre.mermaid').length) {
   }
   // defer loading until the whole page loading is completed
   window.addEventListener('load', loadCount, false);
+</script>
+<script>
+  var disqus_config = function() {
+    this.page.url = "https://bluemap1e.github.io/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/";
+    this.page.identifier = "2025/08/29/在Windows-11上修改YT-DLP的默认配置文件/";
+    this.page.title = "在Windows 11上修改YT-DLP的默认配置文件";
+    };
+  NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
+    if (window.DISQUS) {
+      DISQUS.reset({
+        reload: true,
+        config: disqus_config
+      });
+    } else {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://BlueMap1e.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', '' + +new Date());
+      (d.head || d.body).appendChild(s);
+    }
+  });
 </script>
 
 </body>
