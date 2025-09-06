@@ -22,27 +22,24 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。 随后发现，主要还是Twine 2 + SugarCube 2这种形式，最终部署在Vercel上。">
+  <meta name="description" content="前言近期在折腾一个QQ机器人的一些API功能，因此需要在Linux操作系统上部署一个代理客户端。 本文主要介绍如何在Ubuntu 22.04操作系统上简单使用Shadowsocks-Libev客户端进行代理上网。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建">
-<meta property="og:url" content="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:title" content="在Ubuntu上部署Shadowsocks-Libev客户端">
+<meta property="og:url" content="https://bluemap1e.github.io/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。 随后发现，主要还是Twine 2 + SugarCube 2这种形式，最终部署在Vercel上。">
+<meta property="og:description" content="前言近期在折腾一个QQ机器人的一些API功能，因此需要在Linux操作系统上部署一个代理客户端。 本文主要介绍如何在Ubuntu 22.04操作系统上简单使用Shadowsocks-Libev客户端进行代理上网。">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineSetSugarCube.png">
-<meta property="og:image" content="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineLocalSetSugarCube.png">
-<meta property="article:published_time" content="2024-09-28T05:29:09.000Z">
-<meta property="article:modified_time" content="2024-09-30T10:54:49.372Z">
+<meta property="article:published_time" content="2025-09-06T04:24:26.000Z">
+<meta property="article:modified_time" content="2025-09-06T04:59:32.602Z">
 <meta property="article:author" content="BlueMap1e">
-<meta property="article:tag" content="JavaScript">
-<meta property="article:tag" content="Interactive Fiction">
-<meta property="article:tag" content="Web Front-End">
-<meta property="article:tag" content="HTML">
-<meta property="article:tag" content="CSS">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Proxy">
+<meta property="article:tag" content="Circumvention">
+<meta property="article:tag" content="VPS">
+<meta property="article:tag" content="Network">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineSetSugarCube.png">
 
-<link rel="canonical" href="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+<link rel="canonical" href="https://bluemap1e.github.io/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/">
 
 
 <script id="page-configurations">
@@ -55,7 +52,7 @@
   };
 </script>
 
-  <title>基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建 | BlueMap1e's Blog</title>
+  <title>在Ubuntu上部署Shadowsocks-Libev客户端 | BlueMap1e's Blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
     <script>
@@ -237,7 +234,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -250,7 +247,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建
+          在Ubuntu上部署Shadowsocks-Libev客户端
         </h1>
 
         <div class="post-meta">
@@ -259,16 +256,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">Posted on</span>
+              
 
-              <time title="Created: 2024-09-28 13:29:09" itemprop="dateCreated datePublished" datetime="2024-09-28T13:29:09+08:00">2024-09-28</time>
+              <time title="Created: 2025-09-06 12:24:26 / Modified: 12:59:32" itemprop="dateCreated datePublished" datetime="2025-09-06T12:24:26+08:00">2025-09-06</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2024-09-30 18:54:49" itemprop="dateModified" datetime="2024-09-30T18:54:49+08:00">2024-09-30</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -279,12 +270,12 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tech/Web-Front-End/" itemprop="url" rel="index"><span itemprop="name">Web Front-End</span></a>
+                  <a href="/categories/Tech/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
                 </span>
             </span>
 
           
-            <span id="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="post-meta-item leancloud_visitors" data-flag-title="基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建" title="Views">
+            <span id="/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/" class="post-meta-item leancloud_visitors" data-flag-title="在Ubuntu上部署Shadowsocks-Libev客户端" title="Views">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -299,8 +290,8 @@
       </span>
       <span class="post-meta-item-text">Disqus: </span>
     
-    <a title="disqus" href="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2024/09/28/基于Twine-SugarCube的互动文游制作（1）简介与环境搭建/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/09/06/在Ubuntu上部署Shadowsocks-Libev客户端/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -310,14 +301,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>868</span>
+              <span>575</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>4 mins.</span>
+              <span>3 mins.</span>
             </span>
 
         </div>
@@ -329,86 +320,61 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期看到了几个推特文援做的互动文游，觉得挺有意思，于是打算研究一下制作方式。</p>
-<p>随后发现，主要还是Twine 2 + SugarCube 2这种形式，最终部署在Vercel上。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在折腾一个QQ机器人的一些API功能，因此需要在Linux操作系统上部署一个代理客户端。</p>
+<p>本文主要介绍如何在Ubuntu 22.04操作系统上简单使用Shadowsocks-Libev客户端进行代理上网。</p>
 <span id="more"></span>
 
-<p>放两个我看到的作品吧。虽然我不是很喜欢这个主题和玩法，我是直接拿ClickRun过的。</p>
-<p>（连点1000次到底是什么魔鬼啊喂，这真的还算能是交互性吗？这是虐待吧？是的吧！M男，很神奇吧？）</p>
-<p>但，这个互动文游的形式，我觉得还不错：</p>
-<p><a target="_blank" rel="noopener" href="https://disan-kekes-projects-c4b9b073.vercel.app/">为魔女妹妹打工的小游戏 By @xuemingjiai</a></p>
-<p><a target="_blank" rel="noopener" href="https://moyud.vercel.app/">可喵大人的推特 By @winkyneverlose</a></p>
-<p>不知道相比于Milovana Webtease，各位读者是更喜欢哪一种呢？</p>
 <hr>
-<h2 id="Twine-简介"><a href="#Twine-简介" class="headerlink" title="Twine 简介"></a>Twine 简介</h2><p>Twine是一个开源的交互式故事生成器。</p>
-<p>项目地址：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/klembot/twinejs">klembot&#x2F;twinejs: Twine, a tool for telling interactive, nonlinear stories (github.com)</a></p>
-<p>官方网站：</p>
-<p><a target="_blank" rel="noopener" href="https://twinery.org/">Twine &#x2F; An open-source tool for telling interactive, nonlinear stories (twinery.org)</a></p>
-<p>英文教程：</p>
-<p><a target="_blank" rel="noopener" href="https://twinery.org/cookbook">Twine Cookbook</a></p>
-<hr>
-<h2 id="SugarCube-简介"><a href="#SugarCube-简介" class="headerlink" title="SugarCube 简介"></a>SugarCube 简介</h2><p>SugarCube是Twine 2默认支持的一种故事格式：</p>
-<p>官方网站：</p>
-<p><a target="_blank" rel="noopener" href="https://www.motoslave.net/sugarcube/2/">SugarCube (motoslave.net)</a></p>
-<p>英文文档：</p>
-<p><a target="_blank" rel="noopener" href="https://www.motoslave.net/sugarcube/2/docs/">SugarCube v2 Documentation (motoslave.net)</a></p>
-<hr>
-<h2 id="开发环境搭建"><a href="#开发环境搭建" class="headerlink" title="开发环境搭建"></a>开发环境搭建</h2><p>这个环境搭建很容易，不需要注册账户。</p>
-<p>主要有两种，Web UI和本地应用，可以自己根据需要选择。</p>
-<hr>
-<h3 id="Web-UI"><a href="#Web-UI" class="headerlink" title="Web UI"></a>Web UI</h3><p>Twine的Web UI：</p>
-<p><a target="_blank" rel="noopener" href="https://twinery.org/2/#/">Twine Web (twinery.org)</a></p>
-<p>在顶部菜单栏找到<strong>Twine</strong>，点击<strong>故事格式</strong>选项，单击<strong>SugarCube</strong>，然后单击菜单栏的一个五角星图标——<strong>设为默认格式</strong>。（<strong>可以不设置</strong>，反正默认的<strong>Harlowe</strong>也不错）</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineSetSugarCube.png" class="" title="twineSetSugarCube">
+<h2 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h2><h3 id="安装Shadowsocks-Libev"><a href="#安装Shadowsocks-Libev" class="headerlink" title="安装Shadowsocks-Libev"></a>安装Shadowsocks-Libev</h3><p>Shadowsocks-Libev的安装方法其实很多，<code>apt-install</code>和<code>snap</code>等等都行。但本文为了操作简便，路径简单易懂，选择使用<code>apt-install</code>直接安装。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install shadowsocks-libev</span><br></pre></td></tr></table></figure>
 
-<p>完成。</p>
 <hr>
-<h3 id="本地应用"><a href="#本地应用" class="headerlink" title="本地应用"></a>本地应用</h3><p>在Twine的GitHub发行页面找到自己要下载的版本：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/klembot/twinejs/releases">Releases · klembot&#x2F;twinejs (github.com)</a></p>
-<p>根据自己的系统实际情况下载安装即可。</p>
-<p>设置故事格式的方式类似。</p>
-<p>在顶部菜单栏找到<strong>Twine</strong>，点击<strong>故事格式</strong>选项，单击<strong>SugarCube</strong>，然后单击菜单栏的一个五角星图标——<strong>设为默认格式</strong>。（<strong>可以不设置</strong>，反正默认的<strong>Harlowe</strong>也不错）</p>
-<img src="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/twineLocalSetSugarCube.png" class="" title="twineLocalSetSugarCube">
+<h3 id="修改Shadowsocks-Libev配置文件"><a href="#修改Shadowsocks-Libev配置文件" class="headerlink" title="修改Shadowsocks-Libev配置文件"></a>修改Shadowsocks-Libev配置文件</h3><p>用nano打开配置文件，当然，用vim之类的完全可以。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /etc/shadowsocks-libev/config.json</span><br></pre></td></tr></table></figure>
 
-<p>完成。</p>
-<hr>
-<h2 id="部署环境搭建"><a href="#部署环境搭建" class="headerlink" title="部署环境搭建"></a>部署环境搭建</h2><p>其实现在还远远没有到部署的那一步，但是可以先准备一些东西。</p>
-<p>如果说，是要部署到Vercel上的话，大概需要——</p>
-<p><strong>安装Node.js，安装Vercel CLI，注册GitHub，注册Vercel</strong>。</p>
-<hr>
-<h3 id="安装Node-js"><a href="#安装Node-js" class="headerlink" title="安装Node.js"></a>安装Node.js</h3><p>访问Node.js的官方网站：</p>
-<p><a target="_blank" rel="noopener" href="https://nodejs.org/">Node.js ——在任何地方运行JavaScript</a></p>
-<p>一般来说安装个LTS版本就可以了，当然也可以选择下最新版。后续就是正常的软件安装流程了。</p>
-<p>为了验证Node.js安装完成后的情况，可以Win+R输入cmd打开命令行，输入以下命令进行检查：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node -v</span><br></pre></td></tr></table></figure>
+<p>一个客户端的配置文件内容如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;your_server_ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span><span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;XWlqZhR3y1B0Fb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
 
-<p>理论上应该返回一个版本号，例如v21.3.0。</p>
-<p>顺便检查一下npm的安装情况：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<p>理论上也是应该返回一个版本号，例如10.8.1。</p>
-<p>这两步没有问题了，Node.js安装完毕。</p>
+<p>根据自己已经搭建好的服务器进行修改。</p>
+<p>搭建过程其实也很简单，之前的博客有介绍：</p>
+<p>[在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器 | BlueMap1e’s Blog](<a href="https://bluemap1e.github.io/2023/10/18/%E5%9C%A8Ubuntu">https://bluemap1e.github.io/2023/10/18/在Ubuntu</a> 23上搭建简单的Shadowsocks-Libev服务器&#x2F;)</p>
+<p>网上也有各种教程，比较权威的例如gfw.report的这篇：</p>
+<p><a target="_blank" rel="noopener" href="https://gfw.report/blog/ss_tutorial/zh/">如何部署一台抗封锁的Shadowsocks-libev服务器 - GFW REPORT</a></p>
+<p>当然，各种一键脚本和GUI也都是可行的，例如：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/vaxilu/x-ui">vaxilu&#x2F;x-ui: 支持多协议多用户的 xray 面板</a></p>
+<p><a target="_blank" rel="noopener" href="https://233boy.com/xray/">Xray - 233Boy</a></p>
+<p>非常方便。</p>
 <hr>
-<h3 id="安装Vercel-CLI工具"><a href="#安装Vercel-CLI工具" class="headerlink" title="安装Vercel CLI工具"></a>安装Vercel CLI工具</h3><p>在命令行输入：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g vercel</span><br></pre></td></tr></table></figure>
+<h3 id="修改Shadowsocks-Libev服务类型"><a href="#修改Shadowsocks-Libev服务类型" class="headerlink" title="修改Shadowsocks-Libev服务类型"></a>修改Shadowsocks-Libev服务类型</h3><p>这一步比较关键，先别直接启动了。</p>
+<p>Shadowsocks-Libev默认以服务端运行，因此要对它的运行方式稍作修改：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /usr/lib/systemd/system/shadowsocks-libev.service</span><br></pre></td></tr></table></figure>
 
-<p>如果说人在国内，网络卡顿下载不了，npm报错超时，建议是给npm换源：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry https://registry.npmmirror.com/</span><br></pre></td></tr></table></figure>
+<p>打开这个文件，看到其中有这行：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecStart=/usr/bin/ss-server -c $CONFFILE $DAEMON_ARGS</span><br></pre></td></tr></table></figure>
 
-<p>再尝试一下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install -g vercel</span><br></pre></td></tr></table></figure>
+<p>把它修改为：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExecStart=/usr/bin/ss-local -c $CONFFILE $DAEMON_ARGS</span><br></pre></td></tr></table></figure>
 
-<p>应该就可以了。</p>
+<p>然后重载daemon，读取修改后的配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
 <hr>
-<h3 id="注册GitHub"><a href="#注册GitHub" class="headerlink" title="注册GitHub"></a>注册GitHub</h3><p>这个不用多讲了吧。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/">GitHub.com</a></p>
+<h3 id="启动Shadowsocks客户端"><a href="#启动Shadowsocks客户端" class="headerlink" title="启动Shadowsocks客户端"></a>启动Shadowsocks客户端</h3><p>现在可以正常使用了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl start shadowsocks-libev</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<p>如果要检查运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<p>如果修改了配置文件，要重新加载：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
 <hr>
-<h3 id="注册Vercel"><a href="#注册Vercel" class="headerlink" title="注册Vercel"></a>注册Vercel</h3><p>可以直接用GitHub授权登录的。</p>
-<p><a target="_blank" rel="noopener" href="https://vercel.com/">Vercel.com</a></p>
-<p>至此，基本的部署环境已经准备完毕。</p>
+<h3 id="验证代理可用性"><a href="#验证代理可用性" class="headerlink" title="验证代理可用性"></a>验证代理可用性</h3><p>例如，可以使用curl来进行尝试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl --socks5-hostname 127.0.0.1:1080 https://www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>如果返回了一个HTML文件，那么确定代理已经可用，机器已经可以访问国际互联网。</p>
 <hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文列举了两个Twine 2 + SugarCube 2的文游作品，介绍了Twine和SugarCube，以及开发环境、部署环境的搭建。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Ubuntu 22.04上部署Shadowsocks-Libev代理客户端。</p>
 
     </div>
 
@@ -419,19 +385,19 @@
   <div class="popular-posts-header">Related Posts</div>
   <ul class="popular-posts">
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\28\基于Twine-SugarCube的互动文游制作（2）Twine初识UI\" rel="bookmark">基于Twine-SugarCube的互动文游制作（2）Twine初识UI</a></div>
+      <div class="popular-posts-title"><a href="\2023\11\11\在Debian 12上搭建简单的VMess + TCP服务器\" rel="bookmark">在Debian 12上搭建简单的VMess + TCP服务器</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\29\基于Twine-SugarCube的互动文游制作（3）Twine基础\" rel="bookmark">基于Twine-SugarCube的互动文游制作（3）Twine基础</a></div>
+      <div class="popular-posts-title"><a href="\2023\10\18\使用BBR一键安装脚本快速优化VPS网络性能\" rel="bookmark">使用BBR一键安装脚本快速优化VPS网络性能</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（2）基础行为与机制\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（2） 基础行为与机制</a></div>
+      <div class="popular-posts-title"><a href="\2023\10\18\在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器\" rel="bookmark">在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\19\从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（1） 账号注册与初识UI</a></div>
+      <div class="popular-posts-title"><a href="\2023\10\18\通过简单的CloudFlare-Warp让VPS解锁ChatGPT\" rel="bookmark">通过简单的CloudFlare Warp让VPS解锁ChatGPT</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2024\09\26\从零开始的小黄油制作——-Milovana-EOS-Editor教程（4）-进阶行为与JavaScript\" rel="bookmark">从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript</a></div>
+      <div class="popular-posts-title"><a href="\2023\11\09\简单的Cloudflare Warp使用方法\" rel="bookmark">简单的Cloudflare Warp使用方法</a></div>
     </li>
   </ul>
 
@@ -454,11 +420,11 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/JavaScript/" rel="tag"><i class="fa fa-tag"></i> JavaScript</a>
-              <a href="/tags/Interactive-Fiction/" rel="tag"><i class="fa fa-tag"></i> Interactive Fiction</a>
-              <a href="/tags/Web-Front-End/" rel="tag"><i class="fa fa-tag"></i> Web Front-End</a>
-              <a href="/tags/HTML/" rel="tag"><i class="fa fa-tag"></i> HTML</a>
-              <a href="/tags/CSS/" rel="tag"><i class="fa fa-tag"></i> CSS</a>
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
+              <a href="/tags/Proxy/" rel="tag"><i class="fa fa-tag"></i> Proxy</a>
+              <a href="/tags/Circumvention/" rel="tag"><i class="fa fa-tag"></i> Circumvention</a>
+              <a href="/tags/VPS/" rel="tag"><i class="fa fa-tag"></i> VPS</a>
+              <a href="/tags/Network/" rel="tag"><i class="fa fa-tag"></i> Network</a>
           </div>
 
         
@@ -467,13 +433,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/09/26/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94-Milovana-EOS-Editor%E6%95%99%E7%A8%8B%EF%BC%884%EF%BC%89-%E8%BF%9B%E9%98%B6%E8%A1%8C%E4%B8%BA%E4%B8%8EJavaScript/" rel="prev" title="从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript">
-      <i class="fa fa-chevron-left"></i> 从零开始的小黄油制作—— Milovana EOS Editor教程（4） 进阶行为与JavaScript
+    <a href="/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/" rel="prev" title="在Windows 11上修改YT-DLP的默认配置文件">
+      <i class="fa fa-chevron-left"></i> 在Windows 11上修改YT-DLP的默认配置文件
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%882%EF%BC%89Twine%E5%88%9D%E8%AF%86UI/" rel="next" title="基于Twine-SugarCube的互动文游制作（2）Twine初识UI">
-      基于Twine-SugarCube的互动文游制作（2）Twine初识UI <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -539,7 +502,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Twine-%E7%AE%80%E4%BB%8B"><span class="nav-number">2.</span> <span class="nav-text">Twine 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SugarCube-%E7%AE%80%E4%BB%8B"><span class="nav-number">3.</span> <span class="nav-text">SugarCube 简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">4.</span> <span class="nav-text">开发环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-UI"><span class="nav-number">4.1.</span> <span class="nav-text">Web UI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E5%BA%94%E7%94%A8"><span class="nav-number">4.2.</span> <span class="nav-text">本地应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="nav-number">5.</span> <span class="nav-text">部署环境搭建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Node-js"><span class="nav-number">5.1.</span> <span class="nav-text">安装Node.js</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Vercel-CLI%E5%B7%A5%E5%85%B7"><span class="nav-number">5.2.</span> <span class="nav-text">安装Vercel CLI工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8CGitHub"><span class="nav-number">5.3.</span> <span class="nav-text">注册GitHub</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%86%8CVercel"><span class="nav-number">5.4.</span> <span class="nav-text">注册Vercel</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">6.</span> <span class="nav-text">结语</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">操作过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Shadowsocks-Libev"><span class="nav-number">2.1.</span> <span class="nav-text">安装Shadowsocks-Libev</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9Shadowsocks-Libev%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">修改Shadowsocks-Libev配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9Shadowsocks-Libev%E6%9C%8D%E5%8A%A1%E7%B1%BB%E5%9E%8B"><span class="nav-number">2.3.</span> <span class="nav-text">修改Shadowsocks-Libev服务类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%AF%E5%8A%A8Shadowsocks%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="nav-number">2.4.</span> <span class="nav-text">启动Shadowsocks客户端</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%90%86%E5%8F%AF%E7%94%A8%E6%80%A7"><span class="nav-number">2.5.</span> <span class="nav-text">验证代理可用性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">3.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -868,9 +831,9 @@ if (document.querySelectorAll('pre.mermaid').length) {
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://bluemap1e.github.io/2024/09/28/%E5%9F%BA%E4%BA%8ETwine-SugarCube%E7%9A%84%E4%BA%92%E5%8A%A8%E6%96%87%E6%B8%B8%E5%88%B6%E4%BD%9C%EF%BC%881%EF%BC%89%E7%AE%80%E4%BB%8B%E4%B8%8E%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/";
-    this.page.identifier = "2024/09/28/基于Twine-SugarCube的互动文游制作（1）简介与环境搭建/";
-    this.page.title = "基于Twine-SugarCube的互动文游制作（1） 简介与环境搭建";
+    this.page.url = "https://bluemap1e.github.io/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/";
+    this.page.identifier = "2025/09/06/在Ubuntu上部署Shadowsocks-Libev客户端/";
+    this.page.title = "在Ubuntu上部署Shadowsocks-Libev客户端";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
