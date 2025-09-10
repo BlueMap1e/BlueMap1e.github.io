@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2025-09-06T05:02:27.145Z</updated>
+  <updated>2025-09-10T17:07:01.199Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>简单修复Windows 11任务栏图标丢失问题</title>
+    <link href="https://bluemap1e.github.io/2025/09/11/%E7%AE%80%E5%8D%95%E4%BF%AE%E5%A4%8DWindows-11%E4%BB%BB%E5%8A%A1%E6%A0%8F%E5%9B%BE%E6%A0%87%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98/"/>
+    <id>https://bluemap1e.github.io/2025/09/11/%E7%AE%80%E5%8D%95%E4%BF%AE%E5%A4%8DWindows-11%E4%BB%BB%E5%8A%A1%E6%A0%8F%E5%9B%BE%E6%A0%87%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98/</id>
+    <published>2025-09-10T16:39:03.000Z</published>
+    <updated>2025-09-10T17:07:01.199Z</updated>
+    
+    
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Windows任务栏图标丢失，也就是一个应用程序打开后，它的任务栏图标变为一个白色的文件图标，类似于Windows面对未知类型或未指定打开方式的文件时的那个图标，这似乎是个老问题了。我记得从Win 7就见过，而Win 10和Win 11似乎反复发生。&lt;/p&gt;
+&lt;p&gt;之前一直都是忍受这个问题，而现在决定一探究竟了，发现解决方法并不复杂。本文简单讲讲如何通过简单的命令行操作或者是编写一个批处理文件的方式，快速处理任务栏图标丢失的问题。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/categories/Tech/Windows/"/>
+    
+    
+    <category term="Windows" scheme="https://bluemap1e.github.io/tags/Windows/"/>
+    
+  </entry>
   
   <entry>
     <title>在Ubuntu上部署Shadowsocks-Libev客户端</title>
@@ -513,31 +535,6 @@
     <category term="Network" scheme="https://bluemap1e.github.io/tags/Network/"/>
     
     <category term="Windows" scheme="https://bluemap1e.github.io/tags/Windows/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
-    <link href="https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/"/>
-    <id>https://bluemap1e.github.io/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</id>
-    <published>2023-11-08T08:33:53.000Z</published>
-    <updated>2024-09-30T09:33:13.203Z</updated>
-    
-    
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;一篇简单的OpenSSL 对称加密使用经验，偶尔更新。&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Tech" scheme="https://bluemap1e.github.io/categories/Tech/"/>
-    
-    <category term="Crypto" scheme="https://bluemap1e.github.io/categories/Tech/Crypto/"/>
-    
-    
-    <category term="OpenSSL" scheme="https://bluemap1e.github.io/tags/OpenSSL/"/>
-    
-    <category term="Crypto" scheme="https://bluemap1e.github.io/tags/Crypto/"/>
-    
-    <category term="Linux" scheme="https://bluemap1e.github.io/tags/Linux/"/>
     
   </entry>
   
