@@ -6,7 +6,7 @@
   <link href="https://bluemap1e.github.io/atom.xml" rel="self"/>
   
   <link href="https://bluemap1e.github.io/"/>
-  <updated>2025-11-25T08:12:59.168Z</updated>
+  <updated>2025-11-25T08:23:59.112Z</updated>
   <id>https://bluemap1e.github.io/</id>
   
   <author>
@@ -21,16 +21,10 @@
     <link href="https://bluemap1e.github.io/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
     <id>https://bluemap1e.github.io/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/</id>
     <published>2025-11-25T07:41:46.000Z</published>
-    <updated>2025-11-25T08:12:59.168Z</updated>
+    <updated>2025-11-25T08:23:59.112Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要介绍如何在Debian 12上搭建Shadowsocks-Rust</summary>
-        
-      
+    <summary type="html">&lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;本文主要介绍如何在Debian 12上搭建Shadowsocks-Rust (AEAD-2022)服务器。此教程应当大致也适用于Ubuntu操作系统的VPS。&lt;/p&gt;</summary>
     
     
     

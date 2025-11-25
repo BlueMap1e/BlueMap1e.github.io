@@ -1,6 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>OpenSSL CLI 散列函数 个人使用经验</title>
+    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
+
+<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
+
+<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
+<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
+<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
+<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
+<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
+<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
+<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
+<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
+<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
+<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
+<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
+<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
+<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
+<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
+<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
+<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
+<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
+<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
+<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
+<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
+<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
+<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
+<hr>
+<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
+
+<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
+<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>和</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它们的输出一样：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
+
+<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
+
+<p>可以尝试把它输出到文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
+
+<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
+<p>例如，这是默认的SHAKE-128：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>它的输出为128位：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
+<p>例如，将输出调节为24字节（192位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
+
+<p>将输出调节为32字节（256位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
+
+<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Crypto</category>
+      </categories>
+      <tags>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>OpenSSL CLI 对称加密算法 个人使用经验</title>
     <url>/2023/11/08/OpenSSL-CLI-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 对称加密使用经验，偶尔更新。</p>
@@ -288,236 +415,6 @@
       </tags>
   </entry>
   <entry>
-    <title>OpenSSL CLI 密钥对生成工具 个人使用经验</title>
-    <url>/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: genpkey [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"> -paramfile infile   Parameters file</span><br><span class="line"> -algorithm val      The public key algorithm</span><br><span class="line"> -quiet              Do not output status <span class="keyword">while</span> generating keys</span><br><span class="line"> -pkeyopt val        Set the public key algorithm option as opt:value</span><br><span class="line"> -config infile      Load a configuration file (this may load modules)</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -outform PEM|DER    output format (DER or PEM)</span><br><span class="line"> -pass val           Output file pass phrase <span class="built_in">source</span></span><br><span class="line"> -genparam           Generate parameters, not key</span><br><span class="line"> -text               Print the <span class="keyword">in</span> text</span><br><span class="line"> -*                  Cipher to use to encrypt the key</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line">Order of options may be important!  See the documentation.</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="简单的生成密钥对指令"><a href="#简单的生成密钥对指令" class="headerlink" title="简单的生成密钥对指令"></a>简单的生成密钥对指令</h2><hr>
-<h3 id="私钥生成"><a href="#私钥生成" class="headerlink" title="私钥生成"></a>私钥生成</h3><p>为了生成一个密钥对，至少需要指定一个算法，指定输出文件的名称。</p>
-<p>例如以下命令，它将会生成一个Ed25519私钥文件，文件名是<code>private-key-Ed25519.pem</code>：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm Ed25519 -out private-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="公钥提取"><a href="#公钥提取" class="headerlink" title="公钥提取"></a>公钥提取</h3><p>可以从私钥文件中提取公钥。</p>
-<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>私钥文件中提取对应的Ed25519公钥文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -pubout -out public-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="查看公钥与私钥内容"><a href="#查看公钥与私钥内容" class="headerlink" title="查看公钥与私钥内容"></a>查看公钥与私钥内容</h3><p>可以用<code>pkey</code>指令访问OpenSSL的私钥文件，可以输出私钥、公钥的算法与内容：</p>
-<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>文件中读取算法、私钥内容、公钥内容，并显示在屏幕上：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -text -noout</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">ED25519 Private-Key:</span><br><span class="line">priv:</span><br><span class="line">    ea:f7:<span class="number">04</span>:a2:<span class="number">20</span>:b6:e8:<span class="number">65</span>:<span class="number">40</span>:<span class="number">65</span>:ad:<span class="number">44</span>:df:b4:<span class="number">9</span>f:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">9</span>b:<span class="number">6</span>c:b6:<span class="number">8</span>d:<span class="number">92</span>:<span class="number">66</span>:a9:<span class="number">73</span>:<span class="number">96</span>:cb:ae:aa:bd:<span class="number">52</span>:</span><br><span class="line">    <span class="number">28</span>:<span class="number">69</span></span><br><span class="line">pub:</span><br><span class="line">    <span class="number">42</span>:a3:<span class="number">68</span>:<span class="number">18</span>:<span class="number">8</span>e:df:<span class="number">3</span>e:<span class="number">0</span>c:c0:<span class="number">49</span>:<span class="number">29</span>:ef:e3:<span class="number">27</span>:c7:</span><br><span class="line">    <span class="number">31</span>:<span class="number">75</span>:b1:<span class="number">39</span>:<span class="number">43</span>:f4:<span class="number">26</span>:<span class="number">2</span>c:<span class="number">38</span>:<span class="number">07</span>:d4:d9:<span class="number">43</span>:e1:a1:</span><br><span class="line">    <span class="number">70</span>:<span class="number">45</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
-<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定引擎，通常没必要（实则我也不会）</p>
-<hr>
-<h3 id="paramfile"><a href="#paramfile" class="headerlink" title="-paramfile"></a>-paramfile</h3><p>输入参数文件</p>
-<hr>
-<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="-algorithm"></a>-algorithm</h3><p>指定算法，目前支持的算法有<code>RSA</code>, <code>RSA-PSS</code>, <code>EC</code>, <code>X25519</code>, <code>X448</code>, <code>Ed25519</code>, <code>Ed448</code>。（版本<code>3.1.3</code>）</p>
-<p>举个例子，生成RSA-2048私钥（这里不用指定参数是因为RSA默认2048位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="quiet"><a href="#quiet" class="headerlink" title="-quiet"></a>-quiet</h3><p>生成密钥时不输出信息，例如熵池等等。</p>
-<hr>
-<h3 id="pkeyopt"><a href="#pkeyopt" class="headerlink" title="-pkeyopt"></a>-pkeyopt</h3><p>修改算法的安全参数，这里很难一一列举，具体可以去看OpenSSL的文档：<a href="https://www.openssl.org/docs/manmaster/man1/openssl-genpkey.html#KEY-GENERATION-OPTIONS">&#x2F;docs&#x2F;manmaster&#x2F;man1&#x2F;openssl-genpkey.html</a></p>
-<p>安全参数是否可用需要根据选择的算法来判断。</p>
-<p>例如，这一串命令可以生成一个RSA-4096私钥：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out RSA-4096-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="config"><a href="#config" class="headerlink" title="-config"></a>-config</h3><p>外部导入配置文件，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-4096-Private-Key.pem -config my-config.cnf</span><br></pre></td></tr></table></figure>
-
-<p>Config文件，我个人还没弄清楚怎么写，这就不做误导性示范了。</p>
-<hr>
-<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
-<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文件名，例如输出为<code>RSA-2048-Private-Key.pem</code>:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="outform"><a href="#outform" class="headerlink" title="-outform"></a>-outform</h3><p>指定输出文件格式，支持两种格式——<code>PEM</code>和<code>DER</code></p>
-<p>**PEM(Privacy Enhanced Mail)**：可读的文本格式，包括边界标记、数据类型，编码为Base64。</p>
-<p>**DER(Distinguished Encoding Rules)**：不可读的二进制格式，格式紧凑，无边界标记。</p>
-<p>通常而言，为了提高兼容性和可读性，PEM是常见的选择，也是默认选项。</p>
-<p>如果要以DER格式输出文件，一个例子如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -outform DER -out RSA-2048-Private-Key.der</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="pass"><a href="#pass" class="headerlink" title="-pass"></a>-pass</h3><p>类似于对称加密的密钥，可以通过各种方式指定输出密钥文件的密码短语（Pass Phrase），例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm X25519 -out X25519-Private-Key.pem -pass pass:your_password</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="genparam"><a href="#genparam" class="headerlink" title="-genparam"></a>-genparam</h3><p>只生成参数而不生成密钥，此时<code>genpkey</code>指令可以兼容更多的算法，其中额外的有<code>DH</code>，<code>DSA</code>：</p>
-<p>例如，生成DSA参数：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm DSA -genparam</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+.....+..+.......+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">...........................+.....+.+....+...................+.............+........+.......+........................+.+...........+.+.....+......+..............+.....................+...........+....+...+.+........+.....+...+..+..........+..+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">---<span class="attr">--BEGIN</span> DSA PARAMETERS-----</span><br><span class="line">MIICKAKCAQEAruL2N9/nisKseg6CFjB/mXNC0FFRTcnecvbF+<span class="number">9</span>eD6UepnH7mv0K1</span><br><span class="line">+RFL8ECrHGxlYgAkLA9MN+ZiQQ7BSE6qQt0CEGMkgIW6GFUPt6opupB5Ql+qmEBo</span><br><span class="line">uivQr44/VJKjC0vzli85I+UD2f24xrroqssAf4n9B4t22Bg6dxV2AGAfDLdzsNwQ</span><br><span class="line">GITaruJmEj6Xkgyx3rx3KTvQfLtiHdMUJ9rBs5JonomNrEuX5kjf55chFub9IYDF</span><br><span class="line">Vpjsp57hvEJmDU6kQKihkax69V+NmF4T8cs3kAukYfLn/VubbF+FOEZuzQQsAO5n</span><br><span class="line">tGCedKsKmXCtxCgCqZu+FLIxil+A0w36OQIdAI4/RI2+Im2ZhBKGdtJ2Y8a9ndsU</span><br><span class="line">w5bAokSt+tECggEAEct/e8totsdL3RkD+qMq31Gk58yZoda876Uej6YJYYgt7RwB</span><br><span class="line">CCzOEYP/Hf/ditPSpJ4kFc8/qFp0nHAq4pctZKtywVE3T2XVwdzgBF0uLwIb505G</span><br><span class="line">o92Gcb/eEir8mBxSOvVT6X1hmZsnwHehWyasYYcNrjdorH9UvQ9VwAE5nnkK/HLH</span><br><span class="line">KxQ9P7MAdc6dGYxjFjW36ljlRCUvvNeeVPc+J5a0/JJxfm19YLatWaCnpfp1nHes</span><br><span class="line">YsQ3QdB6LKWd7OFwP6lw+OEKWRc3XhczfUBzOBPqj/QBUfHCQX6PgUJyLgiZTD/N</span><br><span class="line">YGOQzq0L9umxt/lrDQbrIKIuDLyWxe8gVyQ41g==</span><br><span class="line">---<span class="attr">--END</span> DSA PARAMETERS-----</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="text"><a href="#text" class="headerlink" title="-text"></a>-text</h3><p>把整个算法的过程结果直接全部输出到stdout，也就是打印到屏幕上，其中包括各种中间参数和密钥例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -text</span><br></pre></td></tr></table></figure>
-
-<p>一个示例输出如下：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+...+..........+..+.........+....+...+++++++++++++++++++++++++++++++++++++++*.+.+............+...+......+.....+++++++++++++++++++++++++++++++++++++++*....+...........+...+.........+.......+...........+.........+...+.+..+...............+...+....+.....+.+.....+....+...........+......+.+.....+...+............+.........+....+..+...+......+....+..+....+.....+...+...+.......+......+......+...+......+...........+....+.........+..+......+.........+.............+..+.+...+......+.....+...+......+.+......+..+...+...+.......+..+.+......+......+........+.+......+............+......+.........+......+..............+...+.......+......+..........................++++++</span><br><span class="line">..........+++++++++++++++++++++++++++++++++++++++*...+.............................+...+...+....+......+.....+.............+.....+..........+..+...+.+...+...+.....+.......+++++++++++++++++++++++++++++++++++++++*...............+....+........................+.....+.+.....+.......+..+.............+.....+....+......+........+.......+...............+.....+.........+...+.+..++++++</span><br><span class="line">---<span class="attr">--BEGIN</span> PRIVATE KEY-----</span><br><span class="line">MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7n8puayHyAh0</span><br><span class="line">lU6/QfL9XrnyXcMKs4onmdPntVP2UO17jHvYXStNKhLKJkZKEta0yEKihdZdOzmN</span><br><span class="line">AJd2Er5uVWOixQAwphFurajknfEerfe6dOKiTXObWNjgwcHw/xUOT7FKNop8h5DG</span><br><span class="line">X56OwHzWQMma9fWarqxEYR36b8pIno/D7+rKZxrZaJObWoexu/KQT0JCusW1qgTM</span><br><span class="line">i3XFXw4/Lzv/joP/knoxmAIzGb5+YNRAL9TIZioA3AwgiRJrgQNdB9HQTijZplbJ</span><br><span class="line"><span class="number">705</span>eEwVoUSM1AddlS+wV2uhVSSThM/i87MQtSbsvfkUZauYLioJSfxaGWW4Y3Ybe</span><br><span class="line"><span class="number">7</span>ej4ELufAgMBAAECggEAG44bi/DPZa6JQosAN05Ilm+XISOOJva2OFNtL0Ryl6EH</span><br><span class="line">u7lkkhxQbdvJCNRJbte30fFAfUYbe0Wn04ofKpFQIqsm/<span class="number">2</span>vm5giQm18UR4ZDyF9U</span><br><span class="line">I0Phm9vKWbKaXb79JZRWGOmC37oZyMpMIS+Dq4FWW5RhzjcEguCvFNBKlYkak9GV</span><br><span class="line">eKYWdNLA0au4AXRqVmaI7YmGxakHSpVHPIGULk33dlll3/iLNQS3YH9vqvoe3GK8</span><br><span class="line"><span class="number">87</span>ekSAAWTsOZUiJ0MAWMhfkfEDjG3zFq632rg2S+m4e2J1pGVcXPTuHjTSdacWCM</span><br><span class="line">DNekPsKEBByMi00aZtcogxO6zHm121EoHPulcK26oQKBgQDYRq9JQFOCk6ZpeCeb</span><br><span class="line">U6slj+QcAnc95XaXtdg1Kh17IISTLJD1p3tSnbziBWmmugpL9P8tJC63ZcdadYqn</span><br><span class="line">cMzYctNSgMuOgNWKBtXPH4qxWJ8JL8I4Ft8NOiajfVonSjGz+emNzWnNUdDYx5PP</span><br><span class="line">w2WkD82mbAOOUu81Uj4h5WWi+QKBgQDH9avwENMi60WARd1vb+jfS78yuSf3zTe9</span><br><span class="line">s5XgSr2hAHjX0xODAOAEiX253Ube83n9oEkhHMKTcQfzrIgoJ3G5UZ6Pd43tiqrp</span><br><span class="line">ejygyxlOpH+grSiwHc7i3WZWx31kjBCmoFgCQUBfH4UUYzwOqvZgoC3G4lVvYug/</span><br><span class="line"><span class="number">33S</span>RqXZhVwKBgHI8I6nVSEbYJjXfOUxZzTRx5FLHGqSe5x0K98BdFmVKr7vs9kRK</span><br><span class="line">ymDA4Fuh8EQYUAf+yCnXyrUkFUA6hZobgpdxTx1s2hfTBPd61MQqLN+vp5D6oONv</span><br><span class="line">cTFTXcVNGKlYDxi5EBvOO+wvItjd0b0TwEP/<span class="number">9</span>OfKdbZfJ+pKHndY625BAoGAIlif</span><br><span class="line">fO/W5GOXH45gl7iYPmqrX9IP/<span class="selector-tag">G</span>+CiJIlR05vPg1vtFqsOk9XK1BWiStp9ffKV3dF</span><br><span class="line">uGtRPLQokoFrLcKAtT1AyBHYDhpIeywk59Wa9jgpN/cmSwIDvFIdNwCzGCc64PQf</span><br><span class="line">ydtdbDlkyXi2IyrYgQZidov/<span class="number">8s</span>8BZ59BTZfXHqcCgYEAtciV66BhhLSJ0P2hn453</span><br><span class="line">Q2/XvHXU68CKhl/<span class="number">8s</span>G8CyrPxO6Wk3oCIeZPhV0k8HAoU00r1L+j4uwY43/WDJtR5</span><br><span class="line">ljEn5xndTNmd0WWfaV1BruM7ql0I/URwpE6D6rsFq4SFHnKkVsB1Hb6d7YxRt+ct</span><br><span class="line">kjGDW1ZkJzDWKlf7Lf9oKqc=</span><br><span class="line">---<span class="attr">--END</span> PRIVATE KEY-----</span><br><span class="line">Private-Key: (<span class="number">2048</span> bit, <span class="number">2</span> primes)</span><br><span class="line">modulus:</span><br><span class="line">    <span class="number">00</span>:a8:ee:<span class="number">7</span>f:<span class="number">29</span>:b9:ac:<span class="number">87</span>:c8:<span class="number">08</span>:<span class="number">74</span>:<span class="number">95</span>:<span class="number">4</span>e:bf:<span class="number">41</span>:</span><br><span class="line">    f2:fd:<span class="number">5</span>e:b9:f2:<span class="number">5</span>d:c3:<span class="number">0</span>a:b3:<span class="number">8</span>a:<span class="number">27</span>:<span class="number">99</span>:d3:e7:b5:</span><br><span class="line">    <span class="number">53</span>:f6:<span class="number">50</span>:ed:<span class="number">7</span>b:<span class="number">8</span>c:<span class="number">7</span>b:d8:<span class="number">5</span>d:<span class="number">2</span>b:<span class="number">4</span>d:<span class="number">2</span>a:<span class="number">12</span>:ca:<span class="number">26</span>:</span><br><span class="line">    <span class="number">46</span>:<span class="number">4</span>a:<span class="number">12</span>:d6:b4:c8:<span class="number">42</span>:a2:<span class="number">85</span>:d6:<span class="number">5</span>d:<span class="number">3</span>b:<span class="number">39</span>:<span class="number">8</span>d:<span class="number">00</span>:</span><br><span class="line">    <span class="number">97</span>:<span class="number">76</span>:<span class="number">12</span>:be:<span class="number">6</span>e:<span class="number">55</span>:<span class="number">63</span>:a2:c5:<span class="number">00</span>:<span class="number">30</span>:a6:<span class="number">11</span>:<span class="number">6</span>e:ad:</span><br><span class="line">    a8:e4:<span class="number">9</span>d:f1:<span class="number">1</span>e:ad:f7:ba:<span class="number">74</span>:e2:a2:<span class="number">4</span>d:<span class="number">73</span>:<span class="number">9</span>b:<span class="number">58</span>:</span><br><span class="line">    d8:e0:c1:c1:f0:ff:<span class="number">15</span>:<span class="number">0</span>e:<span class="number">4</span>f:b1:<span class="number">4</span>a:<span class="number">36</span>:<span class="number">8</span>a:<span class="number">7</span>c:<span class="number">87</span>:</span><br><span class="line">    <span class="number">90</span>:c6:<span class="number">5</span>f:<span class="number">9</span>e:<span class="number">8</span>e:c0:<span class="number">7</span>c:d6:<span class="number">40</span>:c9:<span class="number">9</span>a:f5:f5:<span class="number">9</span>a:ae:</span><br><span class="line">    ac:<span class="number">44</span>:<span class="number">61</span>:<span class="number">1</span>d:fa:<span class="number">6</span>f:ca:<span class="number">48</span>:<span class="number">9</span>e:<span class="number">8</span>f:c3:ef:ea:ca:<span class="number">67</span>:</span><br><span class="line">    <span class="number">1</span>a:d9:<span class="number">68</span>:<span class="number">93</span>:<span class="number">9</span>b:<span class="number">5</span>a:<span class="number">87</span>:b1:bb:f2:<span class="number">90</span>:<span class="number">4</span>f:<span class="number">42</span>:<span class="number">42</span>:ba:</span><br><span class="line">    c5:b5:aa:<span class="number">04</span>:cc:<span class="number">8</span>b:<span class="number">75</span>:c5:<span class="number">5</span>f:<span class="number">0</span>e:<span class="number">3</span>f:<span class="number">2</span>f:<span class="number">3</span>b:ff:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">83</span>:ff:<span class="number">92</span>:<span class="number">7</span>a:<span class="number">31</span>:<span class="number">98</span>:<span class="number">02</span>:<span class="number">33</span>:<span class="number">19</span>:be:<span class="number">7</span>e:<span class="number">60</span>:d4:<span class="number">40</span>:<span class="number">2</span>f:</span><br><span class="line">    d4:c8:<span class="number">66</span>:<span class="number">2</span>a:<span class="number">00</span>:dc:<span class="number">0</span>c:<span class="number">20</span>:<span class="number">89</span>:<span class="number">12</span>:<span class="number">6</span>b:<span class="number">81</span>:<span class="number">03</span>:<span class="number">5</span>d:<span class="number">07</span>:</span><br><span class="line">    d1:d0:<span class="number">4</span>e:<span class="number">28</span>:d9:a6:<span class="number">56</span>:c9:ef:<span class="number">4</span>e:<span class="number">5</span>e:<span class="number">13</span>:<span class="number">05</span>:<span class="number">68</span>:<span class="number">51</span>:</span><br><span class="line">    <span class="number">23</span>:<span class="number">35</span>:<span class="number">01</span>:d7:<span class="number">65</span>:<span class="number">4</span>b:ec:<span class="number">15</span>:da:e8:<span class="number">55</span>:<span class="number">49</span>:<span class="number">24</span>:e1:<span class="number">33</span>:</span><br><span class="line">    f8:bc:ec:c4:<span class="number">2</span>d:<span class="number">49</span>:bb:<span class="number">2</span>f:<span class="number">7</span>e:<span class="number">45</span>:<span class="number">19</span>:<span class="number">6</span>a:e6:<span class="number">0</span>b:<span class="number">8</span>a:</span><br><span class="line">    <span class="number">82</span>:<span class="number">52</span>:<span class="number">7</span>f:<span class="number">16</span>:<span class="number">86</span>:<span class="number">59</span>:<span class="number">6</span>e:<span class="number">18</span>:dd:<span class="number">86</span>:de:ed:e8:f8:<span class="number">10</span>:</span><br><span class="line">    bb:<span class="number">9</span>f</span><br><span class="line">publicExponent: <span class="number">65537</span> (<span class="number">0</span>x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    <span class="number">1</span>b:<span class="number">8</span>e:<span class="number">1</span>b:<span class="number">8</span>b:f0:cf:<span class="number">65</span>:ae:<span class="number">89</span>:<span class="number">42</span>:<span class="number">8</span>b:<span class="number">00</span>:<span class="number">37</span>:<span class="number">4</span>e:<span class="number">48</span>:</span><br><span class="line">    <span class="number">96</span>:<span class="number">6</span>f:<span class="number">97</span>:<span class="number">21</span>:<span class="number">23</span>:<span class="number">8</span>e:<span class="number">26</span>:f6:b6:<span class="number">38</span>:<span class="number">53</span>:<span class="number">6</span>d:<span class="number">2</span>f:<span class="number">44</span>:<span class="number">72</span>:</span><br><span class="line">    <span class="number">97</span>:a1:<span class="number">07</span>:bb:b9:<span class="number">64</span>:<span class="number">92</span>:<span class="number">1</span>c:<span class="number">50</span>:<span class="number">6</span>d:db:c9:<span class="number">08</span>:d4:<span class="number">49</span>:</span><br><span class="line">    <span class="number">6</span>e:d7:b7:d1:f1:<span class="number">40</span>:<span class="number">7</span>d:<span class="number">46</span>:<span class="number">1</span>b:<span class="number">7</span>b:<span class="number">45</span>:a7:d3:<span class="number">8</span>a:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">2</span>a:<span class="number">91</span>:<span class="number">50</span>:<span class="number">22</span>:ab:<span class="number">26</span>:ff:<span class="number">6</span>b:e6:e6:<span class="number">08</span>:<span class="number">90</span>:<span class="number">9</span>b:<span class="number">5</span>f:<span class="number">14</span>:</span><br><span class="line">    <span class="number">47</span>:<span class="number">86</span>:<span class="number">43</span>:c8:<span class="number">5</span>f:<span class="number">54</span>:<span class="number">23</span>:<span class="number">43</span>:e1:<span class="number">9</span>b:db:ca:<span class="number">59</span>:b2:<span class="number">9</span>a:</span><br><span class="line">    <span class="number">5</span>d:be:fd:<span class="number">25</span>:<span class="number">94</span>:<span class="number">56</span>:<span class="number">18</span>:e9:<span class="number">82</span>:df:ba:<span class="number">19</span>:c8:ca:<span class="number">4</span>c:</span><br><span class="line">    <span class="number">21</span>:<span class="number">2</span>f:<span class="number">83</span>:ab:<span class="number">81</span>:<span class="number">56</span>:<span class="number">5</span>b:<span class="number">94</span>:<span class="number">61</span>:ce:<span class="number">37</span>:<span class="number">04</span>:<span class="number">82</span>:e0:af:</span><br><span class="line">    <span class="number">14</span>:d0:<span class="number">4</span>a:<span class="number">95</span>:<span class="number">89</span>:<span class="number">1</span>a:<span class="number">93</span>:d1:<span class="number">95</span>:<span class="number">78</span>:a6:<span class="number">16</span>:<span class="number">74</span>:d2:c0:</span><br><span class="line">    d1:ab:b8:<span class="number">01</span>:<span class="number">74</span>:<span class="number">6</span>a:<span class="number">56</span>:<span class="number">66</span>:<span class="number">88</span>:ed:<span class="number">89</span>:<span class="number">86</span>:c5:a9:<span class="number">07</span>:</span><br><span class="line">    <span class="number">4</span>a:<span class="number">95</span>:<span class="number">47</span>:<span class="number">3</span>c:<span class="number">81</span>:<span class="number">94</span>:<span class="number">2</span>e:<span class="number">4</span>d:f7:<span class="number">76</span>:<span class="number">59</span>:<span class="number">65</span>:df:f8:<span class="number">8</span>b:</span><br><span class="line">    <span class="number">35</span>:<span class="number">04</span>:b7:<span class="number">60</span>:<span class="number">7</span>f:<span class="number">6</span>f:aa:fa:<span class="number">1</span>e:dc:<span class="number">62</span>:bc:f3:b7:a4:</span><br><span class="line">    <span class="number">48</span>:<span class="number">00</span>:<span class="number">16</span>:<span class="number">4</span>e:c3:<span class="number">99</span>:<span class="number">52</span>:<span class="number">22</span>:<span class="number">74</span>:<span class="number">30</span>:<span class="number">05</span>:<span class="number">8</span>c:<span class="number">85</span>:f9:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">10</span>:<span class="number">38</span>:c6:df:<span class="number">31</span>:<span class="number">6</span>a:eb:<span class="number">7</span>d:ab:<span class="number">83</span>:<span class="number">64</span>:be:<span class="number">9</span>b:<span class="number">87</span>:b6:</span><br><span class="line">    <span class="number">27</span>:<span class="number">5</span>a:<span class="number">46</span>:<span class="number">55</span>:c5:cf:<span class="number">4</span>e:e1:e3:<span class="number">4</span>d:<span class="number">27</span>:<span class="number">5</span>a:<span class="number">71</span>:<span class="number">60</span>:<span class="number">8</span>c:</span><br><span class="line">    <span class="number">0</span>c:d7:a4:<span class="number">3</span>e:c2:<span class="number">84</span>:<span class="number">04</span>:<span class="number">1</span>c:<span class="number">8</span>c:<span class="number">8</span>b:<span class="number">4</span>d:<span class="number">1</span>a:<span class="number">66</span>:d7:<span class="number">28</span>:</span><br><span class="line">    <span class="number">83</span>:<span class="number">13</span>:ba:cc:<span class="number">79</span>:b5:db:<span class="number">51</span>:<span class="number">28</span>:<span class="number">1</span>c:fb:a5:<span class="number">70</span>:ad:ba:</span><br><span class="line">    a1</span><br><span class="line">prime1:</span><br><span class="line">    <span class="number">00</span>:d8:<span class="number">46</span>:af:<span class="number">49</span>:<span class="number">40</span>:<span class="number">53</span>:<span class="number">82</span>:<span class="number">93</span>:a6:<span class="number">69</span>:<span class="number">78</span>:<span class="number">27</span>:<span class="number">9</span>b:<span class="number">53</span>:</span><br><span class="line">    ab:<span class="number">25</span>:<span class="number">8</span>f:e4:<span class="number">1</span>c:<span class="number">02</span>:<span class="number">77</span>:<span class="number">3</span>d:e5:<span class="number">76</span>:<span class="number">97</span>:b5:d8:<span class="number">35</span>:<span class="number">2</span>a:</span><br><span class="line">    <span class="number">1</span>d:<span class="number">7</span>b:<span class="number">20</span>:<span class="number">84</span>:<span class="number">93</span>:<span class="number">2</span>c:<span class="number">90</span>:f5:a7:<span class="number">7</span>b:<span class="number">52</span>:<span class="number">9</span>d:bc:e2:<span class="number">05</span>:</span><br><span class="line">    <span class="number">69</span>:a6:ba:<span class="number">0</span>a:<span class="number">4</span>b:f4:ff:<span class="number">2</span>d:<span class="number">24</span>:<span class="number">2</span>e:b7:<span class="number">65</span>:c7:<span class="number">5</span>a:<span class="number">75</span>:</span><br><span class="line">    <span class="number">8</span>a:a7:<span class="number">70</span>:cc:d8:<span class="number">72</span>:d3:<span class="number">52</span>:<span class="number">80</span>:cb:<span class="number">8</span>e:<span class="number">80</span>:d5:<span class="number">8</span>a:<span class="number">06</span>:</span><br><span class="line">    d5:cf:<span class="number">1</span>f:<span class="number">8</span>a:b1:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">09</span>:<span class="number">2</span>f:c2:<span class="number">38</span>:<span class="number">16</span>:df:<span class="number">0</span>d:<span class="number">3</span>a:</span><br><span class="line">    <span class="number">26</span>:a3:<span class="number">7</span>d:<span class="number">5</span>a:<span class="number">27</span>:<span class="number">4</span>a:<span class="number">31</span>:b3:f9:e9:<span class="number">8</span>d:cd:<span class="number">69</span>:cd:<span class="number">51</span>:</span><br><span class="line">    d0:d8:c7:<span class="number">93</span>:cf:c3:<span class="number">65</span>:a4:<span class="number">0</span>f:cd:a6:<span class="number">6</span>c:<span class="number">03</span>:<span class="number">8</span>e:<span class="number">52</span>:</span><br><span class="line">    ef:<span class="number">35</span>:<span class="number">52</span>:<span class="number">3</span>e:<span class="number">21</span>:e5:<span class="number">65</span>:a2:f9</span><br><span class="line">prime2:</span><br><span class="line">    <span class="number">00</span>:c7:f5:ab:f0:<span class="number">10</span>:d3:<span class="number">22</span>:eb:<span class="number">45</span>:<span class="number">80</span>:<span class="number">45</span>:dd:<span class="number">6</span>f:<span class="number">6</span>f:</span><br><span class="line">    e8:df:<span class="number">4</span>b:bf:<span class="number">32</span>:b9:<span class="number">27</span>:f7:cd:<span class="number">37</span>:bd:b3:<span class="number">95</span>:e0:<span class="number">4</span>a:</span><br><span class="line">    bd:a1:<span class="number">00</span>:<span class="number">78</span>:d7:d3:<span class="number">13</span>:<span class="number">83</span>:<span class="number">00</span>:e0:<span class="number">04</span>:<span class="number">89</span>:<span class="number">7</span>d:b9:dd:</span><br><span class="line">    <span class="number">46</span>:de:f3:<span class="number">79</span>:fd:a0:<span class="number">49</span>:<span class="number">21</span>:<span class="number">1</span>c:c2:<span class="number">93</span>:<span class="number">71</span>:<span class="number">07</span>:f3:ac:</span><br><span class="line">    <span class="number">88</span>:<span class="number">28</span>:<span class="number">27</span>:<span class="number">71</span>:b9:<span class="number">51</span>:<span class="number">9</span>e:<span class="number">8</span>f:<span class="number">77</span>:<span class="number">8</span>d:ed:<span class="number">8</span>a:aa:e9:<span class="number">7</span>a:</span><br><span class="line">    <span class="number">3</span>c:a0:cb:<span class="number">19</span>:<span class="number">4</span>e:a4:<span class="number">7</span>f:a0:ad:<span class="number">28</span>:b0:<span class="number">1</span>d:ce:e2:dd:</span><br><span class="line">    <span class="number">66</span>:<span class="number">56</span>:c7:<span class="number">7</span>d:<span class="number">64</span>:<span class="number">8</span>c:<span class="number">10</span>:a6:a0:<span class="number">58</span>:<span class="number">02</span>:<span class="number">41</span>:<span class="number">40</span>:<span class="number">5</span>f:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">85</span>:<span class="number">14</span>:<span class="number">63</span>:<span class="number">3</span>c:<span class="number">0</span>e:aa:f6:<span class="number">60</span>:a0:<span class="number">2</span>d:c6:e2:<span class="number">55</span>:<span class="number">6</span>f:<span class="number">62</span>:</span><br><span class="line">    e8:<span class="number">3</span>f:df:<span class="number">74</span>:<span class="number">91</span>:a9:<span class="number">76</span>:<span class="number">61</span>:<span class="number">57</span></span><br><span class="line">exponent1:</span><br><span class="line">    <span class="number">72</span>:<span class="number">3</span>c:<span class="number">23</span>:a9:d5:<span class="number">48</span>:<span class="number">46</span>:d8:<span class="number">26</span>:<span class="number">35</span>:df:<span class="number">39</span>:<span class="number">4</span>c:<span class="number">59</span>:cd:</span><br><span class="line">    <span class="number">34</span>:<span class="number">71</span>:e4:<span class="number">52</span>:c7:<span class="number">1</span>a:a4:<span class="number">9</span>e:e7:<span class="number">1</span>d:<span class="number">0</span>a:f7:c0:<span class="number">5</span>d:<span class="number">16</span>:</span><br><span class="line">    <span class="number">65</span>:<span class="number">4</span>a:af:bb:ec:f6:<span class="number">44</span>:<span class="number">4</span>a:ca:<span class="number">60</span>:c0:e0:<span class="number">5</span>b:a1:f0:</span><br><span class="line">    <span class="number">44</span>:<span class="number">18</span>:<span class="number">50</span>:<span class="number">07</span>:fe:c8:<span class="number">29</span>:d7:ca:b5:<span class="number">24</span>:<span class="number">15</span>:<span class="number">40</span>:<span class="number">3</span>a:<span class="number">85</span>:</span><br><span class="line">    <span class="number">9</span>a:<span class="number">1</span>b:<span class="number">82</span>:<span class="number">97</span>:<span class="number">71</span>:<span class="number">4</span>f:<span class="number">1</span>d:<span class="number">6</span>c:da:<span class="number">17</span>:d3:<span class="number">04</span>:f7:<span class="number">7</span>a:d4:</span><br><span class="line">    c4:<span class="number">2</span>a:<span class="number">2</span>c:df:af:a7:<span class="number">90</span>:fa:a0:e3:<span class="number">6</span>f:<span class="number">71</span>:<span class="number">31</span>:<span class="number">53</span>:<span class="number">5</span>d:</span><br><span class="line">    c5:<span class="number">4</span>d:<span class="number">18</span>:a9:<span class="number">58</span>:<span class="number">0</span>f:<span class="number">18</span>:b9:<span class="number">10</span>:<span class="number">1</span>b:ce:<span class="number">3</span>b:ec:<span class="number">2</span>f:<span class="number">22</span>:</span><br><span class="line">    d8:dd:d1:bd:<span class="number">13</span>:c0:<span class="number">43</span>:ff:f4:e7:ca:<span class="number">75</span>:b6:<span class="number">5</span>f:<span class="number">27</span>:</span><br><span class="line">    ea:<span class="number">4</span>a:<span class="number">1</span>e:<span class="number">77</span>:<span class="number">58</span>:eb:<span class="number">6</span>e:<span class="number">41</span></span><br><span class="line">exponent2:</span><br><span class="line">    <span class="number">22</span>:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">7</span>c:ef:d6:e4:<span class="number">63</span>:<span class="number">97</span>:<span class="number">1</span>f:<span class="number">8</span>e:<span class="number">60</span>:<span class="number">97</span>:b8:<span class="number">98</span>:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">6</span>a:ab:<span class="number">5</span>f:d2:<span class="number">0</span>f:fc:<span class="number">6</span>f:<span class="number">82</span>:<span class="number">88</span>:<span class="number">92</span>:<span class="number">25</span>:<span class="number">47</span>:<span class="number">4</span>e:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">0</span>d:<span class="number">6</span>f:b4:<span class="number">5</span>a:ac:<span class="number">3</span>a:<span class="number">4</span>f:<span class="number">57</span>:<span class="number">2</span>b:<span class="number">50</span>:<span class="number">56</span>:<span class="number">89</span>:<span class="number">2</span>b:<span class="number">69</span>:</span><br><span class="line">    f5:f7:ca:<span class="number">57</span>:<span class="number">77</span>:<span class="number">45</span>:b8:<span class="number">6</span>b:<span class="number">51</span>:<span class="number">3</span>c:b4:<span class="number">28</span>:<span class="number">92</span>:<span class="number">81</span>:<span class="number">6</span>b:</span><br><span class="line">    <span class="number">2</span>d:c2:<span class="number">80</span>:b5:<span class="number">3</span>d:<span class="number">40</span>:c8:<span class="number">11</span>:d8:<span class="number">0</span>e:<span class="number">1</span>a:<span class="number">48</span>:<span class="number">7</span>b:<span class="number">2</span>c:<span class="number">24</span>:</span><br><span class="line">    e7:d5:<span class="number">9</span>a:f6:<span class="number">38</span>:<span class="number">29</span>:<span class="number">37</span>:f7:<span class="number">26</span>:<span class="number">4</span>b:<span class="number">02</span>:<span class="number">03</span>:bc:<span class="number">52</span>:<span class="number">1</span>d:</span><br><span class="line">    <span class="number">37</span>:<span class="number">00</span>:b3:<span class="number">18</span>:<span class="number">27</span>:<span class="number">3</span>a:e0:f4:<span class="number">1</span>f:c9:db:<span class="number">5</span>d:<span class="number">6</span>c:<span class="number">39</span>:<span class="number">64</span>:</span><br><span class="line">    c9:<span class="number">78</span>:b6:<span class="number">23</span>:<span class="number">2</span>a:d8:<span class="number">81</span>:<span class="number">06</span>:<span class="number">62</span>:<span class="number">76</span>:<span class="number">8</span>b:ff:f2:cf:<span class="number">01</span>:</span><br><span class="line">    <span class="number">67</span>:<span class="number">9</span>f:<span class="number">41</span>:<span class="number">4</span>d:<span class="number">97</span>:d7:<span class="number">1</span>e:a7</span><br><span class="line">coefficient:</span><br><span class="line">    <span class="number">00</span>:b5:c8:<span class="number">95</span>:eb:a0:<span class="number">61</span>:<span class="number">84</span>:b4:<span class="number">89</span>:d0:fd:a1:<span class="number">9</span>f:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">77</span>:<span class="number">43</span>:<span class="number">6</span>f:d7:bc:<span class="number">75</span>:d4:eb:c0:<span class="number">8</span>a:<span class="number">86</span>:<span class="number">5</span>f:fc:b0:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">02</span>:ca:b3:f1:<span class="number">3</span>b:a5:a4:de:<span class="number">80</span>:<span class="number">88</span>:<span class="number">79</span>:<span class="number">93</span>:e1:<span class="number">57</span>:<span class="number">49</span>:</span><br><span class="line">    <span class="number">3</span>c:<span class="number">1</span>c:<span class="number">0</span>a:<span class="number">14</span>:d3:<span class="number">4</span>a:f5:<span class="number">2</span>f:e8:f8:bb:<span class="number">06</span>:<span class="number">38</span>:df:f5:</span><br><span class="line">    <span class="number">83</span>:<span class="number">26</span>:d4:<span class="number">79</span>:<span class="number">96</span>:<span class="number">31</span>:<span class="number">27</span>:e7:<span class="number">19</span>:dd:<span class="number">4</span>c:d9:<span class="number">9</span>d:d1:<span class="number">65</span>:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">69</span>:<span class="number">5</span>d:<span class="number">41</span>:ae:e3:<span class="number">3</span>b:aa:<span class="number">5</span>d:<span class="number">08</span>:fd:<span class="number">44</span>:<span class="number">70</span>:a4:<span class="number">4</span>e:</span><br><span class="line">    <span class="number">83</span>:ea:bb:<span class="number">05</span>:ab:<span class="number">84</span>:<span class="number">85</span>:<span class="number">1</span>e:<span class="number">72</span>:a4:<span class="number">56</span>:c0:<span class="number">75</span>:<span class="number">1</span>d:be:</span><br><span class="line">    <span class="number">9</span>d:ed:<span class="number">8</span>c:<span class="number">51</span>:b7:e7:<span class="number">2</span>d:<span class="number">92</span>:<span class="number">31</span>:<span class="number">83</span>:<span class="number">5</span>b:<span class="number">56</span>:<span class="number">64</span>:<span class="number">27</span>:<span class="number">30</span>:</span><br><span class="line">    d6:<span class="number">2</span>a:<span class="number">57</span>:fb:<span class="number">2</span>d:ff:<span class="number">68</span>:<span class="number">2</span>a:a7</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id=""><a href="#" class="headerlink" title="-*"></a>-*</h3><p>这个指令的意思是可以自己指定用于保护密钥文件的对称加密算法，当然前提是当前版本的OpenSSL支持。</p>
-<p>例如，使用<code>AES-128-CTR</code>对这个密钥文件进行加密：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -AES-128-CTR -out RSA-2048-Encrypted-Private-Key.pem</span><br></pre></td></tr></table></figure>
-
-<hr>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>OpenSSL CLI 散列函数 个人使用经验</title>
-    <url>/2023/11/06/OpenSSL-CLI-%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL 散列使用经验，偶尔更新。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -h</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: dgst [options] [file...]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -list               List digests</span><br><span class="line"> -engine val         Use engine e, possibly a hardware device</span><br><span class="line"> -engine_impl        Also use engine given by -engine <span class="keyword">for</span> digest operations</span><br><span class="line"> -passin val         Input file pass phrase <span class="built_in">source</span></span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -c                  Print the digest with separating colons</span><br><span class="line"> -r                  Print the digest <span class="keyword">in</span> coreutils format</span><br><span class="line"> -out outfile        Output to filename rather than stdout</span><br><span class="line"> -keyform format     Key file format (ENGINE, other values ignored)</span><br><span class="line"> -hex                Print as hex dump</span><br><span class="line"> -binary             Print <span class="keyword">in</span> binary form</span><br><span class="line"> -xoflen +int        Output length <span class="keyword">for</span> XOF algorithms. To obtain the maximum security strength <span class="built_in">set</span> this to 32 (or greater) <span class="keyword">for</span> SHAKE128, and 64 (or greater) <span class="keyword">for</span> SHAKE256</span><br><span class="line"> -d                  Print debug info</span><br><span class="line"> -debug              Print debug info</span><br><span class="line"></span><br><span class="line">Signing options:</span><br><span class="line"> -sign val           Sign digest using private key</span><br><span class="line"> -verify val         Verify a signature using public key</span><br><span class="line"> -prverify val       Verify a signature using private key</span><br><span class="line"> -sigopt val         Signature parameter <span class="keyword">in</span> n:v form</span><br><span class="line"> -signature infile   File with signature to verify</span><br><span class="line"> -hmac val           Create hashed MAC with key</span><br><span class="line"> -mac val            Create MAC (not necessarily HMAC)</span><br><span class="line"> -macopt val         MAC algorithm parameters <span class="keyword">in</span> n:v form or key</span><br><span class="line"> -*                  Any supported digest</span><br><span class="line"> -fips-fingerprint   Compute HMAC with the key used <span class="keyword">in</span> OpenSSL-FIPS fingerprint</span><br><span class="line"></span><br><span class="line">Random state options:</span><br><span class="line"> -rand val           Load the given file(s) into the random number generator</span><br><span class="line"> -writerand outfile  Write random data to the specified file</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line"></span><br><span class="line">Parameters:</span><br><span class="line"> file                Files to digest (optional; default is stdin)</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="计算文件摘要"><a href="#计算文件摘要" class="headerlink" title="计算文件摘要"></a>计算文件摘要</h2><p>这是<code>openssl dgst</code>中最简单也是最常见的命令，例如计算一个文件的SHA-256摘要：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>此命令通过SHA-256散列算法计算当前工作目录下<code>_config.yml</code>文件的摘要，这是它的输出：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="列出散列算法"><a href="#列出散列算法" class="headerlink" title="列出散列算法"></a>列出散列算法</h2><p>OpenSSL可以使用以下指令列出其支持的散列算法，根据版本而异：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -list</span><br></pre></td></tr></table></figure>
-
-<p>个人使用的OpenSSL是3.1.2，它的输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Supported digests:</span><br><span class="line">-blake2b512                -blake2s256                -md4</span><br><span class="line">-md5                       -md5-sha1                  -mdc2</span><br><span class="line">-ripemd                    -ripemd160                 -rmd160</span><br><span class="line">-sha1                      -sha224                    -sha256</span><br><span class="line">-sha3-224                  -sha3-256                  -sha3-384</span><br><span class="line">-sha3-512                  -sha384                    -sha512</span><br><span class="line">-sha512-224                -sha512-256                -shake128</span><br><span class="line">-shake256                  -sm3                       -ssl3-md5</span><br><span class="line">-ssl3-sha1                 -whirlpool</span><br></pre></td></tr></table></figure>
-
-<h3 id="散列算法简单介绍"><a href="#散列算法简单介绍" class="headerlink" title="散列算法简单介绍"></a>散列算法简单介绍</h3><h4 id="BLAKE2B-512"><a href="#BLAKE2B-512" class="headerlink" title="BLAKE2B-512"></a>BLAKE2B-512</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为512位。</p>
-<h4 id="BLAKE2S-256"><a href="#BLAKE2S-256" class="headerlink" title="BLAKE2S-256"></a>BLAKE2S-256</h4><p>基于Chacha20的一种非常强大的散列函数，强度超过SHA-2，接近SHA-3，同时运行效率超过SHA-3，输出为256位。</p>
-<h4 id="MD4"><a href="#MD4" class="headerlink" title="MD4"></a>MD4</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。</p>
-<h4 id="MD5"><a href="#MD5" class="headerlink" title="MD5"></a>MD5</h4><p>Ron Rivest设计的一种散列函数，输出128位，已经被证明存在碰撞。虽然非常常用，但是已经过时。</p>
-<h4 id="SSL3-MD5"><a href="#SSL3-MD5" class="headerlink" title="SSL3-MD5"></a>SSL3-MD5</h4><p>就是MD5。</p>
-<h4 id="MD5-SHA-1"><a href="#MD5-SHA-1" class="headerlink" title="MD5-SHA-1"></a>MD5-SHA-1</h4><p>一种双重散列，计算MD5值的SHA-1摘要以避免这两个算法各自的弱点。个人觉得不如SHA-256，这个用法也不常见。</p>
-<h4 id="MDC-2"><a href="#MDC-2" class="headerlink" title="MDC-2"></a>MDC-2</h4><p>基于分组密码的一种散列函数，输出取决于底层使用的分组密码。</p>
-<h4 id="RIPEMD"><a href="#RIPEMD" class="headerlink" title="RIPEMD"></a>RIPEMD</h4><p>基于MD4设计的一种散列算法，输出默认为160位，不常见，并且存在碰撞。</p>
-<h4 id="RIPEMD-160"><a href="#RIPEMD-160" class="headerlink" title="RIPEMD-160"></a>RIPEMD-160</h4><p>RIPEMD的160位版本，也就是默认实现。</p>
-<h4 id="RMD-160"><a href="#RMD-160" class="headerlink" title="RMD-160"></a>RMD-160</h4><p>就是RIPEMD-160。</p>
-<h4 id="SHA-1"><a href="#SHA-1" class="headerlink" title="SHA-1"></a>SHA-1</h4><p>NIST发布的一个早期散列算法，输出为160位，极为常见，虽然安全性比MD5要高一些，但仍然存在碰撞和前缀冲突攻击。</p>
-<h4 id="SSL3-SHA-1"><a href="#SSL3-SHA-1" class="headerlink" title="SSL3-SHA-1"></a>SSL3-SHA-1</h4><p>就是SHA-1。</p>
-<h4 id="SHA-224"><a href="#SHA-224" class="headerlink" title="SHA-224"></a>SHA-224</h4><p>NIST SHA-2散列算法标准之一，采用SHA-256不同的初始值并截断输出而来，输出224位。安全性强大。</p>
-<h4 id="SHA-256"><a href="#SHA-256" class="headerlink" title="SHA-256"></a>SHA-256</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出256位，安全性强大，常用于HMAC、文件校验等。</p>
-<h4 id="SHA-384"><a href="#SHA-384" class="headerlink" title="SHA-384"></a>SHA-384</h4><p>NIST SHA-2散列算法标准之一，采用SHA-512不同的初始值并截断输出而来，输出384位，安全性强大。</p>
-<h4 id="SHA-512"><a href="#SHA-512" class="headerlink" title="SHA-512"></a>SHA-512</h4><p>NIST SHA-2散列算法标准之一，最为常见的散列函数之一，输出512位，安全性强大，常用于HMAC、文件校验等。</p>
-<h4 id="SHA-512-224"><a href="#SHA-512-224" class="headerlink" title="SHA-512-224"></a>SHA-512-224</h4><p>把SHA-512的输出截断为224位得到，常用于HMAC。</p>
-<h4 id="SHA-512-256"><a href="#SHA-512-256" class="headerlink" title="SHA-512-256"></a>SHA-512-256</h4><p>把SHA-512的输出截断为256位得到，常用于HMAC。</p>
-<h4 id="SHA-3-224"><a href="#SHA-3-224" class="headerlink" title="SHA-3-224"></a>SHA-3-224</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-224，输出224位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-256"><a href="#SHA-3-256" class="headerlink" title="SHA-3-256"></a>SHA-3-256</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-256，输出256位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-384"><a href="#SHA-3-384" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-384，输出384位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHA-3-384-1"><a href="#SHA-3-384-1" class="headerlink" title="SHA-3-384"></a>SHA-3-384</h4><p>NIST SHA-3散列算法标准之一，可用于替换SHA-512，输出512位。SHA-3通常被认为比SHA-2更安全。</p>
-<h4 id="SHAKE-128"><a href="#SHAKE-128" class="headerlink" title="SHAKE-128"></a>SHAKE-128</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认128位。</p>
-<h4 id="SHAKE-256"><a href="#SHAKE-256" class="headerlink" title="SHAKE-256"></a>SHAKE-256</h4><p>NIST SHA-3散列算法标准之一，输出可扩展，默认256位。</p>
-<h4 id="SM3"><a href="#SM3" class="headerlink" title="SM3"></a>SM3</h4><p>国密算法散列函数，输出256位，设计方面强度对标SHA-256，安全性可靠，但并未经过广泛验证，使用场景有限。</p>
-<h4 id="Whirlpool"><a href="#Whirlpool" class="headerlink" title="Whirlpool"></a>Whirlpool</h4><p>一个基于大幅修改的AES结构的散列算法，输出512位，安全性非常强大。</p>
-<hr>
-<h2 id="输出选项说明"><a href="#输出选项说明" class="headerlink" title="输出选项说明"></a>输出选项说明</h2><h3 id="c"><a href="#c" class="headerlink" title="-c"></a>-c</h3><p>通过冒号，逐字节分隔16进制输出，两个十六进制数为一组，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -c _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10:d9:0a:cf:0a:10:6d:52:58:83:09:37:cf:59:bb:8e:cc:30:78:c9:1e:fa:ec:cc:d2:21:2b:9a:8b:93:f9:8b</span><br></pre></td></tr></table></figure>
-
-<h3 id="r"><a href="#r" class="headerlink" title="-r"></a>-r</h3><p>以Coreutils格式打印摘要，使其更容易与GNU工具集成，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -r _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b *_config.yml</span><br></pre></td></tr></table></figure>
-
-<h3 id="out-outfile"><a href="#out-outfile" class="headerlink" title="-out outfile"></a>-out outfile</h3><p>将摘要输出到一个文件中，而非stdout，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -out hash.txt _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>摘要值将被输出到<code>hash.txt</code>文件当中。</p>
-<h3 id="keyform-format"><a href="#keyform-format" class="headerlink" title="-keyform format"></a>-keyform format</h3><p>指定密钥文件格式，可以接受PEM, DER, ENG等格式，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -sign private_key.pem -keyform PEM -out signature,bin data.txt</span><br></pre></td></tr></table></figure>
-
-<h3 id="hex"><a href="#hex" class="headerlink" title="-hex"></a>-hex</h3><p>以16进制输出摘要，这个是默认行为，一般来说不加也是这样，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>和</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -hex _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>它们的输出一样：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br></pre></td></tr></table></figure>
-
-<h3 id="binary"><a href="#binary" class="headerlink" title="-binary"></a>-binary</h3><p>以二进制输出摘要，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>此时一般会看到一团乱码，因为它会尝试以UTF-8之类的字符集进行解析：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">??mRX?7蟉粠?x?桃!+殝擓</span><br></pre></td></tr></table></figure>
-
-<p>可以尝试把它输出到文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -binary -out hash.bin _config.yml</span><br></pre></td></tr></table></figure>
-
-<h3 id="xoflen-int"><a href="#xoflen-int" class="headerlink" title="-xoflen +int"></a>-xoflen +int</h3><p>对于可扩展输出函数（eXtendable-Output Functions)，例如SHAKE-128，SHAKE-256等，指定其输出长度。</p>
-<p>例如，这是默认的SHAKE-128：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>它的输出为128位：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9</span><br></pre></td></tr></table></figure>
-
-<p>使用<code>xoflen +int</code>用户可以随意地调节它的输出字节数，对于SHAKE-128而言至多32字节（256位），对于SHAKE-256而言至多64字节（512位）。</p>
-<p>例如，将输出调节为24字节（192位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 24 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c158</span><br></pre></td></tr></table></figure>
-
-<p>将输出调节为32字节（256位）：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHAKE-128 -xoflen 32 _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">SHAKE-128(_config.yml)= 963197743bcc929737752110337fffd9662119d7a9b5c1589e93f9295bf8087a</span><br></pre></td></tr></table></figure>
-
-<h3 id="d-或-debug"><a href="#d-或-debug" class="headerlink" title="-d 或 -debug"></a>-d 或 -debug</h3><p>输出debug信息，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl dgst -SHA-256 -d _config.yml</span><br></pre></td></tr></table></figure>
-
-<p>输出为：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">BIO[0x1fd3574d080]: ctrl(6) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(108) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span>(0,8192) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: <span class="built_in">read</span> <span class="built_in">return</span> 1 processed: 3814</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(10) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(2) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 1</span><br><span class="line">SHA2-256(_config.yml)= 10d90acf0a106d5258830937cf59bb8ecc3078c91efaecccd2212b9a8b93f98b</span><br><span class="line">BIO[0x1fd3574d080]: ctrl(1) - FILE pointer</span><br><span class="line">BIO[0x1fd3574d080]: ctrl <span class="built_in">return</span> 0</span><br><span class="line">BIO[0x1fd3574d080]: Free - FILE pointer</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Crypto</category>
-      </categories>
-      <tags>
-        <tag>OpenSSL</tag>
-        <tag>Crypto</tag>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>OpenSSL CLI 随机数生成器 个人使用经验</title>
     <url>/2023/11/14/OpenSSL-CLI-%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90%E5%99%A8-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇简单的OpenSSL CLI 随机数生成器使用经验，不定期更新。</p>
@@ -610,45 +507,6 @@
         <tag>OpenSSL</tag>
         <tag>Crypto</tag>
         <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一个Shadowsocks-Windows使用过程中遇到的小问题</title>
-    <url>/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看网课的时候经常卡顿，觉得很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最糟糕的是关掉代理就不卡了，因此开始排查问题。</p>
-<p>最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="问题场景"><a href="#问题场景" class="headerlink" title="问题场景"></a>问题场景</h2><p>以飞鱼绘的小鹅通页面为例，例如，前端页面的网址是这个：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">app57xp9kxc1037<span class="selector-class">.xet-pc</span><span class="selector-class">.citv</span><span class="selector-class">.cn</span></span><br></pre></td></tr></table></figure>
-
-<p>自然，为了避免Shadowsocks走代理影响访问速度，将其写在pac.txt当中：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&quot;@@||app57xp9kxc1037.xet-pc.citv.cn&quot;,</span><br></pre></td></tr></table></figure>
-
-<p>然而这只能解决前端页面加载速度的问题，并不能解决看视频卡顿的问题。</p>
-<p>这是因为，视频的源并不是前端页面的网址。</p>
-<hr>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>以Microsoft Edge浏览器为例，进入视频播放的界面，然后按下F12。</p>
-<img src="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg" class="" title="Edge-F12-Top-Bar">
-
-<p>选择”网络”，可以看到很多数据包，关注xhr类型。</p>
-<p>播放视频，选择其中数据包体积较大的，查看详情。</p>
-<p>添加其域名到PAC，例如：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&quot;@@||xiaoeknow.com&quot;,</span><br><span class="line"><span class="string">&quot;@@||xed.plus&quot;</span>,</span><br></pre></td></tr></table></figure>
-
-<p>然后重启Shadowsocks，通常可解决问题。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>乱写的，自己也没完全搞清楚，但有效。</p>
-<p>博客好久没更新了，水一点东西（</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Proxy</tag>
-        <tag>Circumvention</tag>
       </tags>
   </entry>
   <entry>
@@ -860,6 +718,45 @@
         <tag>JavaScript</tag>
         <tag>Interactive Fiction</tag>
         <tag>Web Front-End</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一个Shadowsocks-Windows使用过程中遇到的小问题</title>
+    <url>/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看网课的时候经常卡顿，觉得很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最糟糕的是关掉代理就不卡了，因此开始排查问题。</p>
+<p>最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="问题场景"><a href="#问题场景" class="headerlink" title="问题场景"></a>问题场景</h2><p>以飞鱼绘的小鹅通页面为例，例如，前端页面的网址是这个：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">app57xp9kxc1037<span class="selector-class">.xet-pc</span><span class="selector-class">.citv</span><span class="selector-class">.cn</span></span><br></pre></td></tr></table></figure>
+
+<p>自然，为了避免Shadowsocks走代理影响访问速度，将其写在pac.txt当中：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&quot;@@||app57xp9kxc1037.xet-pc.citv.cn&quot;,</span><br></pre></td></tr></table></figure>
+
+<p>然而这只能解决前端页面加载速度的问题，并不能解决看视频卡顿的问题。</p>
+<p>这是因为，视频的源并不是前端页面的网址。</p>
+<hr>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>以Microsoft Edge浏览器为例，进入视频播放的界面，然后按下F12。</p>
+<img src="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg" class="" title="Edge-F12-Top-Bar">
+
+<p>选择”网络”，可以看到很多数据包，关注xhr类型。</p>
+<p>播放视频，选择其中数据包体积较大的，查看详情。</p>
+<p>添加其域名到PAC，例如：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&quot;@@||xiaoeknow.com&quot;,</span><br><span class="line"><span class="string">&quot;@@||xed.plus&quot;</span>,</span><br></pre></td></tr></table></figure>
+
+<p>然后重启Shadowsocks，通常可解决问题。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>乱写的，自己也没完全搞清楚，但有效。</p>
+<p>博客好久没更新了，水一点东西（</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Proxy</tag>
+        <tag>Circumvention</tag>
       </tags>
   </entry>
   <entry>
@@ -1390,109 +1287,106 @@
       </tags>
   </entry>
   <entry>
-    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
-    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
-<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
+    <title>OpenSSL CLI 密钥对生成工具 个人使用经验</title>
+    <url>/2023/11/15/OpenSSL-CLI-%E5%AF%86%E9%92%A5%E5%AF%B9%E7%94%9F%E6%88%90%E5%B7%A5%E5%85%B7-%E4%B8%AA%E4%BA%BA%E4%BD%BF%E7%94%A8%E7%BB%8F%E9%AA%8C/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一篇OpenSSL 密钥对生成工具个人使用经验，不定期更新。</p>
 <span id="more"></span>
 
-<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
-<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
-<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
-<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
 <hr>
-<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
-<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
-<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
-<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
-<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
+<h2 id="获取帮助"><a href="#获取帮助" class="headerlink" title="获取帮助"></a>获取帮助</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -h</span><br></pre></td></tr></table></figure>
 
-<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
-<hr>
-<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
-
-<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
-<hr>
-<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
-<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
-
-<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
-<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+<p>输出如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">Usage: genpkey [options]</span><br><span class="line"></span><br><span class="line">General options:</span><br><span class="line"> -<span class="built_in">help</span>               Display this summary</span><br><span class="line"> -engine val         Use engine, possibly a hardware device</span><br><span class="line"> -paramfile infile   Parameters file</span><br><span class="line"> -algorithm val      The public key algorithm</span><br><span class="line"> -quiet              Do not output status <span class="keyword">while</span> generating keys</span><br><span class="line"> -pkeyopt val        Set the public key algorithm option as opt:value</span><br><span class="line"> -config infile      Load a configuration file (this may load modules)</span><br><span class="line"></span><br><span class="line">Output options:</span><br><span class="line"> -out outfile        Output file</span><br><span class="line"> -outform PEM|DER    output format (DER or PEM)</span><br><span class="line"> -pass val           Output file pass phrase <span class="built_in">source</span></span><br><span class="line"> -genparam           Generate parameters, not key</span><br><span class="line"> -text               Print the <span class="keyword">in</span> text</span><br><span class="line"> -*                  Cipher to use to encrypt the key</span><br><span class="line"></span><br><span class="line">Provider options:</span><br><span class="line"> -provider-path val  Provider load path (must be before <span class="string">&#x27;provider&#x27;</span> argument <span class="keyword">if</span> required)</span><br><span class="line"> -provider val       Provider to load (can be specified multiple <span class="built_in">times</span>)</span><br><span class="line"> -propquery val      Property query used when fetching algorithms</span><br><span class="line">Order of options may be important!  See the documentation.</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
-<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
-<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
-<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
-<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
-
-<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
-<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
-<hr>
-<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+<h2 id="简单的生成密钥对指令"><a href="#简单的生成密钥对指令" class="headerlink" title="简单的生成密钥对指令"></a>简单的生成密钥对指令</h2><hr>
+<h3 id="私钥生成"><a href="#私钥生成" class="headerlink" title="私钥生成"></a>私钥生成</h3><p>为了生成一个密钥对，至少需要指定一个算法，指定输出文件的名称。</p>
+<p>例如以下命令，它将会生成一个Ed25519私钥文件，文件名是<code>private-key-Ed25519.pem</code>：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm Ed25519 -out private-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+<h3 id="公钥提取"><a href="#公钥提取" class="headerlink" title="公钥提取"></a>公钥提取</h3><p>可以从私钥文件中提取公钥。</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>私钥文件中提取对应的Ed25519公钥文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -pubout -out public-key-Ed25519.pem</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
-<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
-<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
-<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
-<p>就类似于这样。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+<h3 id="查看公钥与私钥内容"><a href="#查看公钥与私钥内容" class="headerlink" title="查看公钥与私钥内容"></a>查看公钥与私钥内容</h3><p>可以用<code>pkey</code>指令访问OpenSSL的私钥文件，可以输出私钥、公钥的算法与内容：</p>
+<p>例如以下命令，它会尝试从<code>private-key-Ed25519.pem</code>文件中读取算法、私钥内容、公钥内容，并显示在屏幕上：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl pkey -<span class="keyword">in</span> private-key-Ed25519.pem -text -noout</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">ED25519 Private-Key:</span><br><span class="line">priv:</span><br><span class="line">    ea:f7:<span class="number">04</span>:a2:<span class="number">20</span>:b6:e8:<span class="number">65</span>:<span class="number">40</span>:<span class="number">65</span>:ad:<span class="number">44</span>:df:b4:<span class="number">9</span>f:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">9</span>b:<span class="number">6</span>c:b6:<span class="number">8</span>d:<span class="number">92</span>:<span class="number">66</span>:a9:<span class="number">73</span>:<span class="number">96</span>:cb:ae:aa:bd:<span class="number">52</span>:</span><br><span class="line">    <span class="number">28</span>:<span class="number">69</span></span><br><span class="line">pub:</span><br><span class="line">    <span class="number">42</span>:a3:<span class="number">68</span>:<span class="number">18</span>:<span class="number">8</span>e:df:<span class="number">3</span>e:<span class="number">0</span>c:c0:<span class="number">49</span>:<span class="number">29</span>:ef:e3:<span class="number">27</span>:c7:</span><br><span class="line">    <span class="number">31</span>:<span class="number">75</span>:b1:<span class="number">39</span>:<span class="number">43</span>:f4:<span class="number">26</span>:<span class="number">2</span>c:<span class="number">38</span>:<span class="number">07</span>:d4:d9:<span class="number">43</span>:e1:a1:</span><br><span class="line">    <span class="number">70</span>:<span class="number">45</span></span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
-<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<h2 id="总体选项"><a href="#总体选项" class="headerlink" title="总体选项"></a>总体选项</h2><hr>
+<h3 id="engine"><a href="#engine" class="headerlink" title="-engine"></a>-engine</h3><p>指定引擎，通常没必要（实则我也不会）</p>
 <hr>
-<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
-<p>举个例子，就像这样：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+<h3 id="paramfile"><a href="#paramfile" class="headerlink" title="-paramfile"></a>-paramfile</h3><p>输入参数文件</p>
+<hr>
+<h3 id="algorithm"><a href="#algorithm" class="headerlink" title="-algorithm"></a>-algorithm</h3><p>指定算法，目前支持的算法有<code>RSA</code>, <code>RSA-PSS</code>, <code>EC</code>, <code>X25519</code>, <code>X448</code>, <code>Ed25519</code>, <code>Ed448</code>。（版本<code>3.1.3</code>）</p>
+<p>举个例子，生成RSA-2048私钥（这里不用指定参数是因为RSA默认2048位）：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
-<p>类似于这种：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+<h3 id="quiet"><a href="#quiet" class="headerlink" title="-quiet"></a>-quiet</h3><p>生成密钥时不输出信息，例如熵池等等。</p>
+<hr>
+<h3 id="pkeyopt"><a href="#pkeyopt" class="headerlink" title="-pkeyopt"></a>-pkeyopt</h3><p>修改算法的安全参数，这里很难一一列举，具体可以去看OpenSSL的文档：<a href="https://www.openssl.org/docs/manmaster/man1/openssl-genpkey.html#KEY-GENERATION-OPTIONS">&#x2F;docs&#x2F;manmaster&#x2F;man1&#x2F;openssl-genpkey.html</a></p>
+<p>安全参数是否可用需要根据选择的算法来判断。</p>
+<p>例如，这一串命令可以生成一个RSA-4096私钥：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -out RSA-4096-Private-Key.pem</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+<h3 id="config"><a href="#config" class="headerlink" title="-config"></a>-config</h3><p>外部导入配置文件，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-4096-Private-Key.pem -config my-config.cnf</span><br></pre></td></tr></table></figure>
 
-<p>一个Audio，播放音频，不阻塞。</p>
-<p>一个Timer，计时，阻塞。</p>
-<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<p>Config文件，我个人还没弄清楚怎么写，这就不做误导性示范了。</p>
 <hr>
-<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
-<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
-<p>是否允许用户跳过看你自己。</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+<h2 id="输出选项"><a href="#输出选项" class="headerlink" title="输出选项"></a>输出选项</h2><hr>
+<h3 id="out"><a href="#out" class="headerlink" title="-out"></a>-out</h3><p>指定输出文件名，例如输出为<code>RSA-2048-Private-Key.pem</code>:</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -out RSA-2048-Private-Key.pem</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
-<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
-<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
-<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+<h3 id="outform"><a href="#outform" class="headerlink" title="-outform"></a>-outform</h3><p>指定输出文件格式，支持两种格式——<code>PEM</code>和<code>DER</code></p>
+<p>**PEM(Privacy Enhanced Mail)**：可读的文本格式，包括边界标记、数据类型，编码为Base64。</p>
+<p>**DER(Distinguished Encoding Rules)**：不可读的二进制格式，格式紧凑，无边界标记。</p>
+<p>通常而言，为了提高兼容性和可读性，PEM是常见的选择，也是默认选项。</p>
+<p>如果要以DER格式输出文件，一个例子如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -outform DER -out RSA-2048-Private-Key.der</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
-<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
+<h3 id="pass"><a href="#pass" class="headerlink" title="-pass"></a>-pass</h3><p>类似于对称加密的密钥，可以通过各种方式指定输出密钥文件的密码短语（Pass Phrase），例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm X25519 -out X25519-Private-Key.pem -pass pass:your_password</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="genparam"><a href="#genparam" class="headerlink" title="-genparam"></a>-genparam</h3><p>只生成参数而不生成密钥，此时<code>genpkey</code>指令可以兼容更多的算法，其中额外的有<code>DH</code>，<code>DSA</code>：</p>
+<p>例如，生成DSA参数：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm DSA -genparam</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+.....+..+.......+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">...........................+.....+.+....+...................+.............+........+.......+........................+.+...........+.+.....+......+..............+.....................+...........+....+...+.+........+.....+...+..+..........+..+.+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*</span><br><span class="line">---<span class="attr">--BEGIN</span> DSA PARAMETERS-----</span><br><span class="line">MIICKAKCAQEAruL2N9/nisKseg6CFjB/mXNC0FFRTcnecvbF+<span class="number">9</span>eD6UepnH7mv0K1</span><br><span class="line">+RFL8ECrHGxlYgAkLA9MN+ZiQQ7BSE6qQt0CEGMkgIW6GFUPt6opupB5Ql+qmEBo</span><br><span class="line">uivQr44/VJKjC0vzli85I+UD2f24xrroqssAf4n9B4t22Bg6dxV2AGAfDLdzsNwQ</span><br><span class="line">GITaruJmEj6Xkgyx3rx3KTvQfLtiHdMUJ9rBs5JonomNrEuX5kjf55chFub9IYDF</span><br><span class="line">Vpjsp57hvEJmDU6kQKihkax69V+NmF4T8cs3kAukYfLn/VubbF+FOEZuzQQsAO5n</span><br><span class="line">tGCedKsKmXCtxCgCqZu+FLIxil+A0w36OQIdAI4/RI2+Im2ZhBKGdtJ2Y8a9ndsU</span><br><span class="line">w5bAokSt+tECggEAEct/e8totsdL3RkD+qMq31Gk58yZoda876Uej6YJYYgt7RwB</span><br><span class="line">CCzOEYP/Hf/ditPSpJ4kFc8/qFp0nHAq4pctZKtywVE3T2XVwdzgBF0uLwIb505G</span><br><span class="line">o92Gcb/eEir8mBxSOvVT6X1hmZsnwHehWyasYYcNrjdorH9UvQ9VwAE5nnkK/HLH</span><br><span class="line">KxQ9P7MAdc6dGYxjFjW36ljlRCUvvNeeVPc+J5a0/JJxfm19YLatWaCnpfp1nHes</span><br><span class="line">YsQ3QdB6LKWd7OFwP6lw+OEKWRc3XhczfUBzOBPqj/QBUfHCQX6PgUJyLgiZTD/N</span><br><span class="line">YGOQzq0L9umxt/lrDQbrIKIuDLyWxe8gVyQ41g==</span><br><span class="line">---<span class="attr">--END</span> DSA PARAMETERS-----</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="text"><a href="#text" class="headerlink" title="-text"></a>-text</h3><p>把整个算法的过程结果直接全部输出到stdout，也就是打印到屏幕上，其中包括各种中间参数和密钥例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -text</span><br></pre></td></tr></table></figure>
+
+<p>一个示例输出如下：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">..+...+..........+..+.........+....+...+++++++++++++++++++++++++++++++++++++++*.+.+............+...+......+.....+++++++++++++++++++++++++++++++++++++++*....+...........+...+.........+.......+...........+.........+...+.+..+...............+...+....+.....+.+.....+....+...........+......+.+.....+...+............+.........+....+..+...+......+....+..+....+.....+...+...+.......+......+......+...+......+...........+....+.........+..+......+.........+.............+..+.+...+......+.....+...+......+.+......+..+...+...+.......+..+.+......+......+........+.+......+............+......+.........+......+..............+...+.......+......+..........................++++++</span><br><span class="line">..........+++++++++++++++++++++++++++++++++++++++*...+.............................+...+...+....+......+.....+.............+.....+..........+..+...+.+...+...+.....+.......+++++++++++++++++++++++++++++++++++++++*...............+....+........................+.....+.+.....+.......+..+.............+.....+....+......+........+.......+...............+.....+.........+...+.+..++++++</span><br><span class="line">---<span class="attr">--BEGIN</span> PRIVATE KEY-----</span><br><span class="line">MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCo7n8puayHyAh0</span><br><span class="line">lU6/QfL9XrnyXcMKs4onmdPntVP2UO17jHvYXStNKhLKJkZKEta0yEKihdZdOzmN</span><br><span class="line">AJd2Er5uVWOixQAwphFurajknfEerfe6dOKiTXObWNjgwcHw/xUOT7FKNop8h5DG</span><br><span class="line">X56OwHzWQMma9fWarqxEYR36b8pIno/D7+rKZxrZaJObWoexu/KQT0JCusW1qgTM</span><br><span class="line">i3XFXw4/Lzv/joP/knoxmAIzGb5+YNRAL9TIZioA3AwgiRJrgQNdB9HQTijZplbJ</span><br><span class="line"><span class="number">705</span>eEwVoUSM1AddlS+wV2uhVSSThM/i87MQtSbsvfkUZauYLioJSfxaGWW4Y3Ybe</span><br><span class="line"><span class="number">7</span>ej4ELufAgMBAAECggEAG44bi/DPZa6JQosAN05Ilm+XISOOJva2OFNtL0Ryl6EH</span><br><span class="line">u7lkkhxQbdvJCNRJbte30fFAfUYbe0Wn04ofKpFQIqsm/<span class="number">2</span>vm5giQm18UR4ZDyF9U</span><br><span class="line">I0Phm9vKWbKaXb79JZRWGOmC37oZyMpMIS+Dq4FWW5RhzjcEguCvFNBKlYkak9GV</span><br><span class="line">eKYWdNLA0au4AXRqVmaI7YmGxakHSpVHPIGULk33dlll3/iLNQS3YH9vqvoe3GK8</span><br><span class="line"><span class="number">87</span>ekSAAWTsOZUiJ0MAWMhfkfEDjG3zFq632rg2S+m4e2J1pGVcXPTuHjTSdacWCM</span><br><span class="line">DNekPsKEBByMi00aZtcogxO6zHm121EoHPulcK26oQKBgQDYRq9JQFOCk6ZpeCeb</span><br><span class="line">U6slj+QcAnc95XaXtdg1Kh17IISTLJD1p3tSnbziBWmmugpL9P8tJC63ZcdadYqn</span><br><span class="line">cMzYctNSgMuOgNWKBtXPH4qxWJ8JL8I4Ft8NOiajfVonSjGz+emNzWnNUdDYx5PP</span><br><span class="line">w2WkD82mbAOOUu81Uj4h5WWi+QKBgQDH9avwENMi60WARd1vb+jfS78yuSf3zTe9</span><br><span class="line">s5XgSr2hAHjX0xODAOAEiX253Ube83n9oEkhHMKTcQfzrIgoJ3G5UZ6Pd43tiqrp</span><br><span class="line">ejygyxlOpH+grSiwHc7i3WZWx31kjBCmoFgCQUBfH4UUYzwOqvZgoC3G4lVvYug/</span><br><span class="line"><span class="number">33S</span>RqXZhVwKBgHI8I6nVSEbYJjXfOUxZzTRx5FLHGqSe5x0K98BdFmVKr7vs9kRK</span><br><span class="line">ymDA4Fuh8EQYUAf+yCnXyrUkFUA6hZobgpdxTx1s2hfTBPd61MQqLN+vp5D6oONv</span><br><span class="line">cTFTXcVNGKlYDxi5EBvOO+wvItjd0b0TwEP/<span class="number">9</span>OfKdbZfJ+pKHndY625BAoGAIlif</span><br><span class="line">fO/W5GOXH45gl7iYPmqrX9IP/<span class="selector-tag">G</span>+CiJIlR05vPg1vtFqsOk9XK1BWiStp9ffKV3dF</span><br><span class="line">uGtRPLQokoFrLcKAtT1AyBHYDhpIeywk59Wa9jgpN/cmSwIDvFIdNwCzGCc64PQf</span><br><span class="line">ydtdbDlkyXi2IyrYgQZidov/<span class="number">8s</span>8BZ59BTZfXHqcCgYEAtciV66BhhLSJ0P2hn453</span><br><span class="line">Q2/XvHXU68CKhl/<span class="number">8s</span>G8CyrPxO6Wk3oCIeZPhV0k8HAoU00r1L+j4uwY43/WDJtR5</span><br><span class="line">ljEn5xndTNmd0WWfaV1BruM7ql0I/URwpE6D6rsFq4SFHnKkVsB1Hb6d7YxRt+ct</span><br><span class="line">kjGDW1ZkJzDWKlf7Lf9oKqc=</span><br><span class="line">---<span class="attr">--END</span> PRIVATE KEY-----</span><br><span class="line">Private-Key: (<span class="number">2048</span> bit, <span class="number">2</span> primes)</span><br><span class="line">modulus:</span><br><span class="line">    <span class="number">00</span>:a8:ee:<span class="number">7</span>f:<span class="number">29</span>:b9:ac:<span class="number">87</span>:c8:<span class="number">08</span>:<span class="number">74</span>:<span class="number">95</span>:<span class="number">4</span>e:bf:<span class="number">41</span>:</span><br><span class="line">    f2:fd:<span class="number">5</span>e:b9:f2:<span class="number">5</span>d:c3:<span class="number">0</span>a:b3:<span class="number">8</span>a:<span class="number">27</span>:<span class="number">99</span>:d3:e7:b5:</span><br><span class="line">    <span class="number">53</span>:f6:<span class="number">50</span>:ed:<span class="number">7</span>b:<span class="number">8</span>c:<span class="number">7</span>b:d8:<span class="number">5</span>d:<span class="number">2</span>b:<span class="number">4</span>d:<span class="number">2</span>a:<span class="number">12</span>:ca:<span class="number">26</span>:</span><br><span class="line">    <span class="number">46</span>:<span class="number">4</span>a:<span class="number">12</span>:d6:b4:c8:<span class="number">42</span>:a2:<span class="number">85</span>:d6:<span class="number">5</span>d:<span class="number">3</span>b:<span class="number">39</span>:<span class="number">8</span>d:<span class="number">00</span>:</span><br><span class="line">    <span class="number">97</span>:<span class="number">76</span>:<span class="number">12</span>:be:<span class="number">6</span>e:<span class="number">55</span>:<span class="number">63</span>:a2:c5:<span class="number">00</span>:<span class="number">30</span>:a6:<span class="number">11</span>:<span class="number">6</span>e:ad:</span><br><span class="line">    a8:e4:<span class="number">9</span>d:f1:<span class="number">1</span>e:ad:f7:ba:<span class="number">74</span>:e2:a2:<span class="number">4</span>d:<span class="number">73</span>:<span class="number">9</span>b:<span class="number">58</span>:</span><br><span class="line">    d8:e0:c1:c1:f0:ff:<span class="number">15</span>:<span class="number">0</span>e:<span class="number">4</span>f:b1:<span class="number">4</span>a:<span class="number">36</span>:<span class="number">8</span>a:<span class="number">7</span>c:<span class="number">87</span>:</span><br><span class="line">    <span class="number">90</span>:c6:<span class="number">5</span>f:<span class="number">9</span>e:<span class="number">8</span>e:c0:<span class="number">7</span>c:d6:<span class="number">40</span>:c9:<span class="number">9</span>a:f5:f5:<span class="number">9</span>a:ae:</span><br><span class="line">    ac:<span class="number">44</span>:<span class="number">61</span>:<span class="number">1</span>d:fa:<span class="number">6</span>f:ca:<span class="number">48</span>:<span class="number">9</span>e:<span class="number">8</span>f:c3:ef:ea:ca:<span class="number">67</span>:</span><br><span class="line">    <span class="number">1</span>a:d9:<span class="number">68</span>:<span class="number">93</span>:<span class="number">9</span>b:<span class="number">5</span>a:<span class="number">87</span>:b1:bb:f2:<span class="number">90</span>:<span class="number">4</span>f:<span class="number">42</span>:<span class="number">42</span>:ba:</span><br><span class="line">    c5:b5:aa:<span class="number">04</span>:cc:<span class="number">8</span>b:<span class="number">75</span>:c5:<span class="number">5</span>f:<span class="number">0</span>e:<span class="number">3</span>f:<span class="number">2</span>f:<span class="number">3</span>b:ff:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">83</span>:ff:<span class="number">92</span>:<span class="number">7</span>a:<span class="number">31</span>:<span class="number">98</span>:<span class="number">02</span>:<span class="number">33</span>:<span class="number">19</span>:be:<span class="number">7</span>e:<span class="number">60</span>:d4:<span class="number">40</span>:<span class="number">2</span>f:</span><br><span class="line">    d4:c8:<span class="number">66</span>:<span class="number">2</span>a:<span class="number">00</span>:dc:<span class="number">0</span>c:<span class="number">20</span>:<span class="number">89</span>:<span class="number">12</span>:<span class="number">6</span>b:<span class="number">81</span>:<span class="number">03</span>:<span class="number">5</span>d:<span class="number">07</span>:</span><br><span class="line">    d1:d0:<span class="number">4</span>e:<span class="number">28</span>:d9:a6:<span class="number">56</span>:c9:ef:<span class="number">4</span>e:<span class="number">5</span>e:<span class="number">13</span>:<span class="number">05</span>:<span class="number">68</span>:<span class="number">51</span>:</span><br><span class="line">    <span class="number">23</span>:<span class="number">35</span>:<span class="number">01</span>:d7:<span class="number">65</span>:<span class="number">4</span>b:ec:<span class="number">15</span>:da:e8:<span class="number">55</span>:<span class="number">49</span>:<span class="number">24</span>:e1:<span class="number">33</span>:</span><br><span class="line">    f8:bc:ec:c4:<span class="number">2</span>d:<span class="number">49</span>:bb:<span class="number">2</span>f:<span class="number">7</span>e:<span class="number">45</span>:<span class="number">19</span>:<span class="number">6</span>a:e6:<span class="number">0</span>b:<span class="number">8</span>a:</span><br><span class="line">    <span class="number">82</span>:<span class="number">52</span>:<span class="number">7</span>f:<span class="number">16</span>:<span class="number">86</span>:<span class="number">59</span>:<span class="number">6</span>e:<span class="number">18</span>:dd:<span class="number">86</span>:de:ed:e8:f8:<span class="number">10</span>:</span><br><span class="line">    bb:<span class="number">9</span>f</span><br><span class="line">publicExponent: <span class="number">65537</span> (<span class="number">0</span>x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    <span class="number">1</span>b:<span class="number">8</span>e:<span class="number">1</span>b:<span class="number">8</span>b:f0:cf:<span class="number">65</span>:ae:<span class="number">89</span>:<span class="number">42</span>:<span class="number">8</span>b:<span class="number">00</span>:<span class="number">37</span>:<span class="number">4</span>e:<span class="number">48</span>:</span><br><span class="line">    <span class="number">96</span>:<span class="number">6</span>f:<span class="number">97</span>:<span class="number">21</span>:<span class="number">23</span>:<span class="number">8</span>e:<span class="number">26</span>:f6:b6:<span class="number">38</span>:<span class="number">53</span>:<span class="number">6</span>d:<span class="number">2</span>f:<span class="number">44</span>:<span class="number">72</span>:</span><br><span class="line">    <span class="number">97</span>:a1:<span class="number">07</span>:bb:b9:<span class="number">64</span>:<span class="number">92</span>:<span class="number">1</span>c:<span class="number">50</span>:<span class="number">6</span>d:db:c9:<span class="number">08</span>:d4:<span class="number">49</span>:</span><br><span class="line">    <span class="number">6</span>e:d7:b7:d1:f1:<span class="number">40</span>:<span class="number">7</span>d:<span class="number">46</span>:<span class="number">1</span>b:<span class="number">7</span>b:<span class="number">45</span>:a7:d3:<span class="number">8</span>a:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">2</span>a:<span class="number">91</span>:<span class="number">50</span>:<span class="number">22</span>:ab:<span class="number">26</span>:ff:<span class="number">6</span>b:e6:e6:<span class="number">08</span>:<span class="number">90</span>:<span class="number">9</span>b:<span class="number">5</span>f:<span class="number">14</span>:</span><br><span class="line">    <span class="number">47</span>:<span class="number">86</span>:<span class="number">43</span>:c8:<span class="number">5</span>f:<span class="number">54</span>:<span class="number">23</span>:<span class="number">43</span>:e1:<span class="number">9</span>b:db:ca:<span class="number">59</span>:b2:<span class="number">9</span>a:</span><br><span class="line">    <span class="number">5</span>d:be:fd:<span class="number">25</span>:<span class="number">94</span>:<span class="number">56</span>:<span class="number">18</span>:e9:<span class="number">82</span>:df:ba:<span class="number">19</span>:c8:ca:<span class="number">4</span>c:</span><br><span class="line">    <span class="number">21</span>:<span class="number">2</span>f:<span class="number">83</span>:ab:<span class="number">81</span>:<span class="number">56</span>:<span class="number">5</span>b:<span class="number">94</span>:<span class="number">61</span>:ce:<span class="number">37</span>:<span class="number">04</span>:<span class="number">82</span>:e0:af:</span><br><span class="line">    <span class="number">14</span>:d0:<span class="number">4</span>a:<span class="number">95</span>:<span class="number">89</span>:<span class="number">1</span>a:<span class="number">93</span>:d1:<span class="number">95</span>:<span class="number">78</span>:a6:<span class="number">16</span>:<span class="number">74</span>:d2:c0:</span><br><span class="line">    d1:ab:b8:<span class="number">01</span>:<span class="number">74</span>:<span class="number">6</span>a:<span class="number">56</span>:<span class="number">66</span>:<span class="number">88</span>:ed:<span class="number">89</span>:<span class="number">86</span>:c5:a9:<span class="number">07</span>:</span><br><span class="line">    <span class="number">4</span>a:<span class="number">95</span>:<span class="number">47</span>:<span class="number">3</span>c:<span class="number">81</span>:<span class="number">94</span>:<span class="number">2</span>e:<span class="number">4</span>d:f7:<span class="number">76</span>:<span class="number">59</span>:<span class="number">65</span>:df:f8:<span class="number">8</span>b:</span><br><span class="line">    <span class="number">35</span>:<span class="number">04</span>:b7:<span class="number">60</span>:<span class="number">7</span>f:<span class="number">6</span>f:aa:fa:<span class="number">1</span>e:dc:<span class="number">62</span>:bc:f3:b7:a4:</span><br><span class="line">    <span class="number">48</span>:<span class="number">00</span>:<span class="number">16</span>:<span class="number">4</span>e:c3:<span class="number">99</span>:<span class="number">52</span>:<span class="number">22</span>:<span class="number">74</span>:<span class="number">30</span>:<span class="number">05</span>:<span class="number">8</span>c:<span class="number">85</span>:f9:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">10</span>:<span class="number">38</span>:c6:df:<span class="number">31</span>:<span class="number">6</span>a:eb:<span class="number">7</span>d:ab:<span class="number">83</span>:<span class="number">64</span>:be:<span class="number">9</span>b:<span class="number">87</span>:b6:</span><br><span class="line">    <span class="number">27</span>:<span class="number">5</span>a:<span class="number">46</span>:<span class="number">55</span>:c5:cf:<span class="number">4</span>e:e1:e3:<span class="number">4</span>d:<span class="number">27</span>:<span class="number">5</span>a:<span class="number">71</span>:<span class="number">60</span>:<span class="number">8</span>c:</span><br><span class="line">    <span class="number">0</span>c:d7:a4:<span class="number">3</span>e:c2:<span class="number">84</span>:<span class="number">04</span>:<span class="number">1</span>c:<span class="number">8</span>c:<span class="number">8</span>b:<span class="number">4</span>d:<span class="number">1</span>a:<span class="number">66</span>:d7:<span class="number">28</span>:</span><br><span class="line">    <span class="number">83</span>:<span class="number">13</span>:ba:cc:<span class="number">79</span>:b5:db:<span class="number">51</span>:<span class="number">28</span>:<span class="number">1</span>c:fb:a5:<span class="number">70</span>:ad:ba:</span><br><span class="line">    a1</span><br><span class="line">prime1:</span><br><span class="line">    <span class="number">00</span>:d8:<span class="number">46</span>:af:<span class="number">49</span>:<span class="number">40</span>:<span class="number">53</span>:<span class="number">82</span>:<span class="number">93</span>:a6:<span class="number">69</span>:<span class="number">78</span>:<span class="number">27</span>:<span class="number">9</span>b:<span class="number">53</span>:</span><br><span class="line">    ab:<span class="number">25</span>:<span class="number">8</span>f:e4:<span class="number">1</span>c:<span class="number">02</span>:<span class="number">77</span>:<span class="number">3</span>d:e5:<span class="number">76</span>:<span class="number">97</span>:b5:d8:<span class="number">35</span>:<span class="number">2</span>a:</span><br><span class="line">    <span class="number">1</span>d:<span class="number">7</span>b:<span class="number">20</span>:<span class="number">84</span>:<span class="number">93</span>:<span class="number">2</span>c:<span class="number">90</span>:f5:a7:<span class="number">7</span>b:<span class="number">52</span>:<span class="number">9</span>d:bc:e2:<span class="number">05</span>:</span><br><span class="line">    <span class="number">69</span>:a6:ba:<span class="number">0</span>a:<span class="number">4</span>b:f4:ff:<span class="number">2</span>d:<span class="number">24</span>:<span class="number">2</span>e:b7:<span class="number">65</span>:c7:<span class="number">5</span>a:<span class="number">75</span>:</span><br><span class="line">    <span class="number">8</span>a:a7:<span class="number">70</span>:cc:d8:<span class="number">72</span>:d3:<span class="number">52</span>:<span class="number">80</span>:cb:<span class="number">8</span>e:<span class="number">80</span>:d5:<span class="number">8</span>a:<span class="number">06</span>:</span><br><span class="line">    d5:cf:<span class="number">1</span>f:<span class="number">8</span>a:b1:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">09</span>:<span class="number">2</span>f:c2:<span class="number">38</span>:<span class="number">16</span>:df:<span class="number">0</span>d:<span class="number">3</span>a:</span><br><span class="line">    <span class="number">26</span>:a3:<span class="number">7</span>d:<span class="number">5</span>a:<span class="number">27</span>:<span class="number">4</span>a:<span class="number">31</span>:b3:f9:e9:<span class="number">8</span>d:cd:<span class="number">69</span>:cd:<span class="number">51</span>:</span><br><span class="line">    d0:d8:c7:<span class="number">93</span>:cf:c3:<span class="number">65</span>:a4:<span class="number">0</span>f:cd:a6:<span class="number">6</span>c:<span class="number">03</span>:<span class="number">8</span>e:<span class="number">52</span>:</span><br><span class="line">    ef:<span class="number">35</span>:<span class="number">52</span>:<span class="number">3</span>e:<span class="number">21</span>:e5:<span class="number">65</span>:a2:f9</span><br><span class="line">prime2:</span><br><span class="line">    <span class="number">00</span>:c7:f5:ab:f0:<span class="number">10</span>:d3:<span class="number">22</span>:eb:<span class="number">45</span>:<span class="number">80</span>:<span class="number">45</span>:dd:<span class="number">6</span>f:<span class="number">6</span>f:</span><br><span class="line">    e8:df:<span class="number">4</span>b:bf:<span class="number">32</span>:b9:<span class="number">27</span>:f7:cd:<span class="number">37</span>:bd:b3:<span class="number">95</span>:e0:<span class="number">4</span>a:</span><br><span class="line">    bd:a1:<span class="number">00</span>:<span class="number">78</span>:d7:d3:<span class="number">13</span>:<span class="number">83</span>:<span class="number">00</span>:e0:<span class="number">04</span>:<span class="number">89</span>:<span class="number">7</span>d:b9:dd:</span><br><span class="line">    <span class="number">46</span>:de:f3:<span class="number">79</span>:fd:a0:<span class="number">49</span>:<span class="number">21</span>:<span class="number">1</span>c:c2:<span class="number">93</span>:<span class="number">71</span>:<span class="number">07</span>:f3:ac:</span><br><span class="line">    <span class="number">88</span>:<span class="number">28</span>:<span class="number">27</span>:<span class="number">71</span>:b9:<span class="number">51</span>:<span class="number">9</span>e:<span class="number">8</span>f:<span class="number">77</span>:<span class="number">8</span>d:ed:<span class="number">8</span>a:aa:e9:<span class="number">7</span>a:</span><br><span class="line">    <span class="number">3</span>c:a0:cb:<span class="number">19</span>:<span class="number">4</span>e:a4:<span class="number">7</span>f:a0:ad:<span class="number">28</span>:b0:<span class="number">1</span>d:ce:e2:dd:</span><br><span class="line">    <span class="number">66</span>:<span class="number">56</span>:c7:<span class="number">7</span>d:<span class="number">64</span>:<span class="number">8</span>c:<span class="number">10</span>:a6:a0:<span class="number">58</span>:<span class="number">02</span>:<span class="number">41</span>:<span class="number">40</span>:<span class="number">5</span>f:<span class="number">1</span>f:</span><br><span class="line">    <span class="number">85</span>:<span class="number">14</span>:<span class="number">63</span>:<span class="number">3</span>c:<span class="number">0</span>e:aa:f6:<span class="number">60</span>:a0:<span class="number">2</span>d:c6:e2:<span class="number">55</span>:<span class="number">6</span>f:<span class="number">62</span>:</span><br><span class="line">    e8:<span class="number">3</span>f:df:<span class="number">74</span>:<span class="number">91</span>:a9:<span class="number">76</span>:<span class="number">61</span>:<span class="number">57</span></span><br><span class="line">exponent1:</span><br><span class="line">    <span class="number">72</span>:<span class="number">3</span>c:<span class="number">23</span>:a9:d5:<span class="number">48</span>:<span class="number">46</span>:d8:<span class="number">26</span>:<span class="number">35</span>:df:<span class="number">39</span>:<span class="number">4</span>c:<span class="number">59</span>:cd:</span><br><span class="line">    <span class="number">34</span>:<span class="number">71</span>:e4:<span class="number">52</span>:c7:<span class="number">1</span>a:a4:<span class="number">9</span>e:e7:<span class="number">1</span>d:<span class="number">0</span>a:f7:c0:<span class="number">5</span>d:<span class="number">16</span>:</span><br><span class="line">    <span class="number">65</span>:<span class="number">4</span>a:af:bb:ec:f6:<span class="number">44</span>:<span class="number">4</span>a:ca:<span class="number">60</span>:c0:e0:<span class="number">5</span>b:a1:f0:</span><br><span class="line">    <span class="number">44</span>:<span class="number">18</span>:<span class="number">50</span>:<span class="number">07</span>:fe:c8:<span class="number">29</span>:d7:ca:b5:<span class="number">24</span>:<span class="number">15</span>:<span class="number">40</span>:<span class="number">3</span>a:<span class="number">85</span>:</span><br><span class="line">    <span class="number">9</span>a:<span class="number">1</span>b:<span class="number">82</span>:<span class="number">97</span>:<span class="number">71</span>:<span class="number">4</span>f:<span class="number">1</span>d:<span class="number">6</span>c:da:<span class="number">17</span>:d3:<span class="number">04</span>:f7:<span class="number">7</span>a:d4:</span><br><span class="line">    c4:<span class="number">2</span>a:<span class="number">2</span>c:df:af:a7:<span class="number">90</span>:fa:a0:e3:<span class="number">6</span>f:<span class="number">71</span>:<span class="number">31</span>:<span class="number">53</span>:<span class="number">5</span>d:</span><br><span class="line">    c5:<span class="number">4</span>d:<span class="number">18</span>:a9:<span class="number">58</span>:<span class="number">0</span>f:<span class="number">18</span>:b9:<span class="number">10</span>:<span class="number">1</span>b:ce:<span class="number">3</span>b:ec:<span class="number">2</span>f:<span class="number">22</span>:</span><br><span class="line">    d8:dd:d1:bd:<span class="number">13</span>:c0:<span class="number">43</span>:ff:f4:e7:ca:<span class="number">75</span>:b6:<span class="number">5</span>f:<span class="number">27</span>:</span><br><span class="line">    ea:<span class="number">4</span>a:<span class="number">1</span>e:<span class="number">77</span>:<span class="number">58</span>:eb:<span class="number">6</span>e:<span class="number">41</span></span><br><span class="line">exponent2:</span><br><span class="line">    <span class="number">22</span>:<span class="number">58</span>:<span class="number">9</span>f:<span class="number">7</span>c:ef:d6:e4:<span class="number">63</span>:<span class="number">97</span>:<span class="number">1</span>f:<span class="number">8</span>e:<span class="number">60</span>:<span class="number">97</span>:b8:<span class="number">98</span>:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">6</span>a:ab:<span class="number">5</span>f:d2:<span class="number">0</span>f:fc:<span class="number">6</span>f:<span class="number">82</span>:<span class="number">88</span>:<span class="number">92</span>:<span class="number">25</span>:<span class="number">47</span>:<span class="number">4</span>e:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">3</span>e:<span class="number">0</span>d:<span class="number">6</span>f:b4:<span class="number">5</span>a:ac:<span class="number">3</span>a:<span class="number">4</span>f:<span class="number">57</span>:<span class="number">2</span>b:<span class="number">50</span>:<span class="number">56</span>:<span class="number">89</span>:<span class="number">2</span>b:<span class="number">69</span>:</span><br><span class="line">    f5:f7:ca:<span class="number">57</span>:<span class="number">77</span>:<span class="number">45</span>:b8:<span class="number">6</span>b:<span class="number">51</span>:<span class="number">3</span>c:b4:<span class="number">28</span>:<span class="number">92</span>:<span class="number">81</span>:<span class="number">6</span>b:</span><br><span class="line">    <span class="number">2</span>d:c2:<span class="number">80</span>:b5:<span class="number">3</span>d:<span class="number">40</span>:c8:<span class="number">11</span>:d8:<span class="number">0</span>e:<span class="number">1</span>a:<span class="number">48</span>:<span class="number">7</span>b:<span class="number">2</span>c:<span class="number">24</span>:</span><br><span class="line">    e7:d5:<span class="number">9</span>a:f6:<span class="number">38</span>:<span class="number">29</span>:<span class="number">37</span>:f7:<span class="number">26</span>:<span class="number">4</span>b:<span class="number">02</span>:<span class="number">03</span>:bc:<span class="number">52</span>:<span class="number">1</span>d:</span><br><span class="line">    <span class="number">37</span>:<span class="number">00</span>:b3:<span class="number">18</span>:<span class="number">27</span>:<span class="number">3</span>a:e0:f4:<span class="number">1</span>f:c9:db:<span class="number">5</span>d:<span class="number">6</span>c:<span class="number">39</span>:<span class="number">64</span>:</span><br><span class="line">    c9:<span class="number">78</span>:b6:<span class="number">23</span>:<span class="number">2</span>a:d8:<span class="number">81</span>:<span class="number">06</span>:<span class="number">62</span>:<span class="number">76</span>:<span class="number">8</span>b:ff:f2:cf:<span class="number">01</span>:</span><br><span class="line">    <span class="number">67</span>:<span class="number">9</span>f:<span class="number">41</span>:<span class="number">4</span>d:<span class="number">97</span>:d7:<span class="number">1</span>e:a7</span><br><span class="line">coefficient:</span><br><span class="line">    <span class="number">00</span>:b5:c8:<span class="number">95</span>:eb:a0:<span class="number">61</span>:<span class="number">84</span>:b4:<span class="number">89</span>:d0:fd:a1:<span class="number">9</span>f:<span class="number">8</span>e:</span><br><span class="line">    <span class="number">77</span>:<span class="number">43</span>:<span class="number">6</span>f:d7:bc:<span class="number">75</span>:d4:eb:c0:<span class="number">8</span>a:<span class="number">86</span>:<span class="number">5</span>f:fc:b0:<span class="number">6</span>f:</span><br><span class="line">    <span class="number">02</span>:ca:b3:f1:<span class="number">3</span>b:a5:a4:de:<span class="number">80</span>:<span class="number">88</span>:<span class="number">79</span>:<span class="number">93</span>:e1:<span class="number">57</span>:<span class="number">49</span>:</span><br><span class="line">    <span class="number">3</span>c:<span class="number">1</span>c:<span class="number">0</span>a:<span class="number">14</span>:d3:<span class="number">4</span>a:f5:<span class="number">2</span>f:e8:f8:bb:<span class="number">06</span>:<span class="number">38</span>:df:f5:</span><br><span class="line">    <span class="number">83</span>:<span class="number">26</span>:d4:<span class="number">79</span>:<span class="number">96</span>:<span class="number">31</span>:<span class="number">27</span>:e7:<span class="number">19</span>:dd:<span class="number">4</span>c:d9:<span class="number">9</span>d:d1:<span class="number">65</span>:</span><br><span class="line">    <span class="number">9</span>f:<span class="number">69</span>:<span class="number">5</span>d:<span class="number">41</span>:ae:e3:<span class="number">3</span>b:aa:<span class="number">5</span>d:<span class="number">08</span>:fd:<span class="number">44</span>:<span class="number">70</span>:a4:<span class="number">4</span>e:</span><br><span class="line">    <span class="number">83</span>:ea:bb:<span class="number">05</span>:ab:<span class="number">84</span>:<span class="number">85</span>:<span class="number">1</span>e:<span class="number">72</span>:a4:<span class="number">56</span>:c0:<span class="number">75</span>:<span class="number">1</span>d:be:</span><br><span class="line">    <span class="number">9</span>d:ed:<span class="number">8</span>c:<span class="number">51</span>:b7:e7:<span class="number">2</span>d:<span class="number">92</span>:<span class="number">31</span>:<span class="number">83</span>:<span class="number">5</span>b:<span class="number">56</span>:<span class="number">64</span>:<span class="number">27</span>:<span class="number">30</span>:</span><br><span class="line">    d6:<span class="number">2</span>a:<span class="number">57</span>:fb:<span class="number">2</span>d:ff:<span class="number">68</span>:<span class="number">2</span>a:a7</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id=""><a href="#" class="headerlink" title="-*"></a>-*</h3><p>这个指令的意思是可以自己指定用于保护密钥文件的对称加密算法，当然前提是当前版本的OpenSSL支持。</p>
+<p>例如，使用<code>AES-128-CTR</code>对这个密钥文件进行加密：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">openssl genpkey -algorithm RSA -AES-128-CTR -out RSA-2048-Encrypted-Private-Key.pem</span><br></pre></td></tr></table></figure>
+
+<hr>
 ]]></content>
       <categories>
         <category>Tech</category>
-        <category>Web Front-End</category>
+        <category>Crypto</category>
       </categories>
       <tags>
-        <tag>JavaScript</tag>
-        <tag>Interactive Fiction</tag>
-        <tag>Web Front-End</tag>
+        <tag>OpenSSL</tag>
+        <tag>Crypto</tag>
+        <tag>Linux</tag>
       </tags>
   </entry>
   <entry>
@@ -1738,6 +1632,112 @@
       </tags>
   </entry>
   <entry>
+    <title>从零开始的小黄油制作—— Milovana EOS Editor教程（3） 简单实战</title>
+    <url>/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>在介绍了注册、基本UI和基本行为机制后，其实已经可以制作一个简单的文游。</p>
+<p>或者说，有些读者就很不喜欢看那些系统性介绍的长篇大论，就喜欢这种<strong>直接上手的实战</strong>教程——<strong>你™黄油呢？</strong>那么，它来了。</p>
+<span id="more"></span>
+
+<p>本文将制作一个简单版本的自慰寸止文游，它仅仅是作为一个示例，或者说作为一个PoC，也不一定真的有实际作用。</p>
+<p>注意，通常而言，要做一个文游，要有一个<strong>想法</strong>，至少一套<strong>组图</strong>，一份<strong>大纲</strong>（最好是<strong>文案</strong>）。</p>
+<p><strong>如果你很强</strong>，可以<strong>一边做一边想剧情一边码字</strong>。</p>
+<p>本案例的试玩页面在这里：<a href="https://milovana.com/webteases/showtease.php?id=72496&key=1d7c89e390">镇海姐姐的自慰寸止挑战~</a></p>
+<hr>
+<h2 id="警告"><a href="#警告" class="headerlink" title="警告"></a>警告</h2><p>本次制作的寸止文游使用的素材和主题可能包括：</p>
+<p><strong>#碧蓝航线，#镇海， #纯爱，#姐姐系，#年上， #巨乳， #轻度抖M，#恋物癖， #恋足癖，  #恋袜癖， #轻度气味癖，#自慰，#寸止，#轻微羞辱</strong>等等。</p>
+<p>本文游仅仅是作为一个<strong>范例</strong>来讲，准确地说，读者在自己制作时<strong>完全可以采用不同的主题和素材</strong>。</p>
+<p>本文旨在起到一个<strong>抛砖引玉</strong>的作用，以各位写手、文援、读者的创造力，完全可以做出<strong>好得多</strong>的文游。</p>
+<p>（作者并不玩碧蓝航线，只是<strong>镇海</strong>这个角色皮肤特点比较统一，热度也不算很低，所以她的黑丝脚图相对好找一些，组图素材比较丰富）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/chenHaiPics.png" class="" title="chenHaiPics">
+
+<p>（对于<strong>人设方面失真</strong>，<strong>背离原设</strong>的问题，实在是作者能力之外，抱歉）</p>
+<hr>
+<h2 id="创建文游"><a href="#创建文游" class="headerlink" title="创建文游"></a>创建文游</h2><p>第一步当然是要创建文游，来到Teases界面，点击Create Tease，创建一个新的Webtease。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createTease.png" class="" title="createTease">
+
+<p>起个标题吧，比如说我的标题是<code>镇海姐姐的自慰寸止挑战~</code>。</p>
+<hr>
+<h2 id="导入素材"><a href="#导入素材" class="headerlink" title="导入素材"></a>导入素材</h2><p>为了方便后续的制作，最好先把要用的素材导入一下。</p>
+<h3 id="导入图片素材"><a href="#导入图片素材" class="headerlink" title="导入图片素材"></a>导入图片素材</h3><p>进入<strong>画廊（Galleries）</strong>，新建一个画廊。例如我的画廊就叫<code>Chen Hai</code>（镇海）。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createGallery.png" class="" title="createGallery">
+
+<p>通过拖动或者上传按钮，上传已经准备好的组图素材。</p>
+<p>上传完成后，画廊里面应该已经存好了组图素材。此时就不用担心丢失的问题，之后调用也会方便得多。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToGallery.png" class="" title="uploadToGallery">
+
+<hr>
+<h3 id="导入音频素材"><a href="#导入音频素材" class="headerlink" title="导入音频素材"></a>导入音频素材</h3><p>进入<strong>文件（Files）</strong>，直接拖动或者通过上传按钮，上传已经准备好的音频素材。</p>
+<p>这个音频素材通常是指节拍器音频，你可以用Google Metronome自己录制。</p>
+<p>也可以从Milovana官方EOS教程那里拿到现成的节拍器音频文件（只不过个人不太喜欢这个音色）</p>
+<p><a href="https://milovana.com/forum/download/file.php?id=23725">Metronome-Slow</a>,  <a href="https://milovana.com/forum/download/file.php?id=23724">Metronome-Fast</a>,  <a href="https://milovana.com/forum/download/file.php?id=23723">Metronome-Special</a></p>
+<p>导入音频文件后，应该有一组备用的，BPM有一定梯度的节拍器可以使用。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/uploadToFiles.png" class="" title="uploadToFiles">
+
+<p>这样可以利用<strong>同步计时器+节拍器</strong>的方式来限制或掌控用户的自慰频率，这对于M的用户而言可能带来一种支配感，会增强兴奋。</p>
+<p>当然，用户也完全可以选择静音，按照他们自己的节奏来。</p>
+<hr>
+<h2 id="制作start页面"><a href="#制作start页面" class="headerlink" title="制作start页面"></a>制作start页面</h2><p>来到编辑（Edit）页面，Create Page，<strong>默认标题start</strong>，这个<strong>不建议改</strong>。start改了容易出bug。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/createStartPage.png" class="" title="createStartPage">
+
+<hr>
+<h3 id="背景图"><a href="#背景图" class="headerlink" title="背景图"></a>背景图</h3><p>Create Action，Image，然后选一张自己喜欢的图就可以了。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/selectImage.png" class="" title="selectImage">
+
+<hr>
+<h3 id="叠甲和警告"><a href="#叠甲和警告" class="headerlink" title="叠甲和警告"></a>叠甲和警告</h3><p>开头的交互其实没有什么好说的。只需要创建一堆Say，先叠一下甲，写几个警告，然后加一个选项来确认就可以。</p>
+<p>这个很容易。通常就是R-18，网络侵删，Tag，不适请退出等等。</p>
+<p>Timing模式就留Auto，反正开头用户不会上来直接导，可以交互的。</p>
+<p>稍微注意一下，这个其实是重复，PC端UI的话，中文台本要从其他地方复制，好像是不能直接输入。</p>
+<p>就类似于这样。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/startPage.png" class="" title="startPage">
+
+<hr>
+<h2 id="关键组件"><a href="#关键组件" class="headerlink" title="关键组件"></a>关键组件</h2><p>游戏过程的详细制作过程我就不一一介绍了，这个要讲完基本不现实，而且会重复啰嗦。</p>
+<p>我就选取几个具有代表性的关键组件来讲解一下制作过程。</p>
+<hr>
+<h3 id="确认按钮"><a href="#确认按钮" class="headerlink" title="确认按钮"></a>确认按钮</h3><p>这个东西很简单，就一个Choice，单选，行为留空就可以了。它可以阻塞，所以用户点击之后游戏才能继续，但它自己没有行为，所以什么也不会发生。</p>
+<p>举个例子，就像这样：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/confirmChoice.png" class="" title="confirmChoice">
+
+<hr>
+<h3 id="跳转按钮"><a href="#跳转按钮" class="headerlink" title="跳转按钮"></a>跳转按钮</h3><p>这个东西也很简单，一个Choice，单选，行为就Goto Page。点击后跳转到对应的页面。</p>
+<p>类似于这种：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/jmpChoice.png" class="" title="jmpChoice">
+
+<hr>
+<h3 id="计时器-节拍器（无字幕）"><a href="#计时器-节拍器（无字幕）" class="headerlink" title="计时器+节拍器（无字幕）"></a>计时器+节拍器（无字幕）</h3><p>这个是一个主要的组件，它的构成是这样的：</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/noSubtitleTimerMetronome.png" class="" title="noSubtitleTimerMetronome">
+
+<p>一个Audio，播放音频，不阻塞。</p>
+<p>一个Timer，计时，阻塞。</p>
+<p>一个Eval，通过一行JS代码停止播放音频。</p>
+<hr>
+<h3 id="自动字幕"><a href="#自动字幕" class="headerlink" title="自动字幕"></a>自动字幕</h3><p>在节拍器音频打开，用户腾不出手的情况下，自动字幕可以优化用户的游玩体验。</p>
+<p>这个东西很简单，Say的Timing设置为Custom，设置一个Duration（持续时间）即可。</p>
+<p>是否允许用户跳过看你自己。</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/sayCustom.png" class="" title="sayCustom">
+
+<hr>
+<h3 id="限时任务"><a href="#限时任务" class="headerlink" title="限时任务"></a>限时任务</h3><p>可以利用异步计时器的特性制作限时任务和分支。</p>
+<p>具体而言就是，先打开一个异步计时器，计时器结束将会导致跳转到一个页面（例如：lose）</p>
+<p>然后增加一个交互（例如Choice），如果玩家在计时器走完前点击这个选项，那么跳转到另一个页面（例如：edge3）</p>
+<img src="/2024/09/21/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%B0%8F%E9%BB%84%E6%B2%B9%E5%88%B6%E4%BD%9C%E2%80%94%E2%80%94%20Milovana%20EOS%20Editor%E6%95%99%E7%A8%8B%EF%BC%883%EF%BC%89%20%E7%AE%80%E5%8D%95%E5%AE%9E%E6%88%98/asyncBranch.png" class="" title="asyncBranch">
+
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文通过几个关键组件的方式，简单介绍了一下如何制作一个简单的文游。</p>
+<p>可能会有些粗略，但具体的内容，已经在前两篇EOS的文章里面讲清楚了。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Web Front-End</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+        <tag>Interactive Fiction</tag>
+        <tag>Web Front-End</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>使用BBR一键安装脚本快速优化VPS网络性能</title>
     <url>/2023/10/18/%E4%BD%BF%E7%94%A8BBR%E4%B8%80%E9%94%AE%E5%AE%89%E8%A3%85%E8%84%9A%E6%9C%AC%E5%BF%AB%E9%80%9F%E4%BC%98%E5%8C%96VPS%E7%BD%91%E7%BB%9C%E6%80%A7%E8%83%BD/</url>
     <content><![CDATA[<h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>常规VPS在缺少拥塞控制算法的情况下可能带宽较低，此时可以通过安装BBR来有效提升带宽。</p>
@@ -1763,32 +1763,6 @@
         <tag>Proxy</tag>
         <tag>Circumvention</tag>
         <tag>Network</tag>
-        <tag>VPS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>免费领取一台IBM LinuxOne服务器</title>
-    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
-<span id="more"></span>
-
-<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
-<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
-
-<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
-<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
-<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
-<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
-<p><strong>CPU</strong>: 2v CPU</p>
-<p><strong>RAM</strong>: 4GB</p>
-<p><strong>SSD</strong>: 50GB</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
         <tag>VPS</tag>
       </tags>
   </entry>
@@ -1846,9 +1820,37 @@
       </tags>
   </entry>
   <entry>
+    <title>免费领取一台IBM LinuxOne服务器</title>
+    <url>/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近一直在找低价格的云服务器，没想到IBM LinuxOne居然有永久免费的云服务器可以领，配置还很不错，直接进行一个白嫖。</p>
+<span id="more"></span>
+
+<h2 id="注册过程"><a href="#注册过程" class="headerlink" title="注册过程"></a>注册过程</h2><p>很简单，只要打开IBM LinuxOne的站点，点注册就行了：<a href="https://linuxone.cloud.marist.edu/#/instance">LinuxONE Community Cloud (marist.edu)</a></p>
+<img src="/2023/10/22/%E5%85%8D%E8%B4%B9%E9%A2%86%E5%8F%96%E4%B8%80%E5%8F%B0IBM%20LinuxOne%E6%9C%8D%E5%8A%A1%E5%99%A8/Register.png" class="" title="Register-UI">
+
+<p>然后随便填写信息，注意邮箱不要乱填了，因为会有一封确认邮件。</p>
+<p>Description of Your Project乱填就好了，比如说Web Development, Game Development等等。</p>
+<p>过几个小时会有一封确认邮件发到邮箱，链接有效期48小时，点击即可激活账号。</p>
+<p>激活账号后就可以部署云服务器了，配置还是非常不错的，特别是在永久免费的云服务器当中：</p>
+<p><strong>CPU</strong>: 2v CPU</p>
+<p><strong>RAM</strong>: 4GB</p>
+<p><strong>SSD</strong>: 50GB</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器</title>
     <url>/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍如何在Debian 12上搭建Shadowsocks-Rust (AEAD-2022)服务器。此教程应当大致也适用于Ubuntu操作系统的VPS。</p>
+<span id="more"></span>
+
 <hr>
 <h2 id="系统更新与软件安装"><a href="#系统更新与软件安装" class="headerlink" title="系统更新与软件安装"></a>系统更新与软件安装</h2><p>例行更新：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update -y</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade -y</span><br></pre></td></tr></table></figure>
@@ -2364,6 +2366,115 @@
       </tags>
   </entry>
   <entry>
+    <title>在Ubuntu上部署Shadowsocks-Libev客户端</title>
+    <url>/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在折腾一个QQ机器人的一些API功能，因此需要在Linux操作系统上部署一个代理客户端。</p>
+<p>本文主要介绍如何在Ubuntu 22.04操作系统上简单使用Shadowsocks-Libev客户端进行代理上网。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h2><h3 id="安装Shadowsocks-Libev"><a href="#安装Shadowsocks-Libev" class="headerlink" title="安装Shadowsocks-Libev"></a>安装Shadowsocks-Libev</h3><p>Shadowsocks-Libev的安装方法其实很多，<code>apt-install</code>和<code>snap</code>等等都行。但本文为了操作简便，路径简单易懂，选择使用<code>apt-install</code>直接安装。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="修改Shadowsocks-Libev配置文件"><a href="#修改Shadowsocks-Libev配置文件" class="headerlink" title="修改Shadowsocks-Libev配置文件"></a>修改Shadowsocks-Libev配置文件</h3><p>用nano打开配置文件，当然，用vim之类的完全可以。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /etc/shadowsocks-libev/config.json</span><br></pre></td></tr></table></figure>
+
+<p>一个客户端的配置文件内容如下：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;your_server_ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span><span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;XWlqZhR3y1B0Fb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>根据自己已经搭建好的服务器进行修改。</p>
+<p>搭建过程其实也很简单，之前的博客有介绍。</p>
+<p>网上也有各种教程，比较权威的例如gfw.report的这篇：</p>
+<p><a href="https://gfw.report/blog/ss_tutorial/zh/">如何部署一台抗封锁的Shadowsocks-libev服务器 - GFW REPORT</a></p>
+<p>当然，各种一键脚本和GUI也都是可行的，例如：</p>
+<p><a href="https://github.com/vaxilu/x-ui">vaxilu&#x2F;x-ui: 支持多协议多用户的 xray 面板</a></p>
+<p><a href="https://233boy.com/xray/">Xray - 233Boy</a></p>
+<p>非常方便。</p>
+<hr>
+<h3 id="修改Shadowsocks-Libev服务类型"><a href="#修改Shadowsocks-Libev服务类型" class="headerlink" title="修改Shadowsocks-Libev服务类型"></a>修改Shadowsocks-Libev服务类型</h3><p>这一步比较关键，先别直接启动了。</p>
+<p>Shadowsocks-Libev默认以服务端运行，因此要对它的运行方式稍作修改：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /usr/lib/systemd/system/shadowsocks-libev.service</span><br></pre></td></tr></table></figure>
+
+<p>打开这个文件，看到其中有这行：</p>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">ExecStart=/usr/bin/ss-server -c $CONFFILE $DAEMON_ARGS</span><br></pre></td></tr></table></figure>
+
+<p>把它修改为：</p>
+<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">ExecStart=/usr/bin/ss-local -c $CONFFILE $DAEMON_ARGS</span><br></pre></td></tr></table></figure>
+
+<p>然后重载daemon，读取修改后的配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="启动Shadowsocks客户端"><a href="#启动Shadowsocks客户端" class="headerlink" title="启动Shadowsocks客户端"></a>启动Shadowsocks客户端</h3><p>现在可以正常使用了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl start shadowsocks-libev</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<p>如果要检查运行状态：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<p>如果修改了配置文件，要重新加载：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart shadowsocks-libev</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="验证代理可用性"><a href="#验证代理可用性" class="headerlink" title="验证代理可用性"></a>验证代理可用性</h3><p>例如，可以使用curl来进行尝试：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl --socks5-hostname 127.0.0.1:1080 https://www.google.com</span><br></pre></td></tr></table></figure>
+
+<p>如果返回了一个HTML文件，那么确定代理已经可用，机器已经可以访问国际互联网。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Ubuntu 22.04上部署Shadowsocks-Libev代理客户端。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>Proxy</tag>
+        <tag>Circumvention</tag>
+        <tag>Network</tag>
+        <tag>VPS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Windows 11上修改YT-DLP的默认配置文件</title>
+    <url>/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。</p>
+<p>但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>首先参考官方文档：<a href="https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#configuration">YT-DLP Configuration - GitHuub</a></p>
+<p>以Windows操作系统为例，Win+R，<code>%Appdata%</code>，回车。</p>
+<p>寻找<code>yt-dlp</code>这个文件夹，如果它不存在，创建它，进入。新建文件<code>config.txt</code>。</p>
+<p>使用文本编辑器打开<code>config.txt</code>，可以开始修改默认配置，例如，这是我的个人配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</span><br><span class="line"></span><br><span class="line">-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</span><br><span class="line"></span><br><span class="line">--proxy 127.0.0.1:10808</span><br><span class="line"></span><br><span class="line">--write-thumbnail</span><br></pre></td></tr></table></figure>
+
+<p>简单解释：</p>
+<p><code>-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</code>：输出到<code>E:/VideoClip/Original/</code>目录下，保持默认命名。</p>
+<p><code>-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</code>：下载MP4格式的文件，优先采用1080P60，如果没有，回退到720P60，如果还没有，选择可选的最高画质。音频固定为最高质量音频。</p>
+<p><code>--proxy 127.0.0.1:10808</code>：代理走本地10808端口（v2rayN），如果是Clash for Windows，Clash Meta，Mihomo Party等工具，那么就是7890端口。如果是Shadowsocks，Hysteria 2等工具，那么就是1080端口。根据实际情况。</p>
+<p><code>--write-thumbnail</code>：下载封面。</p>
+<p>更多详细配置请参考帮助，不一一罗列。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yt-dlp --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<p>随后可以正常使用，且操作简单快捷，例如：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yt-dlp [yourVideoURL]</span><br></pre></td></tr></table></figure>
+
+<p>不需要反复确认指令参数，稍微方便了一些。</p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文简单介绍了如何通过修改配置文件的方式修改YT-DLP的默认设置。</p>
+<p>更多详细信息请参考官方文档：<a href="https://github.com/yt-dlp/yt-dlp">YT-DLP - GitHub</a></p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+        <tag>Python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>在Visual Studio 2022中配置Crypto++开发环境</title>
     <url>/2023/11/11/%E5%9C%A8Visual-Studio-2022%E4%B8%AD%E9%85%8D%E7%BD%AECrypto-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Crypto++</code>是一个轻量、开源、受欢迎的<code>C++</code>密码学库，采用了OOP的程序设计思想，总体比较契合<code>C++</code>的程序设计风格。</p>
@@ -2453,148 +2564,6 @@
       <tags>
         <tag>Crypto</tag>
         <tag>C++</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Windows 11上修改YT-DLP的默认配置文件</title>
-    <url>/2025/08/29/%E5%9C%A8Windows-11%E4%B8%8A%E4%BF%AE%E6%94%B9YT-DLP%E7%9A%84%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在更换新的单人字幕工作流，通过开源软件替代商业软件。搬运需要下载视频，那么YT-DLP就是一个不错的选择。</p>
-<p>但是在使用过程中遇到了一些问题，主要是配置文件方面，不想每次都输入大量参数。经过一番摸索，获得了自己的解决方案，仅供参考。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><p>首先参考官方文档：<a href="https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#configuration">YT-DLP Configuration - GitHuub</a></p>
-<p>以Windows操作系统为例，Win+R，<code>%Appdata%</code>，回车。</p>
-<p>寻找<code>yt-dlp</code>这个文件夹，如果它不存在，创建它，进入。新建文件<code>config.txt</code>。</p>
-<p>使用文本编辑器打开<code>config.txt</code>，可以开始修改默认配置，例如，这是我的个人配置：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</span><br><span class="line"></span><br><span class="line">-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</span><br><span class="line"></span><br><span class="line">--proxy 127.0.0.1:10808</span><br><span class="line"></span><br><span class="line">--write-thumbnail</span><br></pre></td></tr></table></figure>
-
-<p>简单解释：</p>
-<p><code>-o &quot;E:/VideoClip/Original/%(title)s.%(ext)s&quot;</code>：输出到<code>E:/VideoClip/Original/</code>目录下，保持默认命名。</p>
-<p><code>-f &quot;bv[ext=mp4][height=1080][fps=60]+ba[ext=m4a]/bv[ext=mp4][height=720][fps=60]+ba[ext=m4a]/bv[ext=mp4][height&lt;=1080]+ba[ext=m4a]/bestvideo+bestaudio/best&quot;</code>：下载MP4格式的文件，优先采用1080P60，如果没有，回退到720P60，如果还没有，选择可选的最高画质。音频固定为最高质量音频。</p>
-<p><code>--proxy 127.0.0.1:10808</code>：代理走本地10808端口（v2rayN），如果是Clash for Windows，Clash Meta，Mihomo Party等工具，那么就是7890端口。如果是Shadowsocks，Hysteria 2等工具，那么就是1080端口。根据实际情况。</p>
-<p><code>--write-thumbnail</code>：下载封面。</p>
-<p>更多详细配置请参考帮助，不一一罗列。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yt-dlp --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
-
-<p>随后可以正常使用，且操作简单快捷，例如：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yt-dlp [yourVideoURL]</span><br></pre></td></tr></table></figure>
-
-<p>不需要反复确认指令参数，稍微方便了一些。</p>
-<hr>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文简单介绍了如何通过修改配置文件的方式修改YT-DLP的默认设置。</p>
-<p>更多详细信息请参考官方文档：<a href="https://github.com/yt-dlp/yt-dlp">YT-DLP - GitHub</a></p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
-        <tag>Python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Ubuntu上部署Shadowsocks-Libev客户端</title>
-    <url>/2025/09/06/%E5%9C%A8Ubuntu%E4%B8%8A%E9%83%A8%E7%BD%B2Shadowsocks-Libev%E5%AE%A2%E6%88%B7%E7%AB%AF/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近期在折腾一个QQ机器人的一些API功能，因此需要在Linux操作系统上部署一个代理客户端。</p>
-<p>本文主要介绍如何在Ubuntu 22.04操作系统上简单使用Shadowsocks-Libev客户端进行代理上网。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="操作过程"><a href="#操作过程" class="headerlink" title="操作过程"></a>操作过程</h2><h3 id="安装Shadowsocks-Libev"><a href="#安装Shadowsocks-Libev" class="headerlink" title="安装Shadowsocks-Libev"></a>安装Shadowsocks-Libev</h3><p>Shadowsocks-Libev的安装方法其实很多，<code>apt-install</code>和<code>snap</code>等等都行。但本文为了操作简便，路径简单易懂，选择使用<code>apt-install</code>直接安装。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update</span><br><span class="line"><span class="built_in">sudo</span> apt install shadowsocks-libev</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="修改Shadowsocks-Libev配置文件"><a href="#修改Shadowsocks-Libev配置文件" class="headerlink" title="修改Shadowsocks-Libev配置文件"></a>修改Shadowsocks-Libev配置文件</h3><p>用nano打开配置文件，当然，用vim之类的完全可以。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /etc/shadowsocks-libev/config.json</span><br></pre></td></tr></table></figure>
-
-<p>一个客户端的配置文件内容如下：</p>
-<figure class="highlight json"><table><tr><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;your_server_ip&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span><span class="number">16384</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span><span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span><span class="string">&quot;XWlqZhR3y1B0Fb&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span><span class="string">&quot;aes-128-gcm&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-<p>根据自己已经搭建好的服务器进行修改。</p>
-<p>搭建过程其实也很简单，之前的博客有介绍。</p>
-<p>网上也有各种教程，比较权威的例如gfw.report的这篇：</p>
-<p><a href="https://gfw.report/blog/ss_tutorial/zh/">如何部署一台抗封锁的Shadowsocks-libev服务器 - GFW REPORT</a></p>
-<p>当然，各种一键脚本和GUI也都是可行的，例如：</p>
-<p><a href="https://github.com/vaxilu/x-ui">vaxilu&#x2F;x-ui: 支持多协议多用户的 xray 面板</a></p>
-<p><a href="https://233boy.com/xray/">Xray - 233Boy</a></p>
-<p>非常方便。</p>
-<hr>
-<h3 id="修改Shadowsocks-Libev服务类型"><a href="#修改Shadowsocks-Libev服务类型" class="headerlink" title="修改Shadowsocks-Libev服务类型"></a>修改Shadowsocks-Libev服务类型</h3><p>这一步比较关键，先别直接启动了。</p>
-<p>Shadowsocks-Libev默认以服务端运行，因此要对它的运行方式稍作修改：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /usr/lib/systemd/system/shadowsocks-libev.service</span><br></pre></td></tr></table></figure>
-
-<p>打开这个文件，看到其中有这行：</p>
-<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">ExecStart=/usr/bin/ss-server -c $CONFFILE $DAEMON_ARGS</span><br></pre></td></tr></table></figure>
-
-<p>把它修改为：</p>
-<figure class="highlight txt"><table><tr><td class="code"><pre><span class="line">ExecStart=/usr/bin/ss-local -c $CONFFILE $DAEMON_ARGS</span><br></pre></td></tr></table></figure>
-
-<p>然后重载daemon，读取修改后的配置文件：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="启动Shadowsocks客户端"><a href="#启动Shadowsocks客户端" class="headerlink" title="启动Shadowsocks客户端"></a>启动Shadowsocks客户端</h3><p>现在可以正常使用了。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl start shadowsocks-libev</span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> shadowsocks-libev</span><br></pre></td></tr></table></figure>
-
-<p>如果要检查运行状态：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status shadowsocks-libev</span><br></pre></td></tr></table></figure>
-
-<p>如果修改了配置文件，要重新加载：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart shadowsocks-libev</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="验证代理可用性"><a href="#验证代理可用性" class="headerlink" title="验证代理可用性"></a>验证代理可用性</h3><p>例如，可以使用curl来进行尝试：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">curl --socks5-hostname 127.0.0.1:1080 https://www.google.com</span><br></pre></td></tr></table></figure>
-
-<p>如果返回了一个HTML文件，那么确定代理已经可用，机器已经可以访问国际互联网。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Ubuntu 22.04上部署Shadowsocks-Libev代理客户端。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>Proxy</tag>
-        <tag>Circumvention</tag>
-        <tag>Network</tag>
-        <tag>VPS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>在Windows 11中默认使用Windows 10右键菜单</title>
-    <url>/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近重装了系统，觉得Windows 11默认的右键菜单方案很别扭，还是Windows 10的样式最舒适。因此找了找网上的方案，最后自己摸索出可用的方法。并不困难。</p>
-<p>修改注册表操作可能存在一定风险，如果担心风险，可以考虑备份，或者放弃修改。</p>
-<p>如果不想永久性修改，按下<code>Shift+右键</code>即可，可以呼出Windows 10风格的详细右键菜单。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="调整为Windows-10经典菜单"><a href="#调整为Windows-10经典菜单" class="headerlink" title="调整为Windows 10经典菜单"></a>调整为Windows 10经典菜单</h2><p>很简单，只需要新建一个<code>.reg</code>文件，例如，<code>win10ClassicCtxMenu.reg</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">reg.exe add &quot;HKCU\Software\Classes\CLSID\&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;\InprocServer32&quot; /f /ve</span><br></pre></td></tr></table></figure>
-
-<p>保存后，双击执行它，确定。然后在任务管理器中找到文件资源管理器，重启它，或者直接重启电脑即可。</p>
-<hr>
-<h2 id="恢复为Windows-11新菜单"><a href="#恢复为Windows-11新菜单" class="headerlink" title="恢复为Windows 11新菜单"></a>恢复为Windows 11新菜单</h2><p>很简单，也同样只需要一个<code>.reg</code>文件，例如，<code>win11NewCtxMenu.reg</code>：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[-HKEY_CURRENT_USER\Software\Classes\CLSID\&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;]</span><br></pre></td></tr></table></figure>
-
-<p>同样的操作，保存后，双击它。其实甚至都不用刷新文件资源管理器就生效了。</p>
-<hr>
-<h2 id="原理简介"><a href="#原理简介" class="headerlink" title="原理简介"></a>原理简介</h2><p>（信息来源于Google Gemini）</p>
-<p>微软在 Windows 11 中为文件资源管理器（Explorer）引入了新的上下文菜单（右键菜单）机制。它通过一个被称为 <code>CLSID</code>（Class ID）的特殊标识符来加载。<code>&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;</code> 就是用来控制这个新菜单的关键 ID。</p>
-<p>通过在注册表中为这个 ID 增加一个 <strong><code>InprocServer32</code></strong> 项并设置其为空值，我们实际上是在告诉系统：“不要加载与此 CLSID 关联的默认处理程序，请退回到旧版（经典版）的上下文菜单。” 这样就巧妙地绕过了 Windows 11 的新设计，让经典的 Windows 10 菜单得以重现。</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Windows 11操作系统中用简单的注册表修改手段将右键菜单样式退回经典的Windows 10。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
@@ -2841,6 +2810,39 @@
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>在Windows 11中默认使用Windows 10右键菜单</title>
+    <url>/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近重装了系统，觉得Windows 11默认的右键菜单方案很别扭，还是Windows 10的样式最舒适。因此找了找网上的方案，最后自己摸索出可用的方法。并不困难。</p>
+<p>修改注册表操作可能存在一定风险，如果担心风险，可以考虑备份，或者放弃修改。</p>
+<p>如果不想永久性修改，按下<code>Shift+右键</code>即可，可以呼出Windows 10风格的详细右键菜单。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="调整为Windows-10经典菜单"><a href="#调整为Windows-10经典菜单" class="headerlink" title="调整为Windows 10经典菜单"></a>调整为Windows 10经典菜单</h2><p>很简单，只需要新建一个<code>.reg</code>文件，例如，<code>win10ClassicCtxMenu.reg</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">reg.exe add &quot;HKCU\Software\Classes\CLSID\&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;\InprocServer32&quot; /f /ve</span><br></pre></td></tr></table></figure>
+
+<p>保存后，双击执行它，确定。然后在任务管理器中找到文件资源管理器，重启它，或者直接重启电脑即可。</p>
+<hr>
+<h2 id="恢复为Windows-11新菜单"><a href="#恢复为Windows-11新菜单" class="headerlink" title="恢复为Windows 11新菜单"></a>恢复为Windows 11新菜单</h2><p>很简单，也同样只需要一个<code>.reg</code>文件，例如，<code>win11NewCtxMenu.reg</code>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version 5.00</span><br><span class="line"></span><br><span class="line">[-HKEY_CURRENT_USER\Software\Classes\CLSID\&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>同样的操作，保存后，双击它。其实甚至都不用刷新文件资源管理器就生效了。</p>
+<hr>
+<h2 id="原理简介"><a href="#原理简介" class="headerlink" title="原理简介"></a>原理简介</h2><p>（信息来源于Google Gemini）</p>
+<p>微软在 Windows 11 中为文件资源管理器（Explorer）引入了新的上下文菜单（右键菜单）机制。它通过一个被称为 <code>CLSID</code>（Class ID）的特殊标识符来加载。<code>&#123;86ca1aa0-34aa-4e8b-a509-50c905bae2a2&#125;</code> 就是用来控制这个新菜单的关键 ID。</p>
+<p>通过在注册表中为这个 ID 增加一个 <strong><code>InprocServer32</code></strong> 项并设置其为空值，我们实际上是在告诉系统：“不要加载与此 CLSID 关联的默认处理程序，请退回到旧版（经典版）的上下文菜单。” 这样就巧妙地绕过了 Windows 11 的新设计，让经典的 Windows 10 菜单得以重现。</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Windows 11操作系统中用简单的注册表修改手段将右键菜单样式退回经典的Windows 10。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
@@ -3118,6 +3120,105 @@
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
+    <url>/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。</p>
+<p>这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h2><hr>
+<h3 id="示例：Markdown"><a href="#示例：Markdown" class="headerlink" title="示例：Markdown"></a>示例：Markdown</h3><p>建议是在VSCode里面增加一个Reg插件。</p>
+<p>新建一个文本文件，把后缀名改成.reg，例如<code>addMd.reg</code></p>
+<p>用文本编辑器之类的东西打开，把内容改成这样：</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md</span>]</span><br><span class="line">@=<span class="string">&quot;markdown&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\markdown</span>]</span><br><span class="line">@=<span class="string">&quot;Markdown file&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>保存，双击运行，点击「是」，即可。</p>
+<p>可能不会立刻生效，重启一下就可以了。</p>
+<hr>
+<h3 id="示例：C"><a href="#示例：C" class="headerlink" title="示例：C++"></a>示例：C++</h3><p>同样，只要改一下Reg文件的内容：</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp</span>]</span><br><span class="line">@=<span class="string">&quot;cppfile&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\cppfile</span>]</span><br><span class="line">@=<span class="string">&quot;C++ Source File&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>保存，双击运行，即可。其它的以此类推</p>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了如何通过简单的防法，为Windows右键菜单新建文件提供更多选择。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单的Cloudflare Warp使用方法</title>
+    <url>/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。</p>
+<p>本文字教程主要介绍在个人设备上使用Cloudflare Warp连接到互联网，并通过Cloudflare Zero Trust登录客户端，解除Warp自身的流量限制。</p>
+<span id="more"></span>
+
+<h2 id="安装与连接"><a href="#安装与连接" class="headerlink" title="安装与连接"></a>安装与连接</h2><p>安装非常简单，在Cloudflare 1.1.1.1的官方网站下载适合自己设备的客户端即可。</p>
+<p>下载链接：<a href="https://1.1.1.1/">1.1.1.1 — The free app that makes your Internet faster.</a></p>
+<p>打开安装包，按照指示完成安装即可。打开Cloudflare Warp客户端。</p>
+<p>点击连接，即可尝试连接。这一步有一定的可能性会失败。如果成功，已经可以访问国际互联网，而且性能通常不错。但是有一定的流量限制。</p>
+<p>如果是轻度使用者，不在意流量限制，到这一步即可完成。</p>
+<h2 id="注册Zero-Trust"><a href="#注册Zero-Trust" class="headerlink" title="注册Zero Trust"></a>注册Zero Trust</h2><p>登录Cloudflare Dashboard：<a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
+<p>当然，如果没有账号可以先注册一个，很容易。注册过程略。</p>
+<p>在左侧找到Zero Trust，注册一个Zero Trust账号，团队名称可以自由选择。注册过程略。</p>
+<p>注册成功后，找到左侧的<code>My Team</code>一栏，找到<code>Devices</code>选项。选择<code>Connect a Device</code>选项。</p>
+<p>单击<code>Create an Enrollment</code>，输入需要注册的邮箱后缀名，例如<code>@gmail.com</code>，然后点击<code>save</code>。</p>
+<h2 id="Zero-Trust登录与连接"><a href="#Zero-Trust登录与连接" class="headerlink" title="Zero Trust登录与连接"></a>Zero Trust登录与连接</h2><p>打开自己的Cloudflare Warp客户端，在右键菜单中找到<code>偏好设置</code>，找到<code>账户</code>一栏，点击<code>使用Cloudflare Zero Trust登录</code>。</p>
+<p>输入自己之前注册Zero Trust使用的团队名称，点击确认，会跳转到团队的一个Web验证界面。</p>
+<p>输入自己使用的邮箱。</p>
+<p>在自己的邮箱当中找到Cloudflare发送的验证码，填写验证码，确认。</p>
+<p>稍作等待，Cloudflare Warp客户端的Zero Trust将成功登陆。</p>
+<p>打开Cloudflare Warp客户端，现在Warp的标志将被替换为Zero Trust。点击连接按钮，即可尝试连接到Cloudflare Warp服务。</p>
+<p>这一步的成功率很高，通常能够连接成功。并且1G的流量限制已经解除。</p>
+<p>现在可以尝试访问一些网站，例如<a href="https://google.com/">Google</a>。</p>
+<p>也可以尝试进行网络测速。</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Cloudflare Warp + Zero Trust的简单使用方法已经介绍完毕。Warp能够通过WireGuard协议保护互联网协议，拥有强大的安全性、高效的协议设计和很高的下行速率（有一个问题是上行速率较低），并通过1.1.1.1 DNS解析来提高DNS解析的效率，避免DNS污染的影响，改善综合上网体验。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Network</category>
+      </categories>
+      <tags>
+        <tag>Proxy</tag>
+        <tag>Circumvention</tag>
+        <tag>Network</tag>
+        <tag>Windows</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>简单修复Windows 11任务栏图标丢失问题</title>
+    <url>/2025/09/11/%E7%AE%80%E5%8D%95%E4%BF%AE%E5%A4%8DWindows-11%E4%BB%BB%E5%8A%A1%E6%A0%8F%E5%9B%BE%E6%A0%87%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Windows任务栏图标丢失，也就是一个应用程序打开后，它的任务栏图标变为一个白色的文件图标，类似于Windows面对未知类型或未指定打开方式的文件时的那个图标，这似乎是个老问题了。我记得从Win 7就见过，而Win 10和Win 11似乎反复发生。</p>
+<p>之前一直都是忍受这个问题，而现在决定一探究竟了，发现解决方法并不复杂。本文简单讲讲如何通过简单的命令行操作或者是编写一个批处理文件的方式，快速处理任务栏图标丢失的问题。</p>
+<span id="more"></span>
+
+<hr>
+<h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>相当简单，此类问题通常是因为任务栏图标缓存出了问题。有时候重启也不会解决这个问题。</p>
+<hr>
+<h3 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h3><p>打开CMD或PowerShell，可以尝试刷新任务栏缓存：</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">ie4uinit.exe <span class="literal">-show</span></span><br><span class="line">taskkill /im explorer.exe /f</span><br><span class="line"><span class="built_in">DEL</span> /A /Q <span class="string">&quot;%localappdata%\IconCache.db&quot;</span></span><br><span class="line"><span class="built_in">start</span> explorer.exe</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="批处理文件"><a href="#批处理文件" class="headerlink" title="批处理文件"></a>批处理文件</h3><p>新建一个.bat文件（改后缀名即可），通过VSCode等文本编辑器修改其内容，然后以管理员身份运行。</p>
+<figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">echo</span> 正在清理图标缓存...</span><br><span class="line"><span class="built_in">echo</span>.</span><br><span class="line"></span><br><span class="line">ie4uinit.exe -show</span><br><span class="line"><span class="built_in">taskkill</span> /im explorer.exe /f</span><br><span class="line">timeout /t <span class="number">2</span> /nobreak &gt;<span class="built_in">nul</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">exist</span> &quot;<span class="variable">%localappdata%</span>\IconCache.db&quot; (</span><br><span class="line">    <span class="built_in">del</span> /f /q &quot;<span class="variable">%localappdata%</span>\IconCache.db&quot;</span><br><span class="line">    <span class="built_in">echo</span> IconCache.db 已删除。</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    <span class="built_in">echo</span> IconCache.db 未找到，可能已被清理或不存在。</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span>.</span><br><span class="line"><span class="built_in">echo</span> 重启资源管理器...</span><br><span class="line"><span class="built_in">start</span> explorer.exe</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span>.</span><br><span class="line"><span class="built_in">echo</span> 图标缓存清理完成。</span><br><span class="line"><span class="built_in">echo</span> 任务栏图标可能需要几秒钟重新加载。</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>本文简单介绍了如何应对Windows 任务栏图标丢失的问题。</p>
+]]></content>
+      <categories>
+        <category>Tech</category>
+        <category>Windows</category>
+      </categories>
+      <tags>
+        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
@@ -3433,105 +3534,6 @@
         <tag>Web Front-End</tag>
         <tag>HTML</tag>
         <tag>CSS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单修复Windows 11任务栏图标丢失问题</title>
-    <url>/2025/09/11/%E7%AE%80%E5%8D%95%E4%BF%AE%E5%A4%8DWindows-11%E4%BB%BB%E5%8A%A1%E6%A0%8F%E5%9B%BE%E6%A0%87%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Windows任务栏图标丢失，也就是一个应用程序打开后，它的任务栏图标变为一个白色的文件图标，类似于Windows面对未知类型或未指定打开方式的文件时的那个图标，这似乎是个老问题了。我记得从Win 7就见过，而Win 10和Win 11似乎反复发生。</p>
-<p>之前一直都是忍受这个问题，而现在决定一探究竟了，发现解决方法并不复杂。本文简单讲讲如何通过简单的命令行操作或者是编写一个批处理文件的方式，快速处理任务栏图标丢失的问题。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="处理方式"><a href="#处理方式" class="headerlink" title="处理方式"></a>处理方式</h2><p>相当简单，此类问题通常是因为任务栏图标缓存出了问题。有时候重启也不会解决这个问题。</p>
-<hr>
-<h3 id="命令行"><a href="#命令行" class="headerlink" title="命令行"></a>命令行</h3><p>打开CMD或PowerShell，可以尝试刷新任务栏缓存：</p>
-<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">ie4uinit.exe <span class="literal">-show</span></span><br><span class="line">taskkill /im explorer.exe /f</span><br><span class="line"><span class="built_in">DEL</span> /A /Q <span class="string">&quot;%localappdata%\IconCache.db&quot;</span></span><br><span class="line"><span class="built_in">start</span> explorer.exe</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="批处理文件"><a href="#批处理文件" class="headerlink" title="批处理文件"></a>批处理文件</h3><p>新建一个.bat文件（改后缀名即可），通过VSCode等文本编辑器修改其内容，然后以管理员身份运行。</p>
-<figure class="highlight bat"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line"><span class="built_in">echo</span> 正在清理图标缓存...</span><br><span class="line"><span class="built_in">echo</span>.</span><br><span class="line"></span><br><span class="line">ie4uinit.exe -show</span><br><span class="line"><span class="built_in">taskkill</span> /im explorer.exe /f</span><br><span class="line">timeout /t <span class="number">2</span> /nobreak &gt;<span class="built_in">nul</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="keyword">exist</span> &quot;<span class="variable">%localappdata%</span>\IconCache.db&quot; (</span><br><span class="line">    <span class="built_in">del</span> /f /q &quot;<span class="variable">%localappdata%</span>\IconCache.db&quot;</span><br><span class="line">    <span class="built_in">echo</span> IconCache.db 已删除。</span><br><span class="line">) <span class="keyword">else</span> (</span><br><span class="line">    <span class="built_in">echo</span> IconCache.db 未找到，可能已被清理或不存在。</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span>.</span><br><span class="line"><span class="built_in">echo</span> 重启资源管理器...</span><br><span class="line"><span class="built_in">start</span> explorer.exe</span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span>.</span><br><span class="line"><span class="built_in">echo</span> 图标缓存清理完成。</span><br><span class="line"><span class="built_in">echo</span> 任务栏图标可能需要几秒钟重新加载。</span><br><span class="line"></span><br><span class="line"><span class="built_in">pause</span></span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h3><p>本文简单介绍了如何应对Windows 任务栏图标丢失的问题。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单修改注册表来增加Windows右键菜单新建文件的种类</title>
-    <url>/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写文档的时候总是有一个别扭的操作，那就是想要新建Markdown文件，却只能新建文本文件，再把文件的后缀名修改成.md。</p>
-<p>这样做非常不优雅，于是开始稍微研究一下直接创建Markdown文件的方法，发现只要简单修改注册表就可以了。</p>
-<span id="more"></span>
-
-<hr>
-<h2 id="具体操作步骤"><a href="#具体操作步骤" class="headerlink" title="具体操作步骤"></a>具体操作步骤</h2><hr>
-<h3 id="示例：Markdown"><a href="#示例：Markdown" class="headerlink" title="示例：Markdown"></a>示例：Markdown</h3><p>建议是在VSCode里面增加一个Reg插件。</p>
-<p>新建一个文本文件，把后缀名改成.reg，例如<code>addMd.reg</code></p>
-<p>用文本编辑器之类的东西打开，把内容改成这样：</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md</span>]</span><br><span class="line">@=<span class="string">&quot;markdown&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.md\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"> </span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\markdown</span>]</span><br><span class="line">@=<span class="string">&quot;Markdown file&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>保存，双击运行，点击「是」，即可。</p>
-<p>可能不会立刻生效，重启一下就可以了。</p>
-<hr>
-<h3 id="示例：C"><a href="#示例：C" class="headerlink" title="示例：C++"></a>示例：C++</h3><p>同样，只要改一下Reg文件的内容：</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">Windows Registry Editor Version <span class="number">5.00</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp</span>]</span><br><span class="line">@=<span class="string">&quot;cppfile&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\.cpp\ShellNew</span>]</span><br><span class="line"><span class="string">&quot;NullFile&quot;</span>=<span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line">[<span class="meta">HKEY_CLASSES_ROOT\cppfile</span>]</span><br><span class="line">@=<span class="string">&quot;C++ Source File&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>保存，双击运行，即可。其它的以此类推</p>
-<hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文介绍了如何通过简单的防法，为Windows右键菜单新建文件提供更多选择。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Windows</category>
-      </categories>
-      <tags>
-        <tag>Windows</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>简单的Cloudflare Warp使用方法</title>
-    <url>/2023/11/09/%E7%AE%80%E5%8D%95%E7%9A%84Cloudflare%20Warp%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Cloudflare Warp是Cloudfare推出的一种免费、高性能的VPN服务，理论上能够提升上网的安全性与性能，也能用来绕过网络审查。</p>
-<p>本文字教程主要介绍在个人设备上使用Cloudflare Warp连接到互联网，并通过Cloudflare Zero Trust登录客户端，解除Warp自身的流量限制。</p>
-<span id="more"></span>
-
-<h2 id="安装与连接"><a href="#安装与连接" class="headerlink" title="安装与连接"></a>安装与连接</h2><p>安装非常简单，在Cloudflare 1.1.1.1的官方网站下载适合自己设备的客户端即可。</p>
-<p>下载链接：<a href="https://1.1.1.1/">1.1.1.1 — The free app that makes your Internet faster.</a></p>
-<p>打开安装包，按照指示完成安装即可。打开Cloudflare Warp客户端。</p>
-<p>点击连接，即可尝试连接。这一步有一定的可能性会失败。如果成功，已经可以访问国际互联网，而且性能通常不错。但是有一定的流量限制。</p>
-<p>如果是轻度使用者，不在意流量限制，到这一步即可完成。</p>
-<h2 id="注册Zero-Trust"><a href="#注册Zero-Trust" class="headerlink" title="注册Zero Trust"></a>注册Zero Trust</h2><p>登录Cloudflare Dashboard：<a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
-<p>当然，如果没有账号可以先注册一个，很容易。注册过程略。</p>
-<p>在左侧找到Zero Trust，注册一个Zero Trust账号，团队名称可以自由选择。注册过程略。</p>
-<p>注册成功后，找到左侧的<code>My Team</code>一栏，找到<code>Devices</code>选项。选择<code>Connect a Device</code>选项。</p>
-<p>单击<code>Create an Enrollment</code>，输入需要注册的邮箱后缀名，例如<code>@gmail.com</code>，然后点击<code>save</code>。</p>
-<h2 id="Zero-Trust登录与连接"><a href="#Zero-Trust登录与连接" class="headerlink" title="Zero Trust登录与连接"></a>Zero Trust登录与连接</h2><p>打开自己的Cloudflare Warp客户端，在右键菜单中找到<code>偏好设置</code>，找到<code>账户</code>一栏，点击<code>使用Cloudflare Zero Trust登录</code>。</p>
-<p>输入自己之前注册Zero Trust使用的团队名称，点击确认，会跳转到团队的一个Web验证界面。</p>
-<p>输入自己使用的邮箱。</p>
-<p>在自己的邮箱当中找到Cloudflare发送的验证码，填写验证码，确认。</p>
-<p>稍作等待，Cloudflare Warp客户端的Zero Trust将成功登陆。</p>
-<p>打开Cloudflare Warp客户端，现在Warp的标志将被替换为Zero Trust。点击连接按钮，即可尝试连接到Cloudflare Warp服务。</p>
-<p>这一步的成功率很高，通常能够连接成功。并且1G的流量限制已经解除。</p>
-<p>现在可以尝试访问一些网站，例如<a href="https://google.com/">Google</a>。</p>
-<p>也可以尝试进行网络测速。</p>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>至此，Cloudflare Warp + Zero Trust的简单使用方法已经介绍完毕。Warp能够通过WireGuard协议保护互联网协议，拥有强大的安全性、高效的协议设计和很高的下行速率（有一个问题是上行速率较低），并通过1.1.1.1 DNS解析来提高DNS解析的效率，避免DNS污染的影响，改善综合上网体验。</p>
-]]></content>
-      <categories>
-        <category>Tech</category>
-        <category>Network</category>
-      </categories>
-      <tags>
-        <tag>Proxy</tag>
-        <tag>Circumvention</tag>
-        <tag>Network</tag>
-        <tag>Windows</tag>
       </tags>
   </entry>
   <entry>
