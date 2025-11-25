@@ -22,23 +22,24 @@
     var CONFIG = {"hostname":"bluemap1e.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":true},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":true,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="前言在看网课的时候经常卡顿，觉得很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最糟糕的是关掉代理就不卡了，因此开始排查问题。 最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。">
+  <meta name="description" content="前言本文主要介绍如何在Debian 12上搭建Shadowsocks-Rust (AEAD-2022)服务器。此教程应当大致也适用于Ubuntu操作系统的VPS。  系统更新与软件安装例行更新： 12sudo apt update -ysudo apt upgrade -y  安装snapd（Ubuntu用户大概可以跳过这一步）： 1sudo apt install snapd -y  安装Sha">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一个Shadowsocks-Windows使用过程中遇到的小问题">
-<meta property="og:url" content="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:title" content="在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器">
+<meta property="og:url" content="https://bluemap1e.github.io/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="BlueMap1e&#39;s Blog">
-<meta property="og:description" content="前言在看网课的时候经常卡顿，觉得很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最糟糕的是关掉代理就不卡了，因此开始排查问题。 最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。">
+<meta property="og:description" content="前言本文主要介绍如何在Debian 12上搭建Shadowsocks-Rust (AEAD-2022)服务器。此教程应当大致也适用于Ubuntu操作系统的VPS。  系统更新与软件安装例行更新： 12sudo apt update -ysudo apt upgrade -y  安装snapd（Ubuntu用户大概可以跳过这一步）： 1sudo apt install snapd -y  安装Sha">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg">
-<meta property="article:published_time" content="2025-07-08T19:21:16.000Z">
-<meta property="article:modified_time" content="2025-07-08T19:58:14.986Z">
+<meta property="article:published_time" content="2025-11-25T07:41:46.000Z">
+<meta property="article:modified_time" content="2025-11-25T08:12:59.168Z">
 <meta property="article:author" content="BlueMap1e">
+<meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Proxy">
 <meta property="article:tag" content="Circumvention">
+<meta property="article:tag" content="Network">
+<meta property="article:tag" content="VPS">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg">
 
-<link rel="canonical" href="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="https://bluemap1e.github.io/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
 
 <script id="page-configurations">
@@ -51,7 +52,7 @@
   };
 </script>
 
-  <title>一个Shadowsocks-Windows使用过程中遇到的小问题 | BlueMap1e's Blog</title>
+  <title>在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器 | BlueMap1e's Blog</title>
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5VBM6R3END"></script>
     <script>
@@ -233,7 +234,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://bluemap1e.github.io/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -246,7 +247,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          一个Shadowsocks-Windows使用过程中遇到的小问题
+          在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器
         </h1>
 
         <div class="post-meta">
@@ -257,7 +258,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-07-09 03:21:16 / Modified: 03:58:14" itemprop="dateCreated datePublished" datetime="2025-07-09T03:21:16+08:00">2025-07-09</time>
+              <time title="Created: 2025-11-25 15:41:46 / Modified: 16:12:59" itemprop="dateCreated datePublished" datetime="2025-11-25T15:41:46+08:00">2025-11-25</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -269,12 +270,12 @@
                 </span>
                   , 
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Tech/Windows/" itemprop="url" rel="index"><span itemprop="name">Windows</span></a>
+                  <a href="/categories/Tech/Network/" itemprop="url" rel="index"><span itemprop="name">Network</span></a>
                 </span>
             </span>
 
           
-            <span id="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/" class="post-meta-item leancloud_visitors" data-flag-title="一个Shadowsocks-Windows使用过程中遇到的小问题" title="Views">
+            <span id="/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="post-meta-item leancloud_visitors" data-flag-title="在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器" title="Views">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -289,8 +290,8 @@
       </span>
       <span class="post-meta-item-text">Disqus: </span>
     
-    <a title="disqus" href="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/#disqus_thread" itemprop="discussionUrl">
-      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/07/09/一个Shadowsocks-Windows使用过程中遇到的小问题/" itemprop="commentCount"></span>
+    <a title="disqus" href="/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/#disqus_thread" itemprop="discussionUrl">
+      <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2025/11/25/在Debian-12上搭建Shadowsocks-Rust-AEAD-2022服务器/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -300,14 +301,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">Symbols count in article: </span>
-              <span>346</span>
+              <span>970</span>
             </span>
             <span class="post-meta-item" title="Reading time">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">Reading time &asymp;</span>
-              <span>2 mins.</span>
+              <span>5 mins.</span>
             </span>
 
         </div>
@@ -319,32 +320,65 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在看网课的时候经常卡顿，觉得很奇怪，明明自己的Shadowsocks PAC文件已经写了页面本身的网址，为什么还是这么卡顿。最糟糕的是关掉代理就不卡了，因此开始排查问题。</p>
-<p>最终发现视频来源是CDN，而CDN与前端页面域名不同。只要在代理规则中设置CDN的白名单即可解决问题。</p>
-<span id="more"></span>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍如何在Debian 12上搭建Shadowsocks-Rust (AEAD-2022)服务器。此教程应当大致也适用于Ubuntu操作系统的VPS。</p>
+<hr>
+<h2 id="系统更新与软件安装"><a href="#系统更新与软件安装" class="headerlink" title="系统更新与软件安装"></a>系统更新与软件安装</h2><p>例行更新：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt update -y</span><br><span class="line"><span class="built_in">sudo</span> apt upgrade -y</span><br></pre></td></tr></table></figure>
+
+<p>安装snapd（Ubuntu用户大概可以跳过这一步）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt install snapd -y</span><br></pre></td></tr></table></figure>
+
+<p>安装Shadowsocks-Rust：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> snap install shadowsocks-rust</span><br></pre></td></tr></table></figure>
 
 <hr>
-<h2 id="问题场景"><a href="#问题场景" class="headerlink" title="问题场景"></a>问题场景</h2><p>以飞鱼绘的小鹅通页面为例，例如，前端页面的网址是这个：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app57xp9kxc1037<span class="selector-class">.xet-pc</span><span class="selector-class">.citv</span><span class="selector-class">.cn</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h2><p>snap渠道安装的Shadowsocks-Rust目前没有提供默认的配置文件，最好是自己新建一个，方便管理。例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> /var/snap/shadowsocks-rust/common/etc/shadowsocks-rust</span><br></pre></td></tr></table></figure>
 
-<p>自然，为了避免Shadowsocks走代理影响访问速度，将其写在pac.txt当中：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;@@||app57xp9kxc1037.xet-pc.citv.cn&quot;,</span><br></pre></td></tr></table></figure>
+<p>再新建并打开一个配置文件。为了对新手友好此处使用nano，vim完全没问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> nano /var/snap/shadowsocsk-rust/common/etc/shadowsocks-rust/config.json</span><br></pre></td></tr></table></figure>
 
-<p>然而这只能解决前端页面加载速度的问题，并不能解决看视频卡顿的问题。</p>
-<p>这是因为，视频的源并不是前端页面的网址。</p>
+<p>以下是一个Shadowsocks-Rust的配置文件示例：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;server&quot;</span><span class="punctuation">:</span><span class="string">&quot;0.0.0.0&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;server_port&quot;</span><span class="punctuation">:</span> <span class="number">8388</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;local_address&quot;</span><span class="punctuation">:</span> <span class="string">&quot;127.0.0.1&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;local_port&quot;</span><span class="punctuation">:</span> <span class="number">1080</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="string">&quot;KlPeFQT7OxHeI2rQMDdF8g==&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;method&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2022-blake3-aes-128-gcm&quot;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;timeout&quot;</span><span class="punctuation">:</span> <span class="number">300</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;mode&quot;</span><span class="punctuation">:</span> <span class="string">&quot;tcp_and_udp&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>具体参数方面的讲解此处略带一下，之前Shadowsocks-Libev的搭建教程中已经提及。</p>
+<p><code>server_port</code>看自己心情修改，不太推荐用8388，然后也别填个22，443之类的和自己现有的服务冲突了之类的就行。客户端和服务端应该保持一致。</p>
+<p>此处着重讲解更新的加密算法和密码。</p>
+<h3 id="加密算法和密码（重点）"><a href="#加密算法和密码（重点）" class="headerlink" title="加密算法和密码（重点）"></a>加密算法和密码（重点）</h3><p>Shadowsocks-Rust对AEAD-2022的实现主要引入了三个新的加密算法：</p>
+<p><code>2022-blake3-aes-128-gcm</code> ，<code>2022-blake3-aes-256-gcm</code> 和 <code>2022-blake3-chacha20-poly1305</code>。</p>
+<p>具体的安全性细节不再赘述，详情可见 <a target="_blank" rel="noopener" href="https://shadowsocks.org/doc/sip022.html">SIP022 AEAD-2022 Ciphers | Shadowsocks</a></p>
+<p>本文主要讲解在配置层面上引入的限制，具体而言，这三种加密算法现在不接受ASCII编码的，任意长度的字符串作为密码（<code>&quot;password&quot;</code>）了，而是需要指定长度的，Base64编码的字符串作为密钥才能够正常运转。</p>
+<p><code>2022-blake3-aes-128-gcm </code> 需要 <code>16</code> 字节的，Base64编码的随机数。</p>
+<p><code>2022-blake3-aes-256-gcm</code> 和 <code>2022-blake3-chacha20-poly1305</code> 需要 <code>32</code> 字节的，Base64编码的随机数。</p>
+<h3 id="快速生成合法格式的密码"><a href="#快速生成合法格式的密码" class="headerlink" title="快速生成合法格式的密码"></a>快速生成合法格式的密码</h3><p>Linux通常预装了OpenSSL，那么此处可以直接使用OpenSSL命令来生成所需的密钥。例如，假设用户希望使用 <code>2022-blake3-aes-128-gcm</code> 作为加密算法，那么就可以使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 16</span><br></pre></td></tr></table></figure>
+
+<p>来生成一个合法的密钥。</p>
+<p>类似地，如果用户决定使用 <code>2022-blake3-aes-256-gcm</code> 或 <code>2022-blake3-chacha20-poly1305</code> ，则可以使用：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl rand -<span class="built_in">base64</span> 32</span><br></pre></td></tr></table></figure>
+
+<p>来生成一个合法的密钥。</p>
+<p>把生成的密钥复制到配置文件中的<code>&quot;password&quot;</code>键对应的值当中即可。</p>
 <hr>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>以Microsoft Edge浏览器为例，进入视频播放的界面，然后按下F12。</p>
-<img src="/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/Edge-F12-Top-Bar.jpg" class="" title="Edge-F12-Top-Bar">
+<h2 id="运行与维护"><a href="#运行与维护" class="headerlink" title="运行与维护"></a>运行与维护</h2><p>启动Shadowsocks-Server服务，并允许开机自启动：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> snap start --<span class="built_in">enable</span> shadowsocks-rust.ssserver-daemon</span><br></pre></td></tr></table></figure>
 
-<p>选择”网络”，可以看到很多数据包，关注xhr类型。</p>
-<p>播放视频，选择其中数据包体积较大的，查看详情。</p>
-<p>添加其域名到PAC，例如：</p>
-<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;@@||xiaoeknow.com&quot;,</span><br><span class="line"><span class="string">&quot;@@||xed.plus&quot;</span>,</span><br></pre></td></tr></table></figure>
+<p>可以通过以下指令来查看服务状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> snap services shadowsocks-rust.ssserver-daemon</span><br></pre></td></tr></table></figure>
 
-<p>然后重启Shadowsocks，通常可解决问题。</p>
+<p>注意此处如果看到一个<code>inactive</code>，那么多半是配置文件写错了，注意检查一下JSON格式，或者是不是密码的格式有误等问题。这是用了AEAD-2022的一个常见问题，而使用AEAD-2017（例如普通的AES-128-GCM等加密算法）则不会面临这个问题，但是会牺牲一些安全性。</p>
+<p>可以通过这条命令查看运行日志，便于诊断问题：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> snap logs shadowsocks-rust.ssserver-daemon</span><br></pre></td></tr></table></figure>
+
+<p>此外，如果系统开启了UFW，别忘了开放Shadowsocks服务监听的端口，例如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ufw allow ssh</span><br><span class="line"><span class="built_in">sudo</span> ufw allow 8388</span><br><span class="line"><span class="built_in">sudo</span> ufw reload</span><br></pre></td></tr></table></figure>
+
+<p>通过指令查询ufw的工作状态：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> ufw status</span><br></pre></td></tr></table></figure>
+
+<p>另外，此处是以Vultr，Digital Ocean，Bandwagon等相对简单的VPS作为例子，如果使用的是阿里云香港ECS等，则要留意一下服务器的安全组，也是同样要允许访问ssserver监听的端口。</p>
 <hr>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>乱写的，自己也没完全搞清楚，但有效。</p>
-<p>博客好久没更新了，水一点东西（</p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文简单介绍了如何在Debian操作系统上部署一台Shadowsocks-Rust AEAD-2022服务器。</p>
 
     </div>
 
@@ -361,13 +395,13 @@
       <div class="popular-posts-title"><a href="\2023\11\11\在Debian 12上搭建简单的VMess + TCP服务器\" rel="bookmark">在Debian 12上搭建简单的VMess + TCP服务器</a></div>
     </li>
     <li class="popular-posts-item">
-      <div class="popular-posts-title"><a href="\2025\11\25\在Debian-12上搭建Shadowsocks-Rust-AEAD-2022服务器\" rel="bookmark">在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器</a></div>
-    </li>
-    <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="\2023\10\18\在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器\" rel="bookmark">在Ubuntu 23上搭建简单的Shadowsocks-Libev服务器</a></div>
     </li>
     <li class="popular-posts-item">
       <div class="popular-posts-title"><a href="\2025\09\06\在Ubuntu上部署Shadowsocks-Libev客户端\" rel="bookmark">在Ubuntu上部署Shadowsocks-Libev客户端</a></div>
+    </li>
+    <li class="popular-posts-item">
+      <div class="popular-posts-title"><a href="\2023\10\18\通过简单的CloudFlare-Warp让VPS解锁ChatGPT\" rel="bookmark">通过简单的CloudFlare Warp让VPS解锁ChatGPT</a></div>
     </li>
   </ul>
 
@@ -390,8 +424,11 @@
       <footer class="post-footer">
           
           <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"><i class="fa fa-tag"></i> Linux</a>
               <a href="/tags/Proxy/" rel="tag"><i class="fa fa-tag"></i> Proxy</a>
               <a href="/tags/Circumvention/" rel="tag"><i class="fa fa-tag"></i> Circumvention</a>
+              <a href="/tags/Network/" rel="tag"><i class="fa fa-tag"></i> Network</a>
+              <a href="/tags/VPS/" rel="tag"><i class="fa fa-tag"></i> VPS</a>
           </div>
 
         
@@ -400,13 +437,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/11/01/%E7%AE%80%E5%8D%95%E4%BF%AE%E6%94%B9%E6%B3%A8%E5%86%8C%E8%A1%A8%E6%9D%A5%E5%A2%9E%E5%8A%A0Windows%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E7%9A%84%E7%A7%8D%E7%B1%BB/" rel="prev" title="简单修改注册表来增加Windows右键菜单新建文件的种类">
-      <i class="fa fa-chevron-left"></i> 简单修改注册表来增加Windows右键菜单新建文件的种类
+    <a href="/2025/09/11/%E7%AE%80%E5%8D%95%E4%BF%AE%E5%A4%8DWindows-11%E4%BB%BB%E5%8A%A1%E6%A0%8F%E5%9B%BE%E6%A0%87%E4%B8%A2%E5%A4%B1%E9%97%AE%E9%A2%98/" rel="prev" title="简单修复Windows 11任务栏图标丢失问题">
+      <i class="fa fa-chevron-left"></i> 简单修复Windows 11任务栏图标丢失问题
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/08/11/%E5%9C%A8Windows-11%E4%B8%AD%E9%BB%98%E8%AE%A4%E4%BD%BF%E7%94%A8Windows-10%E5%8F%B3%E9%94%AE%E8%8F%9C%E5%8D%95/" rel="next" title="在Windows 11中默认使用Windows 10右键菜单">
-      在Windows 11中默认使用Windows 10右键菜单 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -472,7 +506,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E5%9C%BA%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">问题场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="nav-number">3.</span> <span class="nav-text">解决方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">4.</span> <span class="nav-text">结语</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E6%9B%B4%E6%96%B0%E4%B8%8E%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85"><span class="nav-number">2.</span> <span class="nav-text">系统更新与软件安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">配置文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E5%AF%86%E7%A0%81%EF%BC%88%E9%87%8D%E7%82%B9%EF%BC%89"><span class="nav-number">3.1.</span> <span class="nav-text">加密算法和密码（重点）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BF%AB%E9%80%9F%E7%94%9F%E6%88%90%E5%90%88%E6%B3%95%E6%A0%BC%E5%BC%8F%E7%9A%84%E5%AF%86%E7%A0%81"><span class="nav-number">3.2.</span> <span class="nav-text">快速生成合法格式的密码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E4%B8%8E%E7%BB%B4%E6%8A%A4"><span class="nav-number">4.</span> <span class="nav-text">运行与维护</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">5.</span> <span class="nav-text">结语</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -801,9 +835,9 @@ if (document.querySelectorAll('pre.mermaid').length) {
 </script>
 <script>
   var disqus_config = function() {
-    this.page.url = "https://bluemap1e.github.io/2025/07/09/%E4%B8%80%E4%B8%AAShadowsocks-Windows%E4%BD%BF%E7%94%A8%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E5%B0%8F%E9%97%AE%E9%A2%98/";
-    this.page.identifier = "2025/07/09/一个Shadowsocks-Windows使用过程中遇到的小问题/";
-    this.page.title = "一个Shadowsocks-Windows使用过程中遇到的小问题";
+    this.page.url = "https://bluemap1e.github.io/2025/11/25/%E5%9C%A8Debian-12%E4%B8%8A%E6%90%AD%E5%BB%BAShadowsocks-Rust-AEAD-2022%E6%9C%8D%E5%8A%A1%E5%99%A8/";
+    this.page.identifier = "2025/11/25/在Debian-12上搭建Shadowsocks-Rust-AEAD-2022服务器/";
+    this.page.title = "在Debian 12上搭建Shadowsocks-Rust AEAD-2022服务器";
     };
   NexT.utils.loadComments(document.querySelector('#disqus_thread'), () => {
     if (window.DISQUS) {
